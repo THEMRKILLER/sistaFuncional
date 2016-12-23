@@ -13,6 +13,7 @@
     "unit": "karma start test/unit/karma.conf.js --single-run"
   },
   "dependencies": {
+    "moment": "^2.17.1",
     "style-loader": "^0.13.1",
     "vue": "^2.1.0",
     "vue-resource": "^1.0.3",

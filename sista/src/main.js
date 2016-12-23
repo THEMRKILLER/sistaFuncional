@@ -8,6 +8,14 @@ import VeeValidate, { Validator } from 'vee-validate';
 import './assets/css/font-awesome.min.css'
 import './assets/css/style.css'
 import './assets/bootstrap/css/bootstrap.min.css'
+import './assets/css/fullcalendar.min.css'
+
+var $ = require('jquery');
+window.jQuery = $;
+window.$ = $;
+
+import 'fullcalendar'
+
 import App from 'components/Header'
 
 
@@ -24,7 +32,8 @@ Vue.use(VeeValidate, config);
 
 const routes = [
   { path: '/', component: require('components/Home.vue') },
-  { path: '/admin', component: require('components/Login.vue') }
+  { path: '/admin', component: require('components/Login.vue') },
+  { path: '/dashboard', component: require('components/Dashboard.vue') }
   ]
 
 var router = new VueRouter({
@@ -38,7 +47,7 @@ router.mode = 'html5'
 
 const app = new Vue({
     router,
-    
+
     components : {App}
 }).$mount('#app')
 
