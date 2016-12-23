@@ -442,6 +442,12 @@
 
 <script>
 
+import '../assets/css/style.css';
+import '../assets/js/jquery.easing.min.js';
+import '../assets/js/custom.js';
+import '../assets/js/loginjs.js';
+
+
     export default {
     	name:'home',
     	data(){

@@ -4,6 +4,10 @@
 			<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png">
 			<p id="profile-name" class="profile-name-card"></p>
 
+			<div v-if="errorMessage != ''" class="alert alert-danger">
+				{{errorMessage}}
+			</div>
+
 			<!-- formulario -->
 			<div class="form-signin" :class="errors.has('email') ? 'has-error' : ''">
 				<span id="reauth-email" class="reauth-email"></span>
@@ -52,6 +56,7 @@
     	},
     	methods: {
     		sendDatos: function(){
+    			this.errorMessage = '';
     			var information = {
     				"email" : this.email, 
     				"password" : this.password,
@@ -61,18 +66,18 @@
     			this.$http.post('http://192.168.0.14/Sista/public/api/v1/login', information).then(
 						//success
 						function(response){
-							objThis.servidordatos = response.data;
-							console.log(response.data);
+							//se recibe el token de manera exitosa
+							objThis.$localStorage.set('token', response.data.token);
+							objThis.$router.push('/dashboard');
 
-							//console.log(dataCollected);
 						},
 						//error
 						function(response){							
 							
 							if(response.status == 401){
+								this.errorMessage = "Credenciales inválidas, verifique que el usuario y la contraseña sean correctos";
 
-								objThis.isError = true;
-								objThis.errorMessage ="Ha ocurrido un error: " + response.status;
+								
 
 							}
 							//console.log(response.data);
