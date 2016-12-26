@@ -46,21 +46,41 @@ Vue.use(VeeValidate, config);
 
 
 const routes = [
-  { path: '/', component: require('components/Home.vue') },
+  { path: '/', component: require('components/Home.vue')},
   { path: '/admin', component: require('components/Login.vue') },
-  { path: '/dashboard', component: require('components/Dashboard.vue') },
+  { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
   { path: '*', component: require('components/NotFound.vue') }
 
   ]
 
-var router = new VueRouter({
+export var router = new VueRouter({
     hashbang: false,
     mode: 'history',
     linkActiveClass: "active",
     routes
 })
 
-router.mode = 'html5'
+router.mode = 'html5';
+import Auth from './services/auth.js';
+
+router.beforeEach((r, redirect, next) => {
+  if(r.name === 'auth-required')
+  {
+     if(localStorage.getItem('token') !== null) next();
+      else Auth.logout();
+  }
+  else{
+    if (r.path === '/admin'){
+        if(localStorage.getItem('token') == null) next();
+        else router.push('dashboard')
+  }
+  
+  next()
+}
+
+
+})
+
 
 const app = new Vue({
     storage,
@@ -68,4 +88,5 @@ const app = new Vue({
 
     components : {App}
 }).$mount('#app')
+
 
