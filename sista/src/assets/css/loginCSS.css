@@ -1,7 +1,10 @@
 body, html {
-    height: 100%;
+    /*height: 100%;
     background-repeat: no-repeat;
     background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+    */
+    background-image: url("../img/backgroun.jpg");
+    background-color: #cccccc;
 }
 
 .card-container.card {

@@ -42,7 +42,7 @@
 
 
 <script>
-//import '../assets/css/loginCSS.css'
+import '../assets/css/loginCSS.css'
 
     export default {
     	data : function(){

@@ -51,6 +51,7 @@
 				right: 'month,agendaWeek,agendaDay'
 			},
 			defaultDate: '2016-12-12',
+			defaulView: 'agendaDay',
 			navLinks: true, // can click day/week names to navigate views
 			selectable: true,
 			selectHelper: true,

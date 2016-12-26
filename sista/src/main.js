@@ -4,8 +4,8 @@ Vue.use(require('vue-resource'))
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 import VeeValidate, { Validator } from 'vee-validate';
-import VueLocalStorage from 'vue-localstorage';
-Vue.use(VueLocalStorage)
+//import VueLocalStorage from 'vue-localstorage';
+//Vue.use(VueLocalStorage)
 
 
 import './assets/css/font-awesome.min.css'
