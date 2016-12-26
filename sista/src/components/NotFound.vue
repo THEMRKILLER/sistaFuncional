@@ -21,18 +21,20 @@ background: linear-gradient(to left, #7474BF , #348AC7); /* W3C, IE 10+/ Edge, F
     display:box;
     box-pack:center;
     box-align:center;
-    margin-top: -20px;
 
 
 }
 
 #error{
-	text-align: center;
 	
 }
 #error h1{
 	font-family: 'Patua One', cursive;
 	font-size: 50px;
+}
+
+#rhome button{
+	top: 0;
 }
 </style>
 <template>
@@ -47,11 +49,14 @@ background: linear-gradient(to left, #7474BF , #348AC7); /* W3C, IE 10+/ Edge, F
                 <div class="panel-body" align="center" >
 
                 	<div id="error">
-	<h1>Eror 404</h1>
+						<h1>Eror 404</h1>
 	                	<i class="fa fa-close fa-3x"></i>
 
-	<h1><small>La página que estás tratando de buscar no existe</small></h1>
+					<h1><small>La página que estás tratando de buscar no existe</small></h1>
 
+					</div>
+<div class="panel-footer" id="rhome">
+	<router-link to="/"><button class="btn  btn-info" >Inicio <i class="fa fa-home"></i></button></router-link>
 
 </div>
 
