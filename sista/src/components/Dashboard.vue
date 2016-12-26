@@ -39,7 +39,6 @@
     	data(){
     		return {
     			citas : [],
-                calendar : null
     		}
     	},
     	mounted(){
@@ -49,7 +48,7 @@
     	methods : {
 
             createCalendar : function(){
-            this.calendar  = $('#calendar').fullCalendar({
+            $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
                 center: 'title',
