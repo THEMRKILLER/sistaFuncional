@@ -69,7 +69,7 @@
     		fetchDatas : function(){
     		
                 var thisObj = this;
-    			this.$http.get('http://localhost/Sista/public/api/v1/dashboard?token='+localStorage.getItem('token')).then(
+    			this.$http.get('dashboard?token='+localStorage.getItem('token')).then(
     				//success
     				function(response){
     					this.citas = response.data;
@@ -102,7 +102,7 @@
                                     thisObj.$router.push('admin');
 
                                 }
-                            }
+                            }break;
                         }    
     				});
     		}

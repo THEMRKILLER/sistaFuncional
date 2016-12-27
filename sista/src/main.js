@@ -12,6 +12,8 @@ import './assets/css/font-awesome.min.css'
 import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css'
 
+Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
+
 var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;

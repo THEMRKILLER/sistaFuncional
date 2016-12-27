@@ -63,7 +63,7 @@ import '../assets/css/loginCSS.css'
     				"remember" : this.remember
     			};
     			var objThis = this;
-    			this.$http.post('http://localhost/Sista/public/api/v1/login', information).then(
+    			this.$http.post('login', information).then(
 						//success
 						function(response){
 							//se recibe el token de manera exitosa
