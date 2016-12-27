@@ -433,15 +433,13 @@
 	</div>
 
 </template>
-		
 	<script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.easing.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.easing.min.js"></script>    
     <script src="assets/js/custom.js"></script>
     <script src="assets/js/loginjs.js"></script>
 
 <script>
-
+//import './assets/css/bootstrap.css';
 import '../assets/css/style.css';
 import '../assets/js/jquery.easing.min.js';
 import '../assets/js/custom.js';

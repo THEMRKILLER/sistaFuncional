@@ -63,7 +63,7 @@ import '../assets/css/loginCSS.css'
     				"remember" : this.remember
     			};
     			var objThis = this;
-    			this.$http.post('http://localhost/Sista/public/api/v1/login', information).then(
+    			this.$http.post('http://192.168.0.14/Sista/public/api/v1/login', information).then(
 						//success
 						function(response){
 							//se recibe el token de manera exitosa
@@ -83,7 +83,7 @@ import '../assets/css/loginCSS.css'
 								
 
 							}
-							//console.log(response.data);
+							console.log(response.data);
 						});
     		}
     	}

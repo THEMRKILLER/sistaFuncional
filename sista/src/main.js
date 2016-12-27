@@ -9,20 +9,17 @@ import VeeValidate, { Validator } from 'vee-validate';
 
 
 import './assets/css/font-awesome.min.css'
-import './assets/bootstrap/css/bootstrap.min.css'
+import './assets/bootstrap/css/bootstrap.css'
+
 import './assets/css/fullcalendar.min.css'
 
-var $ = require('jquery');
-window.jQuery = $;
-window.$ = $;
+Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
 
+
+import 'bootstrap'
 import 'fullcalendar'
 
 import App from 'components/Header'
-
-var $ = require('jquery');
-window.jQuery = $;
-window.$ = $;
 
 const storage = {
   localStorage: {
