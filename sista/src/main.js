@@ -18,7 +18,6 @@ Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
 
 import 'bootstrap'
 import 'fullcalendar'
-
 import App from 'components/Header'
 
 const storage = {
