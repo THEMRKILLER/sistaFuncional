@@ -13,7 +13,15 @@ import './assets/bootstrap/css/bootstrap.css'
 
 import './assets/css/fullcalendar.min.css'
 
+
 Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
+
+
+Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
+
+var $ = require('jquery');
+window.jQuery = $;
+window.$ = $;
 
 
 import 'bootstrap'
