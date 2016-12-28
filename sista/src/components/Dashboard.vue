@@ -73,7 +73,6 @@
 <script>
 var id_count = 0;
     export default {
-<<<<<<< HEAD
     	name:'dashboard',
 
     	data: function(){
@@ -108,21 +107,6 @@ var id_count = 0;
     				{ text: '10:00', value: '2016-12-31 10:00:00', id: 10},
     		
     			]
-=======
-
-    	name:'dashboard',
-    	data(){
-    		return {
-    			citas : [],
-                    id_cita: '',
-                calendario_id: '',
-                tipo_id: '',
-                fecha_inicio: '',
-                fecha_final: '',
-                cliente_nombre: '',
-                cliente_telefono: '',
-                cliente_email: ''
->>>>>>> 14f851d5363974ca113dbdfc82026e08a090a463
     		}
     	},
     	mounted(){
