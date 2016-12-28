@@ -93,23 +93,19 @@
 <script>
 var id_count = 0;
     export default {
-    	datos: function(){
-    		return{
-    			id_cita: '',
-    			calendario_id: '',
-    			tipo_id: '',
-    			fecha_inicio: '',
-    			fecha_final: '',
-    			cliente_nombre: '',
-    			cliente_telefono: '',
-    			cliente_email: ''
-    	}
-    },
 
     	name:'dashboard',
     	data(){
     		return {
     			citas : [],
+                    id_cita: '',
+                calendario_id: '',
+                tipo_id: '',
+                fecha_inicio: '',
+                fecha_final: '',
+                cliente_nombre: '',
+                cliente_telefono: '',
+                cliente_email: ''
     		}
     	},
     	mounted(){
