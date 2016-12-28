@@ -11,5 +11,13 @@ export default {
         localStorage.removeItem('token');
         this.authenticated = false;
         router.push('/admin')
+    },
+    refreshToken : function(){
+
+    },
+    handleError : function(response)
+    {
+    	
+
     }
 }
