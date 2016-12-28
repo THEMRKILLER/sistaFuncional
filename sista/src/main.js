@@ -10,11 +10,9 @@ import VeeValidate, { Validator } from 'vee-validate';
 
 import './assets/css/font-awesome.min.css'
 import './assets/bootstrap/css/bootstrap.css'
-
 import './assets/css/fullcalendar.min.css'
 
-
-Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
+Vue.component('servicios', require('components/Servicios.vue'));
 
 
 Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
@@ -54,6 +52,7 @@ const routes = [
   { path: '/', component: require('components/Home.vue')},
   { path: '/admin', component: require('components/Login.vue') },
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
+  { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
   { path: '*', component: require('components/NotFound.vue') }
 
   ]

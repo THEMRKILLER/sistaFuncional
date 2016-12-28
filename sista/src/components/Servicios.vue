@@ -1,0 +1,213 @@
+<style>
+
+.panel-title{
+	text-align: center;
+}
+
+</style>
+<template>
+	<div id="servicios_root">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Tabla de servicios</h3>
+		    <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#servicio_modal">Agregar servicio</button>
+		  </div>
+		  <div class="panel-body" align="center">
+		  		<ul class="list-group" v-if="servicios.length > 0">
+		  			<li v-for="servicio in servicios" class="list-group-item">
+		  				Nombre : {{servicio.nombre}}
+		  				<br>
+		  				Duración : {{servicio.duracion}} minutos
+		  			</li>
+				</ul>
+				<ul v-else>
+					<li>No hay servicios registrados</li>
+				</ul>
+		  </div>
+		</div>
+
+			<!--Modal para agregar servicio -->
+			<div id="servicio_modal" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+
+			        <button type="button" class="close" data-dismiss="modal" v-on:click="cancelarRegistro">&times;</button>
+			        <h4 class="modal-title">Registar Servicio</h4>
+			      </div>
+			      <div class="modal-body">
+			        
+			        <div class="form-group">
+    						<label for="email">Nombre del Servicio:</label>
+    						<input type="text" class="form-control" name="nombre" v-model="nombre">
+  					</div>
+  					<div class="form-group">
+    						<label for="email">Duración del Servicio (minutos) :</label>
+    						<input type="number" min="1" class="form-control" name="duracion" v-model="duracion">
+  					</div>
+
+
+
+			      </div>
+			      <div></div>
+			      <div v-show="registro_estado_neutro == false">
+
+			      	<div v-if="registro_estado_encurso" class="alert alert-info">
+			      		<h4>
+			      			Registrando servicio 
+			      			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+						</h4>
+			      	</div>
+
+			      	<div v-if="registro_estado_exitoso" class="alert alert-success">
+			      		<h4>
+			      			El servicio {{registro_estado_exitoso_name}} se ha creado correctamente, puede serguir registrando más servicios o haga clic en salir.
+				        	<i class="fa fa-check"></i>
+						</h4>
+			      	</div>
+
+			      	<div v-if="registro_estado_error" class="alert alert-danger">
+			      		<h4>
+			      			Error creando el servicio <i class="fa fa-times"></i>
+			      			<ul>
+			      				<li v-for="error_s in error_servicio">
+			      					{{error_s}}
+			      				</li>
+			      			</ul>
+				        	
+						</h4>
+			      	</div>
+
+
+
+			      </div>
+
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-md btn-success" v-on:click="registrarServicio">Registrar</button>
+			        <button v-if="!nombre == ''" type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancelarRegistro">Cancelar</button>
+			        <button v-else type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancelarRegistro">Salir</button>
+			      </div>
+			    </div>
+
+			  </div>
+			</div>
+</div>
+</template>
+<script>
+    export default {
+
+    	mounted(){
+    		this.fetchDatas();
+
+    		
+
+    	},
+
+    	data(){
+    		return{
+    			nombre: '',
+    			duracion : 1,
+    			registro_estado_neutro : true,
+    			registro_estado_encurso : false,
+    			registro_estado_exitoso : false,
+    			registro_estado_error : false,
+    			registro_estado_exitoso_name : '',
+
+    			error_servicio : '',
+    			servicios  : []
+    		}
+    	},
+        methods : {
+        	fetchDatas : function(){
+
+        		this.$http.get('tipo?token='+localStorage.getItem('token')).then(
+        			//success
+        			function(response){
+
+        				this.servicios = response.data;
+
+        			},
+        			//error
+        			function(response){
+
+        				console.error("Error :( en servicios D: ");
+        				switch(response.status)
+                        {
+                            case 401 : {
+                                if(localStorage.getItem('remember_user') == true)
+                                {
+                                    thisObj.$http.get('refresh_token').then(
+                                        //sucess
+                                        function(response){
+
+                                            localStorage.setItem('token', response.data.token);
+                                            thisObj.fetchDatas();
+
+                                        },
+                                        //error
+                                        function(response){
+                                            localStorage.removeItem('token');
+                                            thisObj.$router.push('admin');
+                                        });
+                                }
+                                else{
+                                    localStorage.removeItem('token');
+                                    thisObj.$router.push('admin');
+
+                                }
+                            }break;
+
+                            case 404 : {
+                                       localStorage.removeItem('token');
+                                        thisObj.$router.push('admin');
+                            }break;
+                        }    
+        			}
+
+        			);
+
+        	},
+        	registrarServicio : function(event){
+
+        	$(event.target).attr('disabled',true);
+        	this.registro_estado_neutro = false;
+        	this.registro_estado_exitoso = false;
+        	this.registro_estado_error = false;
+        	this.registro_estado_encurso = true;
+
+
+        	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion};
+        	 this.$http.post('tipo?token='+localStorage.getItem('token'),datas_to_server).then(
+        	 	//success
+        	 	function(response){
+        	 		this.registro_estado_exitoso = true;
+        	 		this.registro_estado_encurso = false;
+        	 		$(event.target).attr('disabled',false);
+        	 		this.registro_estado_exitoso_name = this.nombre;
+        	 		this.nombre = '';
+        	 		this.duracion;
+        	 		this.fetchDatas();
+
+
+        	 	},
+        	 	//error
+        	 	function(response){
+        	 		this.registro_estado_error = true;
+        	 		this.registro_estado_encurso = false;
+        	 		this.error_servicio = response.data.error;
+        	 		$(event.target).attr('disabled',false);
+        	 	}
+        	 	);
+
+        	},
+        	cancelarRegistro : function(){
+        		this.nombre = '';
+        		this.duracion = 1;
+        		this.registro_estado_neutro = true;
+
+        	}
+        }
+    }
+</script>

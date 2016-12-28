@@ -71,15 +71,16 @@
 </template>	
 
 <script>
-var id_count = 0;
+
+
     export default {
-<<<<<<< HEAD
+
     	name:'dashboard',
 
     	data: function(){
     		return {
     			//id_cita: '',
-    			calendario_id: 2,
+    			calendario_id: 1,
     			tipo_id: '',
     			fecha_inicio: '',
     			fecha_final: '',
@@ -89,40 +90,26 @@ var id_count = 0;
     			hora_cita: '',
     			date_selected : '',
     			options:[
-    				{ text: 'Limpieza dental', duration: 30, id: 0},    		
-    				{ text: 'Extracciones', duration: 60, id: 1}
+    				{ text: 'Limpieza dental', duration: 30, id: 1},    		
+    				{ text: 'Extracciones', duration: 60, id: 2}
     				//{ text: 'Endodoncia', duration: 80, id: 2},
 	    			//{ text: 'Cita medica', duration: 120, id: 3}
     			],
     			hours:[    			
-    				{ text: '00:00', value: '2016-12-31 00:00:00', id: 0},
-    				{ text: '01:00', value: '2016-12-31 01:00:00', id: 1},
-    				{ text: '02:00', value: '2016-12-31 02:00:00', id: 2},
-    				{ text: '03:00', value: '2016-12-31 03:00:00', id: 3},
-    				{ text: '04:00', value: '2016-12-31 04:00:00', id: 4},
-    				{ text: '05:00', value: '2016-12-31 05:00:00', id: 5},
-    				{ text: '06:00', value: '2016-12-31 06:00:00', id: 6},
-    				{ text: '07:00', value: '2016-12-31 07:00:00', id: 7},
-    				{ text: '08:00', value: '2016-12-31 08:00:00', id: 8},
-    				{ text: '09:00', value: '2016-12-31 09:00:00', id: 9},
-    				{ text: '10:00', value: '2016-12-31 10:00:00', id: 10},
+    				{ text: '00:00', value: '2017-01-01 00:00:00', id: 0},
+    				{ text: '01:00', value: '2017-01-01 01:00:00', id: 1},
+    				{ text: '02:00', value: '2017-01-01 02:00:00', id: 2},
+    				{ text: '03:00', value: '2017-01-01 03:00:00', id: 3},
+    				{ text: '04:00', value: '2017-01-01 04:00:00', id: 4},
+    				{ text: '05:00', value: '2017-01-01 05:00:00', id: 5},
+    				{ text: '06:00', value: '2017-01-01 06:00:00', id: 6},
+    				{ text: '07:00', value: '2017-01-01 07:00:00', id: 7},
+    				{ text: '08:00', value: '2017-01-01 08:00:00', id: 8},
+    				{ text: '09:00', value: '2017-01-01 09:00:00', id: 9},
+    				{ text: '10:00', value: '2017-01-01 10:00:00', id: 10},
     		
     			]
-=======
 
-    	name:'dashboard',
-    	data(){
-    		return {
-    			citas : [],
-                    id_cita: '',
-                calendario_id: '',
-                tipo_id: '',
-                fecha_inicio: '',
-                fecha_final: '',
-                cliente_nombre: '',
-                cliente_telefono: '',
-                cliente_email: ''
->>>>>>> 14f851d5363974ca113dbdfc82026e08a090a463
     		}
     	},
     	mounted(){
@@ -163,14 +150,15 @@ var id_count = 0;
 
     			var dateformat = new Date(this.fecha_inicio);       			
     			var fecha_final = this.addMinutes(dateformat,servicio.duration);
-    			var month = fecha_final.getMonth() < 10 ? '0'+fecha_final.getMonth() : fecha_final.getMonth();
-    			var day = fecha_final.getDay() < 10 ? '0'+fecha_final.getDay() : fecha_final.getDay();
-    			var year = fecha_final.getFullYear();
-    			var minute = fecha_final.getMinutes() < 10 ? '0'+fecha_final.getMinutes() : fecha_final.getMinutes();
-    			var hora = fecha_final.getHours() < 10 ? '0'+fecha_final.getHours() : fecha_final.getHours();
-    			var segundo = fecha_final.getSeconds() < 10 ? '0'+fecha_final.getSeconds() : fecha_final.getSeconds();
+    			var month = fecha_final.getMonth() < 9 ? '0'+ (fecha_final.getMonth()+1) : (fecha_final.getMonth()+1);
+    			var day = fecha_final.getDay() < 9 ? '0'+(fecha_final.getDay()+1) : (fecha_final.getDay()+1);
+    			var year = fecha_final.getFullYear().toString();
+    			var minute = fecha_final.getMinutes() < 9 ? '0'+(fecha_final.getMinutes()+1) : (fecha_final.getMinutes()+1);
+    			var hora = fecha_final.getHours() < 9 ? '0'+(fecha_final.getHours()+1) : ( fecha_final.getHours()+1);
+    			var segundo = fecha_final.getSeconds() < 9 ? '0'+(fecha_final.getSeconds()+1) : (fecha_final.getSeconds()+1);
 
     			fecha_final = year + "-" + month + "-" + day +" " + hora +":"+ minute +":"+ segundo;
+                console.log(month);
     			console.log(fecha_final);
     			//var parse_endDate = 
     			//console.log(fecha_final.toISOString());
@@ -260,7 +248,7 @@ var id_count = 0;
     		fetchDatas : function(){
     		
                 var thisObj = this;
-    			this.$http.get('http://192.168.0.14/Sista/public/api/v1/dashboard?token='+localStorage.getItem('token')).then(
+    			this.$http.get('dashboard?token='+localStorage.getItem('token')).then(
     				//success
     				function(response){
     					this.citas = response.data;
@@ -293,7 +281,12 @@ var id_count = 0;
                                     thisObj.$router.push('admin');
 
                                 }
-                            }
+                            }break;
+
+                            case 404 : {
+                                       localStorage.removeItem('token');
+                                        thisObj.$router.push('admin');
+                            }break;
                         }    
     				});
     		}
