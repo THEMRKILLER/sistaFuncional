@@ -9,6 +9,7 @@
   <div id="calendar"></div>
 </div>		
 
+<!-- INICIO MODAL -->
 
 <div id="calendarModal" class="modal fade">
 <div class="modal-dialog">
@@ -65,8 +66,28 @@
       </div>
 </div>
 </div>
+<!-- FIN MODAL -->
 
-
+<!-- segundo modal -->
+	<div id="segundoModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" id="eventContent" title="Event Details">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">cerrar</span></button>
+                <h4 id="modalTitle" class="modal-title"></h4>
+                Hora Inicio <span id="startTime"></span><br>
+                Hora fin <span id="endTime"></span><br>
+                ID <span id="idEvento"></span><br>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div> 
+<!-- fin segundo modal -->
 	</div>
 </template>	
 
@@ -213,7 +234,27 @@
             	//$('#modalBody').html(event.description);
             	//$('#eventUrl').attr('href',event.url);
             	$('#calendarModal').modal('show');
+            	$('.modal').on('hidden.bs.modal', function(){ 
+					$(this).find('form')[0].reset(); //para borrar todos los datos que tenga los input, textareas, select.
+					$("label.error").remove();  //lo utilice para borrar la etiqueta de error del jquery validate
+	});
         },
+        	//FUNCION PARA MOSTRAR LOS DATOS DE UN EVENTO CREADO
+
+        	eventClick: function(event, jsEvent, view, start, end){
+        		//var formDate = $.fullCalendar.formatDate(event.start, 'MM-dd-yyyy');
+        		$('#modalTitle').html(event.title);
+        		//$("#startTime").html(formDate);
+            	//$("#endTime").html(event.end);
+            	$('#idEvento').html(event.id);
+        		//$('modalBody').html(event.id);
+        		//$('#eventLink').attr('href', event.url);
+            	//$("#eventContent").dialog({ modal: true, title: event.title });
+            	$('#segundoModal').modal();
+        		//alert('Event '+calEvent.title);
+        		//console.log(calEvent.title);
+        	},
+
             header: {
                 left: 'prev,next today',
                 center: 'title',
