@@ -53,6 +53,8 @@ const routes = [
   { path: '/admin', component: require('components/Login.vue') },
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
   { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
+  { path: '/redactar', component: require('components/Articulo.vue'),name: 'auth-required' },
+
   { path: '*', component: require('components/NotFound.vue') }
 
   ]

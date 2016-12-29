@@ -1,0 +1,160 @@
+<style>
+
+img {
+  width: 30%;
+  margin: auto;
+  display: block;
+  margin-bottom: 10px;
+  height: 30%;
+}
+#editor{
+	height: 40%;
+}
+</style>
+<template>
+<div>
+
+
+ <div class="form-group">
+    <label for="email">Titulo</label>
+    <input columns="10" type="text" class="form-control" id="titulo" v-model="titulo" placeholder="Ponle un título a tu artículo">
+  </div>
+  <div class="form-group">
+    <label for="email">Resumen</label>
+    <textarea type="text" class="form-control" id="resumen" v-model="resumen" placeholder="Redacta brevemente un resumen del artículo que vas a escribir">
+  </div>
+  <div class="form-group">
+    <label for="email">Imagen de carátula</label>
+
+     <div v-if="!image">
+     	<label for="email">Selecciona una imagen</label>
+		<input type="file" v-on:change="onFileChange">
+  	</div>
+  	<div v-else align="center">
+    	<img :src="image" />
+    	<button  v-on:click="removeImage" class="btn btn-info btn-md">Eliminar imagen</button>
+  </div>
+  </div>
+
+<div align="center"><button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo <i class="fa fa-cloud-upload" aria-hidden="true"></i></button> </div>
+<br>
+
+<div v-if="!articulo_status_neutral">
+	<div v-if="articulo_status_creando" class="alert alert-info">
+		<h4>
+			Creando articulo ... 
+			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+		</h4>
+	</div>
+	<div v-if="articulo_status_success" class="alert alert-success">
+		<h4>
+			      			El articulo se ha creado de manera exitosa, lo estamos redireccionando al articulo ...
+				        	<i class="fa fa-check"></i>
+		</h4>
+	</div>
+	<div v-if="articulo_status_error" class="alert alert-danger">
+		<h4>
+			      			Error creando el servicio <i class="fa fa-times"></i>
+			      			<ul>
+			      				<li v-for="articulo_error_message in error_articulo">
+			      					{{error_articulo}}
+			      				</li>
+			      			</ul>
+				        	
+		</h4>
+	</div>
+</div>
+<textarea name="editor" id="editor"></textarea>
+<div></div>
+<br>
+<div align="center"><button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo <i class="fa fa-cloud-upload" aria-hidden="true"></i></button> </div>
+</div>
+
+
+</template>
+<script>
+
+export default {
+  name: 'hello',
+  mounted(){
+  	 this.editor  = CKEDITOR.replace( 'editor');
+  	 var client_sizew = $( window ).height();
+	this.editor.config.height = client_sizew * 0.5;
+  },
+  data () {
+    return {
+    	titulo : '',
+    	resumen : '',
+    	 image: '',
+    	 caratula : null,
+    	 editor : null,
+    	 articulo_status_neutral : true,
+    	 articulo_status_success : false,
+    	 articulo_status_error : false,
+    	 articulo_status_creando : false,
+    	 articulo_error_message : ''
+
+    }
+  },
+  methods: {
+  	onFileChange : function (e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+
+     this.caratula = files[0];
+      this.createImage(files[0]);
+
+    },
+    createImage : function(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    removeImage: function (e) {
+      this.image = '';
+    },
+    storeArticulo : function(){
+    	this.articulo_status_error = false;
+    	this.articulo_status_success = false;
+    	this.articulo_status_neutral = false;
+    	this.articulo_status_creando = true;
+
+    	var datas_send = new FormData();
+    	datas_send.append('titulo',this.titulo);
+    	datas_send.append('resumen',this.resumen);
+    	datas_send.append('caratula',this.caratula);
+    	datas_send.append('contenido',CKEDITOR.instances.editor.getData());
+
+
+
+    	//console.log(this.caratula);
+    	//return;
+
+    	this.$http.post('articulo?token='+localStorage.getItem('token'),datas_send).then(
+    		//success
+    		function(response){
+    			this.articulo_status_success = true;
+
+    			console.log(response.data);
+    		},
+    		//error
+    		function(response){
+
+    			this.articulo_status_error = true;
+    			this.error_articulo = response.data.errors;
+    		}
+    		);
+    }
+  }
+}
+</script>
+
+</script>
+
