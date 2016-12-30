@@ -42,7 +42,7 @@
         <div id="modalToEdit" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                    <div class="modal-header" id="eventContent" title="Event Details">
                         {{editEvent}}
                     </div>
                     <div id="modalBody" class="modal-body"></div>
@@ -79,7 +79,7 @@
                     <div id="modalToDelete" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                    <div class="modal-header" id="eventContent" title="Event Details">
                         ¿Está seguro de eliminar ?
                     </div>
                     <div id="modalBody" class="modal-body"></div>

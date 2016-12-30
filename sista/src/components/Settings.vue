@@ -18,8 +18,8 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a data-toggle="tab" href="#servicios" v-on:click="ClickHorario = !ClickHorario">Servicios</a></li>
-        <li><a data-toggle="tab" href="#horarios" v-on:click="ClickHorario = !ClickHorario">Horarios</a></li>
+        <li ><a data-toggle="tab" href="#servicios" v-on:click="ClickHorario = !ClickHorario">Servicios</a></li>
+        <li class="active"><a data-toggle="tab" href="#horarios" v-on:click="ClickHorario = !ClickHorario">Horarios</a></li>
           </ul>
         </li>
       </ul>      
@@ -38,7 +38,7 @@
   <!-- VISTA DE LOS HORARIOS -->
   <div id="horarios" class="tab-pane fade">
     <h3>Ajustar Horarios</h3>
-    <h1>.|.</h1>
+    <horario></horario>
   </div>
  
 </div>
