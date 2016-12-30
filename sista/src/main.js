@@ -13,6 +13,7 @@ import './assets/bootstrap/css/bootstrap.css'
 import './assets/css/fullcalendar.min.css'
 
 Vue.component('servicios', require('components/Servicios.vue'));
+Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
 Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
@@ -53,8 +54,9 @@ const routes = [
   { path: '/admin', component: require('components/Login.vue') },
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
   { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
-  { path: '/redactar', component: require('components/Articulo.vue'),name: 'auth-required' },
-
+  { path: '/redactar', component: require('components/Redactador.vue'),name: 'auth-required' },
+  { path: '/articulo/:id', component: require('components/Articulo.vue')},
+  { path: '/articulos', component: require('components/Articulos.vue')},
   { path: '*', component: require('components/NotFound.vue') }
 
   ]
