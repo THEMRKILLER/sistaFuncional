@@ -14,6 +14,8 @@ import './assets/bootstrap/css/bootstrap.css'
 import './assets/css/fullcalendar.min.css'
 
 Vue.component('servicios', require('components/Servicios.vue'));
+Vue.component('horario', require('components/Horario.vue'));
+
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
