@@ -18,9 +18,11 @@
           <div class="panel-body" align="center">
               <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
                   <thead>
-                      <tr>
+                      <tr>                      
                           <th>Servicio</th>
                           <th>Duración</th>
+                          <th></th>
+                          <th></th>
                       </tr>
                   </thead>
                   <tbody>                  
@@ -42,7 +44,7 @@
         <div id="modalToEdit" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                    <div class="modal-header" id="eventContent" title="Event Details">
                         {{editEvent}}
                     </div>
                     <div id="modalBody" class="modal-body"></div>
@@ -79,7 +81,7 @@
                     <div id="modalToDelete" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                    <div class="modal-header" id="eventContent" title="Event Details">
                         ¿Está seguro de eliminar ?
                     </div>
                     <div id="modalBody" class="modal-body"></div>

@@ -18,8 +18,7 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a data-toggle="tab" href="#servicios" v-on:click="ClickHorario = !ClickHorario">Servicios</a></li>
-        <li><a data-toggle="tab" href="#horarios" v-on:click="ClickHorario = !ClickHorario">Horarios</a></li>
+        <!-- DATOS DEL NAVBAR -->
           </ul>
         </li>
       </ul>      
@@ -27,21 +26,30 @@
   </div>
 </nav>
 
-<div class="panel panel-default" id="hide_s">
-  <div id="servicios" class="panel-heading" v-if="ClickHorario">
-    <transition name="slide-fade">
-      <h3>Servicios</h3>
-    </transition>
-    <servicios></servicios>
+<ul class="nav nav-tabs nav-justified" >
+      <li class="active"><a data-toggle="tab" href="#servicios" >Servicios</a></li>
+      <li><a data-toggle="tab" href="#horarios" >Horarios</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="servicios" class="tab-pane fade in active">
+      <div class="panel panel-default">
+      <div id="servicios" class="panel-heading">
+        <h3>Servicios</h3>
+    
+        <servicios></servicios>
    
+      </div>
+      </div>
+    </div>
+
+    <!-- segunda vista -->
+    <div id="horarios" class="tab-pane fade">
+    <div class="panel panel-default">
+      <h3>Ajustar Horarios</h3>
+      <h1>.|.</h1>
+      </div>
+    </div>
   </div>
-  <!-- VISTA DE LOS HORARIOS -->
-  <div id="horarios" class="tab-pane fade">
-    <h3>Ajustar Horarios</h3>
-    <h1>.|.</h1>
-  </div>
- 
-</div>
 
 </div>
 
@@ -51,30 +59,9 @@
 export default {
   name: 'hello',
   data () {
-    return {
-      el: '#hide_s',
-      ClickHorario: true,
-      //showServicio: true
+    return {      
     }
     
     },
-    /*Ext.define('Override.tab.Bar',{
-      override: 'Ext.tab.Panel',
-      initialize: function(){
-        var me = this;
-
-        me.callParent();
-        me.on({
-          scope: me,
-          delegate : '> component',
-          disabledchange : 'onItemDisabledChange'
-        });
-      },
-      onItemDisabledChange : function(component, newValue){
-        var tab = component.tab;
-        tab.setDisabled(newValue);  
-      }
-    });
-    */
 }
 </script>
