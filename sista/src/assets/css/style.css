@@ -20,6 +20,12 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+.tbserv{
+    font-family: 'Segoe UI';    
+    color: #000000;
+    font-size: 300;
+    font-size: 16px;
+}
 h1, h2, h3, h4, h5, h6
 {
 	font-family: 'Raleway', sans-serif;

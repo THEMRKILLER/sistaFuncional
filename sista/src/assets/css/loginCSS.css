@@ -3,7 +3,7 @@ body, html {
     background-repeat: no-repeat;
     background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
     */
-    /*background-image: url("../img/backgroun.jpg");*/
+    background-image: url("../img/backgroun.jpg");
     background-repeat: no-repeat;
     background-color: #FFFFFF;
 }

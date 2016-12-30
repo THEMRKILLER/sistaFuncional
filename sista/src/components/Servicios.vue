@@ -7,38 +7,65 @@
 </style>
 <template>
 	<div id="servicios_root">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="tablaServicios">
 		  <div class="panel-heading">
-		    <h3 class="panel-title">Tabla de servicios</h3>
-		    <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#servicio_modal">Agregar servicio</button>
+		    <h3 class="panel-title tbserv">                
+                Tabla de servicios</h3>                
 		  </div>
-		  <div class="panel-body" align="center">
-		  		<ul class="list-group" v-if="servicios.length > 0">
-		  			<li v-for="servicio in servicios" class="list-group-item">
-		  				Nombre : {{servicio.nombre}}
-		  				<br>
-		  				Duración : {{servicio.duracion}} minutos
-		  			</li>
-				</ul>
-				<ul v-else>
-					<li>No hay servicios registrados</li>
-				</ul>
-		  </div>
+          <div class="col-md-10 col-md-offset-10">
+                    <button class="btn btn-primary btn-md glyphicon glyphicon-plus" data-toggle="modal" data-target="#servicio_modal">Añadir servicio</button>     
+                </div>
+          <div class="panel-body" align="center">
+              <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
+                  <thead>
+                      <tr>
+                          <th>Servicio</th>
+                          <th>Duración</th>
+                      </tr>
+                  </thead>
+                  <tbody>                  
+                      <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
+                          <td>{{servicio.nombre}}</td> 
+                          <td>{{servicio.duracion}}</td>
+                          <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
+                          <button type="button" class="btn btn-danger glyphicon glyphicon-remove" title="Eliminar servicio" data-toggle="modal" href="#modalDelete"></button>
+                      </tr>
+                      <tr v-else>
+                          <li>No hay servicios registrados</li>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
 		</div>
+
+            <!-- modal to show -->
+        <div id="modalToEdit" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                        {{editEvent}}
+                    </div>
+                    <div id="modalBody" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </div>
+                </div>
+        </div> 
+<!-- modal to show -->
+
 
 			<!--Modal para agregar servicio -->
 			<div id="servicio_modal" class="modal fade" role="dialog">
 			  <div class="modal-dialog">
-
 			    <!-- Modal content-->
 			    <div class="modal-content">
 			      <div class="modal-header">
-
 			        <button type="button" class="close" data-dismiss="modal" v-on:click="cancelarRegistro">&times;</button>
 			        <h4 class="modal-title">Registar Servicio</h4>
 			      </div>
-			      <div class="modal-body">
-			        
+			      <div class="modal-body">			 
 			        <div class="form-group">
     						<label for="email">Nombre del Servicio:</label>
     						<input type="text" class="form-control" name="nombre" v-model="nombre">
@@ -47,7 +74,23 @@
     						<label for="email">Duración del Servicio (minutos) :</label>
     						<input type="number" min="1" class="form-control" name="duracion" v-model="duracion">
   					</div>
-
+<!-- MODAL PARA ELIMINAR -->
+                    
+                    <div id="modalToDelete" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="eventContent" title="Event Details" v-model="editEvent">
+                        ¿Está seguro de eliminar ?
+                    </div>
+                    <div id="modalBody" class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-danger">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+        </div> 
+<!-- MODAL PARA ELIMINAR -->
 
 
 			      </div>
@@ -105,8 +148,8 @@
 
     	},
 
-    	data(){
-    		return{
+    	data(){            
+    		return{                
     			nombre: '',
     			duracion : 1,
     			registro_estado_neutro : true,
@@ -114,7 +157,8 @@
     			registro_estado_exitoso : false,
     			registro_estado_error : false,
     			registro_estado_exitoso_name : '',
-
+                editEvent: '',
+                editTimeEvent: '',
     			error_servicio : '',
     			servicios  : []
     		}
@@ -207,7 +251,8 @@
         		this.duracion = 1;
         		this.registro_estado_neutro = true;
 
-        	}
+        	},
+            
         }
     }
 </script>
