@@ -40,10 +40,9 @@
 
 </template>
 
-
 <script>
+import '../assets/js/loginjs.js';
 import '../assets/css/loginCSS.css'
-
     export default {
     	data : function(){
     		return	{

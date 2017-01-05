@@ -7,15 +7,16 @@ import VeeValidate, { Validator } from 'vee-validate';
 //import VueLocalStorage from 'vue-localstorage';
 //Vue.use(VueLocalStorage)
 
-
-import './assets/css/font-awesome.min.css'
-import './assets/css/style.css'
-import './assets/bootstrap/css/bootstrap.css'
-import './assets/css/fullcalendar.min.css'
+import './assets/css/style.css';
+import './assets/js/jquery.easing.min.js';
+import './assets/js/custom.js';
+import './assets/css/font-awesome.min.css';
+//import './assets/bootstrap/css/bootstrap.min.css'
+import './assets/css/fullcalendar.min.css';
+import './assets/css/jquery-confirm.css';
 
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
-
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
@@ -27,6 +28,7 @@ window.$ = $;
 
 
 import 'bootstrap'
+import 'jquery-confirm'
 import 'fullcalendar'
 
 import App from 'components/Header'

@@ -1,4 +1,4 @@
-/*
+
 (function ($) {
     
     // Add smooth scrolling to all links in navbar
@@ -22,4 +22,3 @@
     });
     
 })(jQuery);
-*/

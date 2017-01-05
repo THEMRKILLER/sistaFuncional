@@ -21,16 +21,20 @@
                       <tr>                      
                           <th>Servicio</th>
                           <th>Duración</th>
-                          <th></th>
-                          <th></th>
+                          <th>Editar</th>
+                          <th>Eliminar</th>
                       </tr>
                   </thead>
                   <tbody>                  
                       <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
                           <td>{{servicio.nombre}}</td> 
                           <td>{{servicio.duracion}}</td>
-                          <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
-                          <button type="button" class="btn btn-danger glyphicon glyphicon-remove" title="Eliminar servicio" data-toggle="modal" href="#modalDelete"></button>
+                          <td>
+                          <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
+                          </td>
+                          <td>
+                          <button v-on:click="deleteTheEvent(servicio.id)" type="button" class="btn btn-danger" title="Eliminar servicio" data-toggle="modal" href="#confirmOverlay">X</button>
+                          </td>
                       </tr>
                       <tr v-else>
                           <li>No hay servicios registrados</li>
@@ -45,9 +49,16 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header" id="eventContent" title="Event Details">
-                        {{editEvent}}
+                        Editar Servicio <b>{{editNameEvent}}</b>
                     </div>
-                    <div id="modalBody" class="modal-body"></div>
+                    <div id="modalBody" class="modal-body">
+                        <label>Nombre del Servicio:</label>
+                        <input type="text" class="form-control" name="nombre" :value="editNameEvent">
+                    </div>
+                    <div class="modal-body">
+                            <label>Duración del Servicio (minutos) :</label>
+                            <input type="number" class="form-control" name="duracion" :value="editTimeEvent">
+                    </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                             <button class="btn btn-primary">Guardar cambios</button>
@@ -57,6 +68,22 @@
         </div> 
 <!-- modal to show -->
 
+<!-- MODAL DELETE -->
+
+    <div id="confirmOverlay" class="modal fade">
+    <div id="confirmBox" class="modal-content">
+
+        <h1>¿Está seguro que desea eliminar el servicio {{deleteNameEvent}}?</h1>
+        <p>El servicio será eliminado permanentemente de la tabla</p>
+
+        <div id="confirmButtons">
+            <a class="button blue" href="#">Sí<span></span></a>
+            <a class="button gray" href="#">No<span></span></a>
+        </div>
+    </div>
+</div>
+    
+<!-- MODAL DELETE -->
 
 			<!--Modal para agregar servicio -->
 			<div id="servicio_modal" class="modal fade" role="dialog">
@@ -76,24 +103,6 @@
     						<label for="email">Duración del Servicio (minutos) :</label>
     						<input type="number" min="1" class="form-control" name="duracion" v-model="duracion">
   					</div>
-<!-- MODAL PARA ELIMINAR -->
-                    
-                    <div id="modalToDelete" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" id="eventContent" title="Event Details">
-                        ¿Está seguro de eliminar ?
-                    </div>
-                    <div id="modalBody" class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-danger">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-        </div> 
-<!-- MODAL PARA ELIMINAR -->
-
 
 			      </div>
 			      <div></div>
@@ -145,13 +154,10 @@
 
     	mounted(){
     		this.fetchDatas();
-
-    		
-
     	},
 
     	data(){            
-    		return{                
+    		return{   
     			nombre: '',
     			duracion : 1,
     			registro_estado_neutro : true,
@@ -161,8 +167,11 @@
     			registro_estado_exitoso_name : '',
                 editEvent: '',
                 editTimeEvent: '',
+                editNameEvent: '',
+                deleteNameEvent: '',
     			error_servicio : '',
-    			servicios  : []
+    			servicios  : [],
+                ArregloID: []                
     		}
     	},
         methods : {
@@ -254,7 +263,16 @@
         		this.registro_estado_neutro = true;
 
         	},
-            
+            getElementID: function(id){
+                this.ArregloID = id;
+                //imprimo los ids seleccionados
+                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
+                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
+            },
+            deleteTheEvent: function(id_button) {
+                this.ArregloID = id_button;
+                this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
+    },
         }
     }
 </script>

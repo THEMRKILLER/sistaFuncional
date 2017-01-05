@@ -22,7 +22,7 @@
 				        <li class=""><a href="#service">Services</a></li>
 				        <li class=""><a href="#about">About</a></li>
 				        <li class=""><a href="#testimonial">Testimonial</a></li>
-				        <li class=""><a href="#contact">Contact</a></li>
+				        <li class=""><a href="#citas">Agendar Cita</a></li>
 				      </ul>
 				    </div>
 				</div>
@@ -32,12 +32,12 @@
 				<div class="row">
 					<div class="banner-info">
 						<div class="banner-logo text-center">
-							<img src="../assets/img/logo.png" class="img-responsive">
+							<img src="../assets/img/logo.png" class="img-responsive" style="width: 200px; ">
 						</div>
 						<div class="banner-text text-center">
 							<h1 class="white">Healthcare at your desk!!</h1>
 							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod <br>tempor incididunt ut labore et dolore magna aliqua.</p>
-							<a href="#contact" class="btn btn-appoint">Make an Appointment.</a>
+							<a href="#citas" class="btn btn-appoint">Make an Appointment.</a>
 						</div>
 						<div class="overlay-detail text-center">
 			               <a href="#service"><i class="fa fa-angle-down"></i></a>
@@ -49,7 +49,7 @@
 	</section>
 	<!--/ banner-->
 	<!--service-->
-	<section id="service" class="section-padding">
+	<section id="service" class="section-padding" STYLE="background-color:#FFFFFF">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
@@ -192,7 +192,7 @@
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-6">
 			      <div class="thumbnail"> 
-			      	<img src="../assets/img/doctor1.jpg" alt="..." class="team-img">
+			      	<img src="../assets/img/doctor1.jpg" alt="..." class="team-img" style='width:100%;'>
 			        <div class="caption">
 			          <h3>Jessica Wally</h3>
 			          <p>Doctor</p>
@@ -206,7 +206,7 @@
 			    </div>
 			    <div class="col-md-3 col-sm-3 col-xs-6">
 			      <div class="thumbnail"> 
-			      	<img src="../assets/img/doctor2.jpg" alt="..." class="team-img">
+			      	<img src="../assets/img/doctor2.jpg" alt="..." class="team-img" style='width:100%;'>
 			        <div class="caption">
 			          <h3>Iai Donas</h3>
 			          <p>Doctor</p>
@@ -220,7 +220,7 @@
 			    </div>
 			    <div class="col-md-3 col-sm-3 col-xs-6">
 			      <div class="thumbnail"> 
-			      	<img src="../assets/img/doctor3.jpg" alt="..." class="team-img">
+			      	<img src="../assets/img/doctor3.jpg" alt="..." class="team-img" style='width:100%;'>
 			        <div class="caption">
 			          <h3>Amanda Denyl</h3>
 			          <p>Doctor</p>
@@ -234,7 +234,7 @@
 			    </div>
 			    <div class="col-md-3 col-sm-3 col-xs-6">
 			      <div class="thumbnail"> 
-			      	<img src="../assets/img/doctor4.jpg" alt="..." class="team-img">
+			      	<img src="../assets/img/doctor4.jpg" alt="..." class="team-img" style='width:100%;'>
 			        <div class="caption">
 			          <h3>Jason Davis</h3>
 			          <p>Doctor</p>
@@ -265,7 +265,7 @@
 					</div>
 					<div class="testi-info">
 						<!-- User Image -->
-						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive"></a>
+						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive" style='width:100%;'></a>
 						<!-- User Name -->
 						<h3>Alex<span>Texas</span></h3>
 					</div>
@@ -277,7 +277,7 @@
 					</div>
 					<div class="testi-info">
 						<!-- User Image -->
-						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive"></a>
+						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive" style='width:100%;'></a>
 						<!-- User Name -->
 						<h3>Alex<span>Texas</span></h3>
 					</div>
@@ -289,7 +289,7 @@
 					</div>
 					<div class="testi-info">
 						<!-- User Image -->
-						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive"></a>
+						<a href="#"><img src="../assets/img/thumb.png" alt="" class="img-responsive" style='width:100%;'></a>
 						<!-- User Name -->
 						<h3>Alex<span>Texas</span></h3>
 					</div>
@@ -316,7 +316,7 @@
 	</section>
 	<!--cta-->
 	<!--contact-->
-	<section id="contact" class="section-padding">
+	<section id="citas" class="section-padding">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
@@ -334,34 +334,21 @@
 			      <p><i class="fa fa-phone fa-fw pull-left fa-2x"></i>+1 800 123 1234</p>
 			    </div>
 				<div class="col-md-8 col-sm-8 marb20">
-					<div class="contact-info">
-							<h3 class="cnt-ttl">Having Any Query! Or Book an appointment</h3>
-							<div class="space"></div>
-                            <div id="sendmessage">Your message has been sent. Thank you!</div>
-                            <div id="errormessage"></div>
-							<form action="" method="post" role="form" class="contactForm">
-							    <div class="form-group">
-                                    <input type="text" name="name" class="form-control br-radius-zero" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control br-radius-zero" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control br-radius-zero" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control br-radius-zero" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
-                                    <div class="validation"></div>
-                                </div>
-                                
-								<div class="form-action">
-									<button type="submit" class="btn btn-form">Send Message</button>
-								</div>
-							</form>
-					</div>
+					<div class="container">
+    <div class="row">
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <div class="input-group date" data-provide="#datepicker">
+    				<input type="text" class="form-control">
+    				<div class="input-group-addon">
+        			<span class="glyphicon glyphicon-calendar" v-on:click="ready()"></span>
+    			</div>
+			</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 				</div>
 			</div>
 		</div>
@@ -388,7 +375,7 @@
 							<ul class="quick-info">
 								<li><a href="index.html"><i class="fa fa-circle"></i>Home</a></li>
 								<li><a href="#service"><i class="fa fa-circle"></i>Service</a></li>
-								<li><a href="#contact"><i class="fa fa-circle"></i>Appointment</a></li>
+								<li><a href="#citas"><i class="fa fa-circle"></i>Appointment</a></li>
 							</ul>
 						</div>
 					</div>
@@ -413,13 +400,7 @@
 				<div class="row">
 					<div class="col-md-12 text-center">
 						© Copyright Medilab Theme. All Rights Reserved
-                        <div class="credits">
-                            <!-- 
-                                All the links in the footer should remain intact. 
-                                You can delete the links only if you purchased the pro version.
-                                Licensing information: https://bootstrapmade.com/license/
-                                Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Medilab
-                            -->
+                        <div class="credits">                          
                             Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
                         </div>
 					</div>
@@ -433,17 +414,11 @@
 	</div>
 
 </template>
-	<script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.easing.min.js"></script>    
-    <script src="assets/js/custom.js"></script>
-    <script src="assets/js/loginjs.js"></script>
+	<script src="assets/js/jquery.min.js"></script>    
 
 <script>
-//import './assets/css/bootstrap.css';
-import '../assets/css/style.css';
-import '../assets/js/jquery.easing.min.js';
-import '../assets/js/custom.js';
-import '../assets/js/loginjs.js';
+//import '../assets/css/bootstrap.css';
+//import '../assets/js/loginjs.js';
 
 
     export default {
@@ -452,6 +427,20 @@ import '../assets/js/loginjs.js';
     		return {
     			msg: 'ok'
     		}
+    	},
+    	methods:{
+    		ready:function(){
+    	$('#datetimepicker6').datetimepicker();
+            $('#datetimepicker7').datetimepicker({
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#datetimepicker6").on("dp.change", function (e) {
+                $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepicker7").on("dp.change", function (e) {
+                $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+            });
+	  },
     	}
 
     }
