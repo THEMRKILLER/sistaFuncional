@@ -4,6 +4,10 @@ Vue.use(require('vue-resource'))
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 import VeeValidate, { Validator } from 'vee-validate';
+
+
+import store from './store'
+
 //import VueLocalStorage from 'vue-localstorage';
 //Vue.use(VueLocalStorage)
 
@@ -20,7 +24,7 @@ Vue.component('horario', require('components/Horario.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
-Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
+Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
@@ -33,16 +37,7 @@ import 'fullcalendar'
 
 import App from 'components/Header'
 
-const storage = {
-  localStorage: {
-      token: {
-        type: String,
-        default: {
-          token: ''
-        }
-      }
-    }
-}
+
 const config = {
     errorBagName: 'errors', // change if property conflicts.
     delay: 0,
@@ -50,6 +45,8 @@ const config = {
     messages: null,
     strict: true
 };
+
+
 
 Vue.use(VeeValidate, config);
 
@@ -96,9 +93,8 @@ router.beforeEach((r, redirect, next) => {
 
 
 const app = new Vue({
-    storage,
+    store,
     router,
-
     components : {App}
 }).$mount('#app')
 

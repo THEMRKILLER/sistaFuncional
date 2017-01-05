@@ -200,7 +200,7 @@
     			var day = fecha_final.getUTCDate() < 10 ? '0'+(fecha_final.getUTCDate()) : (fecha_final.getUTCDate());
     			var year = fecha_final.getFullYear().toString();
     			var minute = fecha_final.getMinutes() < 9 ? '0'+(fecha_final.getMinutes()) : (fecha_final.getMinutes());
-    			var hora = fecha_final.getHours() < 9 ? '0'+(fecha_final.getHours()) : ( fecha_final.getHours());
+    			var hora = fecha_final.getHours() < 10 ? '0'+(fecha_final.getHours()) : ( fecha_final.getHours());
     			var segundo = fecha_final.getSeconds() < 9 ? '0'+(fecha_final.getSeconds()) : (fecha_final.getSeconds());
 
     			fecha_final = year + "-" + month + "-" + day +" " + hora +":"+ minute +":"+ segundo;
