@@ -17,14 +17,14 @@ import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
 //import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css';
-import './assets/css/jquery-confirm.css';
+import 'jquery-confirm/css/jquery-confirm.css';
 
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
-Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
+Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;

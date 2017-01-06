@@ -3,6 +3,8 @@
 		<div class="jumbotron">
     		<h1 align="CENTER">Bienvenido USUARIO</h1>    
     		<br>
+                <router-link to="/settings">Settings</router-link>
+
   		</div>
 <div class="panel panel-default">
   <div class="panel-heading">Calendario</div>

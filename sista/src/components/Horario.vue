@@ -73,8 +73,8 @@ export default {
   },
   data () {
     return {
-    		hora_inicial : 7,
-    		hora_final : 20,
+    		hora_inicial : 0,
+    		hora_final : 0,
     		hora_inicial_bind : [],
       		dias : [
 
@@ -155,13 +155,18 @@ export default {
   		  return horas.indexOf(hora) > -1 ? true : false;
 
   	},
-  	actualizarDiasHabiles : function(){
+  	actualizarDiasHabiles : function(event){
+  		$(event.target).attr('disabled',true);
   		var data = {'dias':this.dias,'hora_inicio' : this.hora_inicial, 'hora_final' : this.hora_final};
   		this.$http.post('dias_habiles?token='+localStorage.getItem('token'),data).then(
   			function(response){
+  				$(event.target).attr('disabled',false);
+
   				console.log(response.data);
   			},
   			function(response){
+  				$(event.target).attr('disabled',false);
+
   				console.error(response.data);
   			}
 
@@ -176,7 +181,9 @@ export default {
   		this.$http.get('dias_habiles',{params: {'calendario' : this.$store.state.calendario_id }}).then(
   			//success
   			function(response){
-  				var dias_disponibles = response.data;
+  				var dias_disponibles = response.data.horario;
+  				objThis.hora_inicial = response.data.hora_inicio;
+  				objThis.hora_final = response.data.hora_final;
   				for (var i = 0; i < dias_disponibles.length; i++)
   				{
   					var dia = objThis.buscarPorDia(dias_disponibles[i].dia);
@@ -210,39 +217,59 @@ export default {
   	{
   		start = parseInt(start);
   		end = parseInt(end);
-  		for(start; start <=end; start++) 
-  			if(!this.buscarPorHora(start,horas)) horas.push({'hora' : start , 'disponible' : false});
+  		var horaInLoop = null;
+  		var horasTmp = [];
+  		for(start; start <=end; start++)
+  		{ 
+  			horaInLoop = this.buscarPorHora(start,horas);
+  			if(!horaInLoop) horasTmp.push({'hora' : start , 'disponible' : false});
+  			else horasTmp.push(horaInLoop);
+  		}
+  		horas = horasTmp;
   		return horas;
   	},
+  	sortByKey : function (array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+	},
   	buscarPorHora: function(hora,horas){
   		for (var i = 0; i < horas.length; i++)
-  				if(horas[i].hora == hora ) return true;
+  				if(horas[i].hora == hora ) return horas[i];
   		return false;
   	},
   	updateHorasDisponibildad : function(diaObj,horas_server){
+  				this.updateHorasRange();
   				var objThis = this;
-  				var horasDefault = diaObj.horas;
+  				//var horasDefault = diaObj.horas;
+
   				var flag = false;
   				for (var i = 0; i < horas_server.length; i++) 
   				{
-  				 	for (var j = 0; j < horasDefault.length; j++)
+  			//		console.log("Hora a buscar = " + horas_server[i]);
+  				 	for (var k = 0; k < diaObj.horas.length; k++)
   						{
-  							if(horasDefault[j].hora == horas_server[i] )
+
+  							if(diaObj.horas[k].hora === horas_server[i] )
   							{
-  									horasDefault[i].disponible = true;
+  									diaObj.horas[k].disponible = true;
+  //									console.log("Dia " + diaObj.dia);
+//  									console.log("Activado la hora "+ horasDefault[k].hora );
   									flag = true;
-  									break;
+  								
   							}
   						}
   					if(flag) diaObj.laboral = true;
+  					if(horas_server.length == diaObj.horas.length) diaObj.full = true;
   					flag = false;
   				}
   	},
   	updateHorasRange :function(){
   		var objThis = this;
   		for (var i = 0; i < objThis.dias.length; i++) {
-
   			objThis.dias[i].horas =  this.rangeDisp(objThis.hora_inicial,objThis.hora_final,objThis.dias[i].horas);
+  			objThis.sortByKey(objThis.dias[i].horas, 'hora');
 
   		};
   	}

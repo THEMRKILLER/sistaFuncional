@@ -9,6 +9,9 @@
 	<div id="servicios_root">
 		<div class="panel panel-default" id="tablaServicios">
 		  <div class="panel-heading">
+            <div v-if="updateSuccess" class="alert alert-success">
+                <h5>Datos actulizados correctamente <i class="fa fa-check"></i></h5>
+            </div>
 		    <h3 class="panel-title tbserv">                
                 Tabla de servicios</h3>                
 		  </div>
@@ -21,6 +24,7 @@
                       <tr>                      
                           <th>Servicio</th>
                           <th>Duración</th>
+                          <th>Costo</th>
                           <th>Editar</th>
                           <th>Eliminar</th>
                       </tr>
@@ -28,7 +32,9 @@
                   <tbody>                  
                       <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
                           <td>{{servicio.nombre}}</td> 
-                          <td>{{servicio.duracion}}</td>
+                          <td>{{servicio.duracion}} minutos</td>
+                          <td>{{servicio.costo}} {{servicio.denominacion}}</td>
+
                           <td>
                           <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
                           </td>
@@ -52,16 +58,42 @@
                         Editar Servicio <b>{{editNameEvent}}</b>
                     </div>
                     <div id="modalBody" class="modal-body">
-                        <label>Nombre del Servicio:</label>
-                        <input type="text" class="form-control" name="nombre" :value="editNameEvent">
+
+
+                      <div class="form-group">
+                            <label for="email">Nombre del Servicio:</label>
+                            <input type="text" class="form-control" name="nombre" v-model="editNameEvent">
                     </div>
-                    <div class="modal-body">
-                            <label>Duración del Servicio (minutos) :</label>
-                            <input type="number" class="form-control" name="duracion" :value="editTimeEvent">
+                     <div class="form-group">
+                            <label for="costo">Costo del Servicio:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-dollar"></i></div>
+                                 <input type="number" min="1" class="form-control" name="costo" v-model="editCostEvent">
+                                <div class="input-group-addon">
+                                    <select v-model="editDenominacionEvent">
+                                        <option value="MXN">MXN</option>
+                                        <option value="USD">USD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                
+                    <div class="form-group">
+                        <label for="email">Duración del Servicio (minutos) :</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+                                 <input type="number" min="1" class="form-control" name="duracion" v-model="editTimeEvent">
+                            </div>
+                        </div>
+
                     </div>
+
+
+
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button class="btn btn-primary">Guardar cambios</button>
+                            <button class="btn btn-primary" v-on:click="updateServicio">Guardar cambios</button>
                         </div>
                     </div>
                 </div>
@@ -77,8 +109,8 @@
         <p>El servicio será eliminado permanentemente de la tabla</p>
 
         <div id="confirmButtons">
-            <a class="button blue" href="#">Sí<span></span></a>
-            <a class="button gray" href="#">No<span></span></a>
+            <button class="btn btn-danger" >SI</button>
+            <button class="btn btn-default">No</button>
         </div>
     </div>
 </div>
@@ -99,10 +131,27 @@
     						<label for="email">Nombre del Servicio:</label>
     						<input type="text" class="form-control" name="nombre" v-model="nombre">
   					</div>
-  					<div class="form-group">
-    						<label for="email">Duración del Servicio (minutos) :</label>
-    						<input type="number" min="1" class="form-control" name="duracion" v-model="duracion">
-  					</div>
+                     <div class="form-group">
+                            <label for="costo">Costo del Servicio:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-dollar"></i></div>
+                                 <input type="number" min="1" class="form-control" name="costo" v-model="costo">
+                                <div class="input-group-addon">
+                                    <select v-model="denominacion">
+                                        <option value="MXN">MXN</option>
+                                        <option value="USD">USD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+  				
+                    <div class="form-group">
+                        <label for="email">Duración del Servicio (minutos) :</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+                                 <input type="number" min="1" class="form-control" name="duracion" v-model="duracion">
+                            </div>
+                        </div>
 
 			      </div>
 			      <div></div>
@@ -160,6 +209,8 @@
     		return{   
     			nombre: '',
     			duracion : 1,
+                costo : 0,
+                denominacion : 'MXN',
     			registro_estado_neutro : true,
     			registro_estado_encurso : false,
     			registro_estado_exitoso : false,
@@ -168,10 +219,13 @@
                 editEvent: '',
                 editTimeEvent: '',
                 editNameEvent: '',
+                editCostEvent: '',
+                editDenominacionEvent: '',
                 deleteNameEvent: '',
     			error_servicio : '',
     			servicios  : [],
-                ArregloID: []                
+                ArregloID: [],
+                updateSuccess : false                
     		}
     	},
         methods : {
@@ -224,6 +278,7 @@
         			);
 
         	},
+
         	registrarServicio : function(event){
 
         	$(event.target).attr('disabled',true);
@@ -233,7 +288,7 @@
         	this.registro_estado_encurso = true;
 
 
-        	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion};
+        	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
         	 this.$http.post('tipo?token='+localStorage.getItem('token'),datas_to_server).then(
         	 	//success
         	 	function(response){
@@ -242,7 +297,9 @@
         	 		$(event.target).attr('disabled',false);
         	 		this.registro_estado_exitoso_name = this.nombre;
         	 		this.nombre = '';
-        	 		this.duracion;
+        	 		this.duracion = 0;
+                    this.costo = 0;
+
         	 		this.fetchDatas();
 
 
@@ -263,11 +320,37 @@
         		this.registro_estado_neutro = true;
 
         	},
+            updateServicio : function(event){
+                $(event.target).attr('disabled',true);
+
+                var datas = {'id' : this.editIdEvent,'nombre' : this.editNameEvent, 'duracion' : this.editTimeEvent , 'costo' : this.editCostEvent, 'denominacion' : this.editDenominacionEvent};
+
+                this.$http.put('tipo?token='+localStorage.getItem('token'),datas).then(
+                    //success
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                        this.updateSuccess = true;
+                        $('#modalToEdit').modal('hide');
+                        var thisObj = this;
+                        setTimeout(function() {
+                            thisObj.updateSuccess = false;
+                        }, 5000);
+                        this.fetchDatas();
+                    },
+                    //error
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                    }
+                    );
+            },
             getElementID: function(id){
                 this.ArregloID = id;
                 //imprimo los ids seleccionados
+                this.editIdEvent = id;
                 this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
                 this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
+                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
+                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
             },
             deleteTheEvent: function(id_button) {
                 this.ArregloID = id_button;
