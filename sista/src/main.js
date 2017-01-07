@@ -17,7 +17,7 @@ import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
 //import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css';
-import './assets/css/jquery-confirm.css';
+import 'jquery-confirm/css/jquery-confirm.css';
 
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));

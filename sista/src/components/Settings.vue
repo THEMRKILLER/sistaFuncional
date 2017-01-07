@@ -14,6 +14,10 @@
       <a class="navbar-brand" href="#">
         <img alt="Medilab" src="../assets/img/logo2.png" class="img-responsive">
       </a>
+      <router-link to="/dashboard">Dashboard</router-link>
+      <router-link to="/">Home</router-link>
+
+
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -46,7 +50,7 @@
     <div id="horarios" class="tab-pane fade">
     <div class="panel panel-default">
       <h3>Ajustar Horarios</h3>
-      <h1>.|.</h1>
+      <horario></horario>
       </div>
     </div>
   </div>
