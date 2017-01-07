@@ -109,8 +109,8 @@
         <p>El servicio será eliminado permanentemente de la tabla</p>
 
         <div id="confirmButtons">
-            <button class="btn btn-danger" >SI</button>
-            <button class="btn btn-default">No</button>
+            <button class="btn btn-danger" v-on:click="deleteServicio" >SI</button>
+            <button class="btn btn-default" data-dismiss="modal">No</button>
         </div>
     </div>
 </div>
@@ -331,6 +331,28 @@
                         $(event.target).attr('disabled',false);
                         this.updateSuccess = true;
                         $('#modalToEdit').modal('hide');
+                        var thisObj = this;
+                        setTimeout(function() {
+                            thisObj.updateSuccess = false;
+                        }, 5000);
+                        this.fetchDatas();
+                    },
+                    //error
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                    }
+                    );
+            },
+            deleteServicio : function(event){
+                  $(event.target).attr('disabled',true);
+                var datas = {'id' : this.ArregloID};
+
+                this.$http.delete('tipo?token='+localStorage.getItem('token'),{params : {'id' : this.ArregloID}}).then(
+                    //success
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                        this.updateSuccess = true;
+                        $('#confirmOverlay').modal('hide');
                         var thisObj = this;
                         setTimeout(function() {
                             thisObj.updateSuccess = false;

@@ -1,3 +1,14 @@
+<style>
+.Highlighted a{
+   background-color : Green !important;
+   background-image :none !important;
+   color: White !important;
+   font-weight:bold !important;
+   font-size: 12pt;
+}
+
+
+</style>
 <template>	
 	<div class="container">
 		<div class="jumbotron">
@@ -76,7 +87,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" id="eventContent" title="Event Details">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">cerrar</span></button>
+                <button type="button" class="close" v-on:click="cerrarModalCita" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">cerrar</span></button>
                 <h4 class="modal-title">
                     {{event_selected_servicio}}
                 </h4>
@@ -92,11 +103,27 @@
                 Hora de Inicio : {{event_selected_hora_inicio}}
                 <br>
                 Hora de Finalización : {{event_selected_hora_final}}
+                <div v-if="reagendar">
+                    Fecha:
+                    <p> Fecha: <input type="text" id="datepicker"> </p>
+                    Hora
+                    <select>
+                        <option></option>
+                    </select>
+
+                </div>
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary">Guardar cambios</button>
+            <div class="modal-footer" v-if="!reagendar">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cerrarModalCita">Cerrar</button>
+                <button class="btn btn-warning" v-on:click="activarReagendar">Reagendar</button>
+            </div>
+            <div class="modal-footer" v-else>
+                <button type="button" class="btn btn-default" v-on:click="cerrarModalCita">Cancelar</button>
+                <button class="btn btn-danger">Realizar cambios</button>
+
+
             </div>
         </div>
     </div>
@@ -131,7 +158,8 @@
                 event_selected_cliente_email : '', 
                 event_selected_cliente_telefono  : '',
                 event_selected_servicio : '',
-    			hours:[]
+    			hours:[],
+                reagendar : false
 
     		}
     	},
@@ -145,6 +173,38 @@
             }
         },
     	methods : {
+            activarReagendar : function(){
+                this.reagendar = true;
+                var availableDates = ['2017-01-07','2017-01-09','2017-01-12','2017-01-15'];
+   
+             setTimeout(function() {
+
+                    $( "#datepicker" ).datepicker({
+                       dateFormat: 'yy-mm-dd',
+                      minDate: new Date(), 
+                    beforeShowDay: function(d) {
+                        var ymd = d.getFullYear() +'-';
+                        ymd +=  (d.getMonth()<9) ? ("0"+ (d.getMonth()+1)) : (d.getMonth()+1);
+                        ymd+= "-"; 
+        
+                        if(d.getDate()<10) ymd+="0"+ d.getDate();
+                        else  ymd+=d.getDate();
+        
+                            console.log(ymd+' : '+($.inArray(ymd, availableDates)));
+        
+                        if ($.inArray(ymd, availableDates) != -1) {
+                            return [true, "Highlighted"]; 
+                        } else{
+                                return [true,"",]; 
+                        }
+                    }
+                    });
+
+                }, 50);
+            },
+            cerrarModalCita : function(){
+                this.reagendar = false;
+            },
             servicioHorasDisponibles : function(){
                 this.hours = [];
                 console.log("dia = " + new Date(this.date_selected));

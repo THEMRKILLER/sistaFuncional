@@ -17,8 +17,7 @@ import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
 //import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css';
-import 'jquery-confirm/css/jquery-confirm.css';
-
+import 'jquery-ui/themes/base/all.css'
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
@@ -34,6 +33,7 @@ window.$ = $;
 import 'bootstrap'
 import 'jquery-confirm'
 import 'fullcalendar'
+import 'jquery-ui/ui/widgets/datepicker.js'
 
 import App from 'components/Header'
 
@@ -62,6 +62,27 @@ const routes = [
   { path: '*', component: require('components/NotFound.vue') }
 
   ]
+
+  const datepickerconfig = {
+            closeText: 'Cerrar',
+            prevText: '< Ant',
+           nextText: 'Sig >',
+           currentText: 'Hoy',
+           monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+           monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+           dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+           dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+           dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+           weekHeader: 'Sm',
+           dateFormat: 'dd/mm/yy',
+           firstDay: 1,
+           isRTL: false,
+           showMonthAfterYear: false,
+           yearSuffix: ''
+ };
+
+ $.datepicker.regional['es'] = datepickerconfig;
+ $.datepicker.setDefaults($.datepicker.regional['es']);
 
 export var router = new VueRouter({
     hashbang: false,
