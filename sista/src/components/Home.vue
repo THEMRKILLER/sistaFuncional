@@ -1,7 +1,5 @@
-<template>
-	
+<template>	
 	<div>
-		
 		<!--banner-->
 	<section id="banner" class="banner">
 		<div class="bg-color">
@@ -334,21 +332,17 @@
 			      <p><i class="fa fa-phone fa-fw pull-left fa-2x"></i>+1 800 123 1234</p>
 			    </div>
 				<div class="col-md-8 col-sm-8 marb20">
-					<div class="container">
-    <div class="row">
-        <div class='col-sm-6'>
-            <div class="form-group">
-                <div class="input-group date" data-provide="#datepicker">
-    				<input type="text" class="form-control">
-    				<div class="input-group-addon">
-        			<span class="glyphicon glyphicon-calendar" v-on:click="ready()"></span>
-    			</div>
-			</div>
-            </div>
-        </div>
-    </div>
-</div>
-
+				<div class="alert alert-info fade in alert-dismissable">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+  					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.
+				</div>
+					
+  							<div id="calendar"></div>	
+        					<div></div>
+        					<div><span class="glyphicon glyphicon-stop IndicadorVerde"></span> <span class="LabelIndicador">Alta disponibilidad</span></div>
+        					<div><span class="glyphicon glyphicon-stop IndicadorAmarillo"></span> <span class="LabelIndicador">Poca disponibilidad</span></div>
+        					<div><span class="glyphicon glyphicon-stop IndicadorRojo"></span> <span class="LabelIndicador">Sin disponibilidad</span></div>
+    					
 				</div>
 			</div>
 		</div>
@@ -409,39 +403,164 @@
 		</div>
 	</footer>
 	<!--/ footer-->
+<!-- MODAL -->
+<div id="registrarCitaModal" class="modal fade">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="exampleModalLabel">Agendar una cita</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+<!-- Nombre -->
+            <div class="form-group">
+              <label for="recipient-name" class="form-control-label">Nombre:</label>
+              <input type="text" name="cliente_nombre" class="form-control" id="recipient-name" v-model="cliente_nombre">
+            </div>
+<!-- TELEFONO -->
+            <div class="form-group">
+              <label for="message-text" class="form-control-label">Telefono:</label>
+              <input type="text" name="cliente_telefono" class="form-control" id="recipient-phone" v-model="cliente_telefono">
+            </div>
+<!-- EMAIL -->
+            <div class="form-group">
+              <label for="message-text" class="form-control-label">Correo electrónico:</label>
+              <input type="text" name="cliente_email" class="form-control" id="recipient-email" v-model="cliente_email">
+            </div>
+<!-- SERVICIOS -->
+            <div class="form-group">             
+            <label for="message-text" class="form-control-label">Escoja un servicio</label>
+            	<select class="form-control" v-model="tipo_id">
+            	<option v-for="servicio in servicios" :value="servicio.id">
+            		{{ servicio.nombre }}
+            	</option>
+  					
+				</select>
+            </div>
+<!-- Hora -->
+            <div class="form-group">
+              <label for="message-text" class="form-control-label">Duración:</label>
+				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
+				<option v-for="hour in hours" :value="hour.value">
+					{{ hour.text }}
+				</option>
+  					
+				</select>
+                <select v-else class="form-control" name="fecha_inicio" disabled></select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" v-on:click="">Agendar Cita</button>
+        </div>
+      </div>
+</div>
+</div>
+<!-- FIN MODAL -->
 
 
 	</div>
 
 </template>
-	<script src="assets/js/jquery.min.js"></script>    
+	<script src="assets/js/jquery.min.js"></script>
 
 <script>
-//import '../assets/css/bootstrap.css';
+import 'assets/js/es.js';
 //import '../assets/js/loginjs.js';
 
 
     export default {
-    	name:'home',
+    	name:'home',    	
     	data(){
     		return {
-    			msg: 'ok'
+    			msg: 'ok',
+    			tipo_id: '',
+    			cliente_nombre: '',
+    			cliente_email: '',
+    			cliente_telefono: '',
+    			hora_cita: '',
+    			fecha_inicio: '',
+    			fecha_final: '',
+    			servicios: [],
+    			hours:[]
     		}
     	},
+    	mounted(){    		
+    			this.createCalendar();
+    		},
+    		watch:{
+    			'tipo_id': function(){
+    				this.servicioHorasDisponibles();
+    			}
+    		},
     	methods:{
-    		ready:function(){
-    	$('#datetimepicker6').datetimepicker();
-            $('#datetimepicker7').datetimepicker({
-                useCurrent: false //Important! See issue #1075
-            });
-            $("#datetimepicker6").on("dp.change", function (e) {
-                $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-            });
-            $("#datetimepicker7").on("dp.change", function (e) {
-                $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-            });
+    		createCalendar : function(){
+            $('#calendar').fullCalendar({
+			select: function(start, end, allDay) {
+            	var check = start._d.toJSON().slice(0,10); 
+            	var today = new Date().toJSON().slice(0,10);
+		    	if(check < today){
+        // Previous Day. show message if you want otherwise do nothing.
+                // So it will be unselectable  
+                $('#calendar').fullCalendar('unselect');        		
+        		return false;
+    			}
+    			
+        // Its a right date
+                // Do something
+    			else{
+    				$('#registrarCitaModal').modal('show');
+  					$('modal').on('hidden.bs.modal', function(){
+  					$('label.error').remove();
+  				});
+    			}
+  			},
+  			servicioHorasDisponibles : function(){
+                this.hours = [];
+                console.log("dia = " + new Date(this.date_selected));
+                var dia = new Date(this.date_selected).toISOString();
+                console.log(dia);
+                
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
+                    //success
+                    function(response){
+                        this.hours = response.data;
+                    },
+                    //error
+                    function(response){
+                        this.hours = []
+                    }
+
+                    );
+            },
+  			dayClick: function(date, jsEvent, view){
+  				
+  				
+  			},
+
+            header: {
+                left: 'prev, next, month',
+                center: 'title',
+                right: ''
+            },
+            
+            navLinks: false, // can click day/week names to navigate views
+            selectable: true,
+            selectHelper: true,            
+            dayRender: function (date, cell) {
+                        //cell.css("background-color", "#FF6961");
+                        },
+            editable: true,
+            eventLimit: true, // allow "more" link when too many events
+            events: this.citas
+            
+        })
+
+            }
 	  },
     	}
-
-    }
 </script>
