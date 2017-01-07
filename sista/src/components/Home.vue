@@ -442,7 +442,7 @@
             </div>
 <!-- Hora -->
             <div class="form-group">
-              <label for="message-text" class="form-control-label">Duración:</label>
+              <label for="message-text" class="form-control-label">Hora:</label>
 				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
 				<option v-for="hour in hours" :value="hour.value">
 					{{ hour.text }}
@@ -453,9 +453,36 @@
             </div>
           </form>
         </div>
+<!--  ALERTAS DE CREACION CITA -->
+		<div></div>
+			      <div v-show="agendarCita_estado_neutro == false">
+			      	<div v-if="agendarCita_estado_encurso" class="alert alert-info">
+			      		<h4>
+			      			Registrando servicio 
+			      			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+						</h4>
+			      	</div>
+			      	<div v-if="agendarCita_estado_exitoso" class="alert alert-success">
+			      		<h4>
+			      			La cita se ha creado correctamente.
+				        	<i class="fa fa-check"></i>
+						</h4>
+			      	</div>
+			      	<div v-if="agendarCita_estado_error" class="alert alert-danger">
+			      		<h4>
+			      			No se ha podido crear la cita <i class="fa fa-times"></i>
+			      			<ul>
+			      				<li v-for="error_ag in error_agendarCita">
+			      					{{error_ag}}
+			      				</li>
+			      			</ul>	
+						</h4>
+			      	</div>
+			      </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" v-on:click="">Agendar Cita</button>
+          <button type="button" class="btn btn-primary" v-on:click="registrarAgendarCita">Agendar Cita</button>
         </div>
       </div>
 </div>
@@ -478,6 +505,11 @@ import 'assets/js/es.js';
     	data(){
     		return {
     			msg: 'ok',
+    			agendarCita_estado_neutro : true,
+    			agendarCita_estado_encurso : false,
+    			agendarCita_estado_exitoso : false,
+    			agendarCita_estado_error : false,
+    			error_agendarCita: '',
     			tipo_id: '',
     			cliente_nombre: '',
     			cliente_email: '',
@@ -560,7 +592,42 @@ import 'assets/js/es.js';
             
         })
 
-            }
+            },
+            registrarAgendarCita : function(event){
+
+        	$(event.target).attr('disabled',true);
+        	this.agendarCita_estado_neutro = false;
+        	this.agendarCita_estado_exitoso = false;
+        	this.agendarCita_estado_error = false;
+        	this.agendarCita_estado_encurso = true;
+
+
+        	 var datas_to_server = {'nombre' : this.cliente_nombre,'email' : this.cliente_email, 'telefono' : this.cliente_telefono,'hora' : this.hora_cita};
+        	 this.$http.post('tipo?token='+localStorage.getItem('token'),datas_to_server).then(
+        	 	//success
+        	 	function(response){
+        	 		this.registro_estado_exitoso = true;
+        	 		this.registro_estado_encurso = false;
+        	 		$(event.target).attr('disabled',false);
+        	 		this.registro_estado_exitoso_name = this.cliente_nombre;
+        	 		this.cliente_nombre = '';
+        	 		this.cliente_email = '';
+                    this.hora_cita = '';
+
+        	 		this.fetchDatas();
+
+
+        	 	},
+        	 	//error
+        	 	function(response){
+        	 		this.registro_estado_error = true;
+        	 		this.registro_estado_encurso = false;
+        	 		this.error_servicio = response.data.error;
+        	 		$(event.target).attr('disabled',false);
+        	 	}
+        	 	);
+
+        	},
 	  },
     	}
 </script>

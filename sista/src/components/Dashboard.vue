@@ -51,7 +51,7 @@
             </div>
 <!-- Hora -->
             <div class="form-group">
-              <label for="message-text" class="form-control-label">Duración:</label>
+              <label for="message-text" class="form-control-label">Hora:</label>
 				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
 				<option v-for="hour in hours" :value="hour.value">
 					{{ hour.text }}
