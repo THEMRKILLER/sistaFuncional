@@ -173,6 +173,7 @@ export default {
     	this.$http.post('articulo?token='+localStorage.getItem('token'),datas_send).then(
     		//success
     		function(response){
+          
     			this.articulo_status_creando = false;
     			this.articulo_status_success = true;
           var thisObj = this;

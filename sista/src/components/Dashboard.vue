@@ -1,11 +1,26 @@
 <style>
-.Highlighted a{
-   background-color : Green !important;
+.disponibilidad-baja a{
+   background-color : #FF6961 !important;
    background-image :none !important;
    color: White !important;
    font-weight:bold !important;
    font-size: 12pt;
 }
+.disponibilidad-media a{
+   background-color : #FFB347 !important;
+   background-image :none !important;
+   color: White !important;
+   font-weight:bold !important;
+   font-size: 12pt;
+}
+.disponibilidad-alta a{
+   background-color : #779ECB !important;
+   background-image :none !important;
+   color: White !important;
+   font-weight:bold !important;
+   font-size: 12pt;
+}
+
 
 
 </style>
@@ -52,7 +67,7 @@
             </div>
 <!-- SERVICIOS -->
             <div class="form-group">             
-            <label for="message-text" class="form-control-label">Escoja un servicio</label>
+            <label for="message-text" class="form-control-label">Servicio</label>
             	<select class="form-control" v-model="tipo_id">
             	<option v-for="servicio in servicios" :value="servicio.id">
             		{{ servicio.nombre }}
@@ -104,8 +119,32 @@
                 <br>
                 Hora de Finalización : {{event_selected_hora_final}}
                 <div v-if="reagendar">
-                    Fecha:
-                    <p> Fecha: <input type="text" id="datepicker"> </p>
+                        <div class="form-group">             
+                            <label for="message-text" class="form-control-label">Servicio</label>
+                            <select class="form-control" v-model="event_selected_servicio_id">
+                            <option v-for="servicio in servicios" :value="servicio.id">
+                                {{ servicio.nombre }}
+                            </option>
+                    
+                            </select>
+                        </div>
+                        <!-- Hora -->
+                        <div class="form-group">
+                            <label for="message-text" class="form-control-label">Duración:</label>
+                                <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
+                                    <option v-for="hour in hours" :value="hour.value">
+                                        {{ hour.text }}
+                                    </option>
+                                </select>
+                            <select v-else class="form-control" name="fecha_inicio" disabled></select>
+                        </div> 
+                    
+                     <div class="form-group">             
+                            <label for="message-text" class="form-control-label">Fecha</label>
+                            <input type="text" id="datepicker" class="form-control" :value="event_selected_fecha">
+                        </select>
+                    </div>
+                    
                     Hora
                     <select>
                         <option></option>
@@ -154,12 +193,15 @@
                 servicios : [],
                 event_selected_cliente_nombre : '',
                 event_selected_hora_inicio : '',
+                event_selected_fecha : new Date(),
                 event_selected_hora_final : '',
                 event_selected_cliente_email : '', 
                 event_selected_cliente_telefono  : '',
                 event_selected_servicio : '',
+                event_selected_servicio_id : 0,
     			hours:[],
-                reagendar : false
+                reagendar : false,
+                disponibilidad_servicio : []
 
     		}
     	},
@@ -169,17 +211,45 @@
     	},
         watch : {
             'tipo_id' : function(){
-                this.servicioHorasDisponibles();
-            }
+                var tipo_id = this.tipo_id;
+                var fecha = this.date_selected;
+                this.servicioHorasDisponibles(tipo_id,fecha);
+            },
+            'event_selected_servicio_id' : function(){
+                var tipo_id = this.event_selected_servicio_id;
+                var fecha = this.event_selected_fecha;
+                this.servicioHorasDisponibles(tipo_id,fecha);
+                if(this.reagendar) this.servicioDisponibilidadColoreado(tipo_id);
+
+            },
+           
         },
     	methods : {
+            formatoFecha: function(d){
+                var ymd = d.getFullYear() +'-';
+                        ymd +=  (d.getMonth()<9) ? ("0"+ (d.getMonth()+1)) : (d.getMonth()+1);
+                        ymd+= "-"; 
+        
+                        if(d.getDate()<10) ymd+="0"+ d.getDate();
+                        else  ymd+=d.getDate();
+                return ymd;
+            },
             activarReagendar : function(){
                 this.reagendar = true;
-                var availableDates = ['2017-01-07','2017-01-09','2017-01-12','2017-01-15'];
-   
-             setTimeout(function() {
+                var thisObj  = this;
+                thisObj.servicioDisponibilidadColoreado(this.event_selected_servicio_id);
+            },
+            cerrarModalCita : function(){
+                this.reagendar = false;
+            },
+            crearCalendario : function(){
+                    var thisObj = this;
+                    var availableDates = [];
+                for (var i = 0; i < this.disponibilidad_servicio.length; i++) {
+                   availableDates.push( this.disponibilidad_servicio[i].fecha);
+                };
 
-                    $( "#datepicker" ).datepicker({
+            $( "#datepicker" ).datepicker({
                        dateFormat: 'yy-mm-dd',
                       minDate: new Date(), 
                     beforeShowDay: function(d) {
@@ -189,29 +259,66 @@
         
                         if(d.getDate()<10) ymd+="0"+ d.getDate();
                         else  ymd+=d.getDate();
-        
-                            console.log(ymd+' : '+($.inArray(ymd, availableDates)));
-        
-                        if ($.inArray(ymd, availableDates) != -1) {
-                            return [true, "Highlighted"]; 
+
+                       
+                        var disponibilidad = thisObj.buscarPorDisponibilidad(ymd);
+                        if ( disponibilidad != false) {
+                                console.log(disponibilidad);
+                                switch(disponibilidad.disponibilidad)
+                                {
+                                    case 1 : {
+                                        return [true, "disponibilidad-alta"]; 
+                                    }break;                                
+                                    case 2: {
+                                        return [true, "disponibilidad-media"]; 
+                                    }break;
+                                    case 3 : {
+                                        return [true, "disponibilidad-baja"]; 
+                                    }
+                                    default : {
+                                        return [true, "disponibilidad-alta"]; 
+                                    }
+
+                                }
+
+                            
                         } else{
-                                return [true,"",]; 
+                                return [true, "disponibilidad-alta"]; 
                         }
                     }
                     });
+             
 
-                }, 50);
             },
-            cerrarModalCita : function(){
-                this.reagendar = false;
+            buscarPorDisponibilidad : function(fecha){
+                var disponibilidad = $.grep(this.disponibilidad_servicio, function(e){ return e.fecha == fecha; });
+                if(disponibilidad.length > 0 ) return disponibilidad[0];
+                else return false;
+
+
+                    },
+            servicioDisponibilidadColoreado : function(tipo_id){
+                var thisObj = this;
+                this.$http.get('disponibilidad',{params : {'tipo_id' : tipo_id}}).then(
+                    //success
+                    function(response){
+                        this.disponibilidad_servicio = response.data;
+                        this.crearCalendario();
+                        
+
+                    },
+                    function(response){
+                        console.error(response.data);
+                    }
+                    );
             },
-            servicioHorasDisponibles : function(){
+            servicioHorasDisponibles : function(servicio_id,fecha){
                 this.hours = [];
-                console.log("dia = " + new Date(this.date_selected));
-                var dia = new Date(this.date_selected).toISOString();
-                console.log(dia);
+                console.log("dia = " + new Date(fecha));
+                var dia = new Date(fecha).toISOString();
+               // console.log(dia);
                 
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : servicio_id, 'dia' : dia, 'calendario_id' : this.$store.state.calendario_id }}).then(
                     //success
                     function(response){
                         this.hours = response.data;
@@ -252,22 +359,15 @@
 
 
     			this.errorMessage='';
+                var thisObj = this;
     			var dia_seleccionado = this.date_selected;
 
     			var dateformat = new Date(this.fecha_inicio);       			
     			var fecha_final = this.addMinutes(dateformat,servicio.duracion);
-                console.log("Final = " + fecha_final);
-
-    			var month = fecha_final.getMonth() < 9 ? '0'+ (fecha_final.getMonth()+1) : (fecha_final.getMonth()+1);
-    			var day = fecha_final.getUTCDate() < 10 ? '0'+(fecha_final.getUTCDate()) : (fecha_final.getUTCDate());
-    			var year = fecha_final.getFullYear().toString();
-    			var minute = fecha_final.getMinutes() < 9 ? '0'+(fecha_final.getMinutes()) : (fecha_final.getMinutes());
-    			var hora = fecha_final.getHours() < 10 ? '0'+(fecha_final.getHours()) : ( fecha_final.getHours());
-    			var segundo = fecha_final.getSeconds() < 9 ? '0'+(fecha_final.getSeconds()) : (fecha_final.getSeconds());
-
-    			fecha_final = year + "-" + month + "-" + day +" " + hora +":"+ minute +":"+ segundo;
-    			console.log(fecha_final);
-    		
+                
+                var fecha_final = moment(fecha_final).format("YYYY-MM-DD HH:mm:ss");
+                console.log(fecha_final);
+                
     			var calendarInformation = {
     				//"id_cita": id_count,
     				"calendario_id": this.calendario_id,
@@ -283,7 +383,7 @@
     			this.$http.post('cita?token='+localStorage.getItem('token'), calendarInformation).then(
 						//success
 						function(response){
-							console.log("Success");
+						  thisObj.fetchDatas();
 						},
 						//error
 						function(response){							
@@ -307,6 +407,7 @@
             $('#calendar').fullCalendar({
 
             dayClick:  function(date, jsEvent, view){
+
                 thisObj.date_selected = date;
             	//console.log(thisObj);
 
@@ -329,6 +430,9 @@
                 thisObj.event_selected_cliente_email = event.cliente_email;
                 thisObj.event_selected_hora_inicio = event.start;
                 thisObj.event_selected_hora_final = event.end;
+                thisObj.event_selected_servicio_id = thisObj.buscarPorServicio(event.title);
+                var tmpDate = new Date(event.start);
+                thisObj.event_selected_fecha = thisObj.formatoFecha(tmpDate);
 
 
         		$('#modalTitle').html(event.title);
@@ -376,6 +480,11 @@
 
             },
             timeFormat: 'H(:mm)',
+            buscarPorServicio : function(servicio){
+                var servicio = $.grep(this.servicios, function(e){ return e.nombre == servicio; });
+                if(servicio.length > 0 ) return servicio[0].id;
+                else return 0;
+            },
     		fetchDatas : function(){
     		
                 var thisObj = this;
