@@ -11,7 +11,7 @@ import store from './store'
 //import VueLocalStorage from 'vue-localstorage';
 //Vue.use(VueLocalStorage)
 
-import './assets/css/style.css';
+//import './assets/css/style.css';
 import './assets/js/jquery.easing.min.js';
 import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';

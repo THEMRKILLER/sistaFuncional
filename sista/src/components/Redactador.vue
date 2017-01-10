@@ -13,8 +13,30 @@ img {
 </style>
 <template>
 <div>
-
-
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  
+  <a class="navbar-brand" href="#">Navbar</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br>
+<br>
+<div class="panel panel-default container" style="max-width: 800px;">
+<form role="form">
  <div class="form-group">
     <label for="email">Titulo</label>
     <input columns="10" type="text" class="form-control" id="titulo" v-model="titulo" placeholder="Ponle un título a tu artículo">
@@ -35,8 +57,14 @@ img {
     	<button  v-on:click="removeImage" class="btn btn-info btn-md">Eliminar imagen</button>
   </div>
   </div>
-
-<div align="center"><button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo <i class="fa fa-cloud-upload" aria-hidden="true"></i></button> </div>
+<!--
+<div align="center">
+  <button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+</button>
+</div> -->
+<textarea name="editor" id="editor"></textarea>
+</form>
+</div>
 <br>
 
 <div v-if="!articulo_status_neutral">
@@ -62,18 +90,21 @@ img {
 			      					</ul>
 			      				</li>
 			      			</ul>
-				        	
 		</h4>
 	</div>
 </div>
-<textarea name="editor" id="editor"></textarea>
+
 <div></div>
 <br>
-<div align="center"><button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo <i class="fa fa-cloud-upload" aria-hidden="true"></i></button> </div>
+  <div align="center" class="panel container">
+    <button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo 
+    <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+    </button>
+    </div>
 </div>
-
-
 </template>
+
+<!-- DO NOT EDIT -->
 <script>
 
 export default {
@@ -165,5 +196,4 @@ export default {
 }
 </script>
 
-</script>
 
