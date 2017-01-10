@@ -33,6 +33,7 @@
 <ul class="nav nav-tabs nav-justified" >
       <li class="active"><a data-toggle="tab" href="#servicios" >Servicios</a></li>
       <li><a data-toggle="tab" href="#horarios" >Horarios</a></li>
+      <li><a data-toggle="tab" href="#fechas_inhabiles" >Fechas Inhabiles</a></li>
   </ul>
   <div class="tab-content">
     <div id="servicios" class="tab-pane fade in active">
@@ -43,8 +44,22 @@
         <servicios></servicios>
    
       </div>
+
       </div>
     </div>
+
+    <div id="fechas_inhabiles" class="tab-pane fade">
+    <div class="panel panel-default">
+ <h3>Fechas Inhabiles</h3>
+        <fechaInhabil></fechaInhabil>
+      </div>
+    </div>
+
+
+
+  
+
+    
 
     <!-- segunda vista -->
     <div id="horarios" class="tab-pane fade">

@@ -20,21 +20,23 @@ import './assets/css/fullcalendar.min.css';
 import 'jquery-ui/themes/base/all.css'
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
+Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
+
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
-Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
+Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
 
-
 import 'bootstrap'
 import 'jquery-confirm'
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
-
+var moment = require('moment');
+moment().format();
 import App from 'components/Header'
 
 
@@ -49,6 +51,7 @@ const config = {
 
 
 Vue.use(VeeValidate, config);
+
 
 
 const routes = [
