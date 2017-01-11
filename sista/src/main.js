@@ -31,11 +31,8 @@ var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
 
-require('jquery.easing');
 
 
-import 'bootstrap'
-import 'jquery-confirm'
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
 var moment = require('moment');
