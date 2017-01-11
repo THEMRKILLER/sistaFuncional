@@ -1,7 +1,6 @@
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Candal);
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css);
-@import url(https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css);
+
 body {
 	font-family: 'Open Sans', sans-serif;
 	line-height: 20px;
@@ -542,6 +541,16 @@ footer
 
 <template>	
 	<div>
+
+		<!--BANNER PROPIO-->
+		<nav class="navbar navbar-default navbar-fixed-top">
+  			<div class="container">
+    
+  			</div>
+		</nav>
+		<!--BANNER PROPIO FIN-->
+
+
 		<!--banner-->
 	<section id="banner" class="banner">
 		<div class="bg-color">
@@ -588,6 +597,10 @@ footer
 		</div>
 	</section>
 	<!--/ banner-->
+
+
+
+
 	<!--service-->
 	<section id="service" class="section-padding" STYLE="background-color:#FFFFFF">
 		<div class="container">
@@ -878,7 +891,9 @@ footer
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
   					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.
 				</div>
-					
+							<select v-model="tipo_id">
+								<option v-for="servicio in servicios" :value="servicio.id">{{servicio.nombre}}</option>
+							</select>
   							<div id="calendar"></div>	
         					<div></div>
         					<div><span class="glyphicon glyphicon-stop IndicadorVerde"></span> <span class="LabelIndicador">Alta disponibilidad</span></div>
@@ -1024,7 +1039,7 @@ footer
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" v-on:click="registrarAgendarCita">Agendar Cita</button>
+          <button type="button" class="btn btn-primary" v-on:click="">Agendar Cita</button>
         </div>
       </div>
 </div>
@@ -1050,7 +1065,7 @@ import 'assets/js/es.js';
     			agendarCita_estado_exitoso : false,
     			agendarCita_estado_error : false,
     			error_agendarCita: '',
-    			tipo_id: '',
+    			tipo_id: null,
     			cliente_nombre: '',
     			cliente_email: '',
     			cliente_telefono: '',
@@ -1058,20 +1073,108 @@ import 'assets/js/es.js';
     			fecha_inicio: '',
     			fecha_final: '',
     			servicios: [],
-    			hours:[]
+    			hours:[],
+    			disponibilidad_servicio : []
     		}
     	},
     	mounted(){    		
     			this.createCalendar();
     		},
+
+    			this.fetchDatas();
+
+    			$(".navbar a,a.btn-appoint, .quick-info li a, .overlay-detail a").on('click', function(event) {
+					        event.preventDefault();
+					        var hash = this.hash;
+					        $('html, body').animate({
+					            scrollTop: $(hash).offset().top
+					        }, 900, function(){
+					            window.location.hash = hash;
+					        });
+    			});
+       
+    			//jQuery to collapse the navbar on scroll
+    $(window).scroll(function() {
+			        if ($(".navbar-default").offset() != undefined  && $(".navbar-default").offset().top > 50) {
+			            if ( $(".navbar-default").offset() != undefined && $(".navbar-default").offset().top > 50) {
+			                $(".navbar-fixed-top").addClass("top-nav-collapse");
+			            } else {
+			            $(".navbar-fixed-top").removeClass("top-nav-collapse");
+			        }
+			    }
+    });
+
+    //fecha ,disponibilidad
+
+    			},
+
     		watch:{
     			'tipo_id': function(){
-    				this.servicioHorasDisponibles();
+    				this.servicioDisponibilidadColoreado();
     			}
     		},
     	methods:{
+    		fetchDatas : function(){
+    			var thisObj = this;
+    			this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}}).then(
+    				//success
+    				function(response){
+    					thisObj.servicios = response.data;
+    					thisObj.tipo_id  = thisObj.servicios[0] != undefined ? thisObj.servicios[0].id : null;
+    					//thisObj.tipo_id != null ? thisObj.servicioDisponibilidadColoreado() : '';
+    				},
+    				function(response){
+    					console.error("Error :(");
+    				}
+    				//error
+
+    				);
+    		},
+    		servicioDisponibilidadColoreado : function(){
+	                var thisObj = this;
+	                this.$http.get('disponibilidad',{params : {'tipo_id' : thisObj.tipo_id}}).then(
+	                    //success
+	                    function(response){
+	                        var disponibilidad = response.data;
+	                        var disponibilidad_arr = [];
+	                        for(var i = 0 ; i < disponibilidad.length ; i++)
+	                        {
+	                        	disponibilidad_arr[disponibilidad[i].fecha] = disponibilidad[i].disponibilidad;
+	                        }
+	                        thisObj.disponibilidad_servicio = disponibilidad_arr;
+
+	                        this.createCalendar();
+	                        
+
+	                    },
+	                    function(response){
+	                        console.error(response.data);
+	                    }
+	                    );
+            },
+            servicioHorasDisponibles : function(){
+                this.hours = [];
+                console.log("dia = " + new Date(this.date_selected));
+                var dia = new Date(this.date_selected).toISOString();
+                console.log(dia);
+                
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
+                    //success
+                    function(response){
+                        this.hours = response.data;
+                    },
+                    //error
+                    function(response){
+                        this.hours = []
+                    }
+
+                    );
+            },
     		createCalendar : function(){
+
+    			var thisObj = this;
             $('#calendar').fullCalendar({
+
 			select: function(start, end, allDay) {
             	var check = start._d.toJSON().slice(0,10); 
             	var today = new Date().toJSON().slice(0,10);
@@ -1091,24 +1194,6 @@ import 'assets/js/es.js';
   				});
     			}
   			},
-  			servicioHorasDisponibles : function(){
-                this.hours = [];
-                console.log("dia = " + new Date(this.date_selected));
-                var dia = new Date(this.date_selected).toISOString();
-                console.log(dia);
-                
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
-                    //success
-                    function(response){
-                        this.hours = response.data;
-                    },
-                    //error
-                    function(response){
-                        this.hours = []
-                    }
-
-                    );
-            },
   			dayClick: function(date, jsEvent, view){
   				
   				
@@ -1124,7 +1209,10 @@ import 'assets/js/es.js';
             selectable: true,
             selectHelper: true,            
             dayRender: function (date, cell) {
-                        //cell.css("background-color", "#FF6961");
+
+            			console.log(thisObj.disponibilidad_servicio);
+
+                        cell.css("background-color", "#FF6961");
                         },
             editable: true,
             eventLimit: true, // allow "more" link when too many events
@@ -1133,41 +1221,7 @@ import 'assets/js/es.js';
         })
 
             },
-            registrarAgendarCita : function(event){
-
-        	$(event.target).attr('disabled',true);
-        	this.agendarCita_estado_neutro = false;
-        	this.agendarCita_estado_exitoso = false;
-        	this.agendarCita_estado_error = false;
-        	this.agendarCita_estado_encurso = true;
-
-
-        	 var datas_to_server = {'nombre' : this.cliente_nombre,'email' : this.cliente_email, 'telefono' : this.cliente_telefono,'hora' : this.hora_cita};
-        	 this.$http.post('tipo?token='+localStorage.getItem('token'),datas_to_server).then(
-        	 	//success
-        	 	function(response){
-        	 		this.registro_estado_exitoso = true;
-        	 		this.registro_estado_encurso = false;
-        	 		$(event.target).attr('disabled',false);
-        	 		this.registro_estado_exitoso_name = this.cliente_nombre;
-        	 		this.cliente_nombre = '';
-        	 		this.cliente_email = '';
-                    this.hora_cita = '';
-
-        	 		this.fetchDatas();
-
-
-        	 	},
-        	 	//error
-        	 	function(response){
-        	 		this.registro_estado_error = true;
-        	 		this.registro_estado_encurso = false;
-        	 		this.error_servicio = response.data.error;
-        	 		$(event.target).attr('disabled',false);
-        	 	}
-        	 	);
-
-        	},
+        
 	  },
     	}
 </script>

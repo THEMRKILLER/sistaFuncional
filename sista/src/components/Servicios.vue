@@ -3,7 +3,9 @@
 .panel-title{
 	text-align: center;
 }
-
+.addService{
+    float: right;
+}
 </style>
 <template>
 	<div id="servicios_root">
@@ -15,9 +17,9 @@
 		    <h3 class="panel-title tbserv">                
                 Tabla de servicios</h3>                
 		  </div>
-          <div class="col-md-10 col-md-offset-10">
-                    <button class="btn btn-primary btn-md glyphicon glyphicon-plus" data-toggle="modal" data-target="#servicio_modal">Añadir servicio</button>     
-                </div>
+        
+        <button class="btn btn-primary fa fa-plus addService" data-toggle="modal" data-target="#servicio_modal">Añadir servicio</button>     
+                
           <div class="panel-body" align="center">
               <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
                   <thead>
@@ -203,6 +205,7 @@
 
     	mounted(){
     		this.fetchDatas();
+
     	},
 
     	data(){            
