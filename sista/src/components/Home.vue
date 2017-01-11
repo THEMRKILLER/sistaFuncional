@@ -1030,8 +1030,6 @@ footer
 </div>
 </div>
 <!-- FIN MODAL -->
-<button id="tool" title="hey!">Hola</button>
-
 	</div>
 
 </template>
@@ -1065,7 +1063,6 @@ import 'assets/js/es.js';
     	},
     	mounted(){    		
     			this.createCalendar();
-    			$('#tool').tooltip();
     		},
     		watch:{
     			'tipo_id': function(){
