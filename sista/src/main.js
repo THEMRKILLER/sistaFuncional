@@ -31,6 +31,9 @@ var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
 
+require('jquery.easing');
+
+
 import 'bootstrap'
 import 'jquery-confirm'
 import 'fullcalendar'

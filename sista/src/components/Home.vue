@@ -1,7 +1,6 @@
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Candal);
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css);
-@import url(https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css);
+
 body {
 	font-family: 'Open Sans', sans-serif;
 	line-height: 20px;
@@ -542,6 +541,16 @@ footer
 
 <template>	
 	<div>
+
+		<!--BANNER PROPIO-->
+		<nav class="navbar navbar-default navbar-fixed-top">
+  			<div class="container">
+    
+  			</div>
+		</nav>
+		<!--BANNER PROPIO FIN-->
+
+
 		<!--banner-->
 	<section id="banner" class="banner">
 		<div class="bg-color">
@@ -588,6 +597,10 @@ footer
 		</div>
 	</section>
 	<!--/ banner-->
+
+
+
+
 	<!--service-->
 	<section id="service" class="section-padding" STYLE="background-color:#FFFFFF">
 		<div class="container">
@@ -1065,8 +1078,29 @@ import 'assets/js/es.js';
     	},
     	mounted(){    		
     			this.createCalendar();
-    			$('#tool').tooltip();
-    		},
+
+    			$(".navbar a,a.btn-appoint, .quick-info li a, .overlay-detail a").on('click', function(event) {
+					        event.preventDefault();
+					        var hash = this.hash;
+					        $('html, body').animate({
+					            scrollTop: $(hash).offset().top
+					        }, 900, function(){
+					            window.location.hash = hash;
+					        });
+    			});
+       
+    			//jQuery to collapse the navbar on scroll
+    $(window).scroll(function() {
+			        if ($(".navbar-default").offset() != undefined  && $(".navbar-default").offset().top > 50) {
+			            if ( $(".navbar-default").offset() != undefined && $(".navbar-default").offset().top > 50) {
+			                $(".navbar-fixed-top").addClass("top-nav-collapse");
+			            } else {
+			            $(".navbar-fixed-top").removeClass("top-nav-collapse");
+			        }
+			    }
+    });
+
+    			},
     		watch:{
     			'tipo_id': function(){
     				this.servicioHorasDisponibles();
