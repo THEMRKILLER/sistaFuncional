@@ -38,7 +38,7 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
         <td>{{dia.nombre}}</td>
         <td>{{dia.dia}}</td>
         <td v-if="dia.full">Todo el día</td>
-        <td v-else-if="dia.nombre==='Domingo'">Dia no laboral</td>
+        <td v-else-if="dia.laboral===false">Dia no laboral</td>
         <th v-else>
           <span  v-for="hora in dia.horas">
           <td v-if="hora.disponible">
