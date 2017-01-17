@@ -29,14 +29,12 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
     <thead>
       <tr>
         <th>Día de la semana</th>
-        <th>Día</th>
         <th>Disponibilidad (Hrs)</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="dia in dias">
         <td>{{dia.nombre}}</td>
-        <td>{{dia.dia}}</td>
         <td v-if="dia.full">Todo el día</td>
         <td v-else-if="dia.laboral===false">Dia no laboral</td>
         <th v-else>
