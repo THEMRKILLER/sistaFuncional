@@ -33,7 +33,14 @@
 
   		</div>
 <div class="panel panel-default">
-  <div class="panel-heading">Calendario</div>
+  <div class="panel-heading">Calendario
+    <div v-if="!agendarcita_status_neutral" align="center">
+        <div v-if="agendarcita_status_exitoso" class="alert alert-success">
+            <i class="fa fa-check"></i>
+            <span >Cita correctamente agendada </span>
+        </div>
+    </div>
+  </div>
   <div id="calendar"></div>
 </div>		
 
@@ -89,6 +96,27 @@
           </form>
         </div>
         <div class="modal-footer">
+            <div v-if="!agendarcita_status_neutral" align="center">
+                <div v-if="agendarcita_status_agendando" class="alert alert-info">
+                   <i class="fa fa-cog fa-spin  fa-fw"></i>
+                   <span>Agendando cita...</span>
+                </div>
+
+                <div v-if="agendarcita_status_exitoso" class="alert alert-success">
+                   <i class="fa fa-check"></i>
+                   <span >Cita correctamente agendada </span>
+                </div>
+
+                <div v-if="agendarcita_status_error" class="alert alert-danger">
+                   <i class="fa fa-times"></i>
+                   <span >Ocurrió un o más errores agendando la cita:  </span>
+                   <ul>
+                    <li v-for="error in agendarcita_error_mensaje">
+                        {{error}}
+                    </li>
+                   </ul>
+                </div>
+            </div>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-primary" v-on:click="sendCalendarJSON">Agendar Cita</button>
         </div>
@@ -105,6 +133,7 @@
                 <button type="button" class="close" v-on:click="cerrarModalCita" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">cerrar</span></button>
                 <h4 class="modal-title">
                     {{event_selected_servicio}}
+
                 </h4>
                 
             </div>
@@ -123,14 +152,14 @@
                             <label for="message-text" class="form-control-label">Servicio</label>
                             <select class="form-control" v-model="event_selected_servicio_id">
                             <option v-for="servicio in servicios" :value="servicio.id">
-                                {{ servicio.nombre }}
+                               Servicio :  {{ servicio.nombre }}  Duracion : {{servicio.duracion}}
                             </option>
                     
                             </select>
                         </div>
                         <!-- Hora -->
                         <div class="form-group">
-                            <label for="message-text" class="form-control-label">Duración:</label>
+                            <label for="message-text" class="form-control-label">Hora:</label>
                                 <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
                                     <option v-for="hour in hours" :value="hour.value">
                                         {{ hour.text }}
@@ -142,13 +171,11 @@
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
                             <input type="text" id="datepicker" class="form-control" :value="event_selected_fecha">
+                            {{event_selected_fecha}}
                         </select>
                     </div>
                     
-                    Hora
-                    <select>
-                        <option></option>
-                    </select>
+                    
 
                 </div>
 
@@ -160,7 +187,7 @@
             </div>
             <div class="modal-footer" v-else>
                 <button type="button" class="btn btn-default" v-on:click="cerrarModalCita">Cancelar</button>
-                <button class="btn btn-danger">Realizar cambios</button>
+                <button class="btn btn-danger"  v-on:click="reagendarCita">Realizar cambios</button>
 
 
             </div>
@@ -189,6 +216,11 @@
     			cliente_telefono: '',
     			cliente_email: '',
     			hora_cita: '',
+                agendarcita_status_neutral : true,
+                agendarcita_status_agendando : false,
+                agendarcita_status_exitoso : false,
+                agendarcita_status_error : false,
+                agendarcita_error_mensaje : [],
     			date_selected : '',
                 servicios : [],
                 event_selected_cliente_nombre : '',
@@ -215,6 +247,12 @@
                 var fecha = this.date_selected;
                 this.servicioHorasDisponibles(tipo_id,fecha);
             },
+            'event_selected_fecha' : function(){
+                var tipo_id = this.event_selected_servicio_id;
+                var fecha = this.event_selected_fecha;
+                if(tipo_id != "")this.servicioHorasDisponibles(tipo_id,fecha);
+                else console.log("Nope " + tipo_id);
+            },
             'event_selected_servicio_id' : function(){
                 var tipo_id = this.event_selected_servicio_id;
                 var fecha = this.event_selected_fecha;
@@ -239,6 +277,18 @@
                 var thisObj  = this;
                 thisObj.servicioDisponibilidadColoreado(this.event_selected_servicio_id);
             },
+            reagendarCita : function(){
+                var datas  = {};
+                this.$http.put('cita-r',datas).then(
+                    //success
+                    function(response){
+
+                    },
+                    //error
+                    function(response){}
+
+                    );
+            },
             cerrarModalCita : function(){
                 this.reagendar = false;
             },
@@ -250,8 +300,12 @@
                 };
 
             $( "#datepicker" ).datepicker({
-                       dateFormat: 'yy-mm-dd',
-                      minDate: new Date(), 
+                    dateFormat: 'yy-mm-dd',
+                    minDate: new Date(), 
+                    onSelect: function () {
+                        thisObj.event_selected_fecha = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+                        console.log("Nuevo dia " + thisObj.event_selected_fecha);
+                    },
                     beforeShowDay: function(d) {
                         var ymd = d.getFullYear() +'-';
                         ymd +=  (d.getMonth()<9) ? ("0"+ (d.getMonth()+1)) : (d.getMonth()+1);
@@ -262,6 +316,7 @@
 
                        
                         var disponibilidad = thisObj.buscarPorDisponibilidad(ymd);
+                        
                         if ( disponibilidad != false) {
                                 console.log(disponibilidad);
                                 switch(disponibilidad.disponibilidad)
@@ -299,7 +354,7 @@
                     },
             servicioDisponibilidadColoreado : function(tipo_id){
                 var thisObj = this;
-                this.$http.get('disponibilidad',{params : {'tipo_id' : tipo_id}}).then(
+                this.$http.get('disponibilidad',{params : {'tipo_id' : tipo_id,'calendario_id' : this.$store.state.calendario_id}}).then(
                     //success
                     function(response){
                         this.disponibilidad_servicio = response.data;
@@ -331,7 +386,8 @@
                     );
             },
 
-    		sendCalendarJSON: function(){
+    		sendCalendarJSON: function(event){
+
     				//guardo en id_selected el valor seleccionado en el option 
     				var id_selected = this.tipo_id;
     				//console.log(this.tipo_id);
@@ -380,21 +436,97 @@
     				"cliente_email": this.cliente_email
     			};    			
     			var objThis = this;
+                $(event.target).attr('disabled',true);
+
+                thisObj.agendarcita_status_neutral = false; 
+                thisObj.agendarcita_status_agendando = true;
+                thisObj.agendarcita_status_exitoso = false; 
+                thisObj.agendarcita_status_error = false;
+                thisObj.agendarcita_error_mensaje = [];
+
     			this.$http.post('cita?token='+localStorage.getItem('token'), calendarInformation).then(
 						//success
 						function(response){
+
+                        thisObj.agendarcita_status_agendando = false;
+                        thisObj.agendarcita_status_exitoso = true;
+
+                        $(event.target).attr('disabled',false);
+                        thisObj.cliente_nombre = "";
+                        thisObj.cliente_telefono = "";
+                        thisObj.cliente_email = "";
+                        $("#calendarModal").modal('hide');
 						  thisObj.fetchDatas();
+                          setTimeout(function() {
+                            thisObj.agendarcita_status_exitoso = false;
+                            thisObj.agendarcita_status_neutral = true;
+                          }, 4000);
 						},
 						//error
-						function(response){							
-							
-							if(response.status == 401){
-								this.errorMessage = "Error";
-							}
-							else{
-								//console.log(response.data);
-							}
-							//console.log(response.data);
+						function(response){		
+                        $(event.target).attr('disabled',false);	
+                        thisObj.agendarcita_status_agendando = false;	
+                        thisObj.agendarcita_status_error = true;
+
+						  
+                          switch(response.status)
+                          {
+                            case 500 : 
+                            {
+                                thisObj.agendarcita_error_mensaje = ["Ocurrió un error en el servidor, intente más tarde o contacte al administrador del sistema"];
+                            }break;
+
+                            case 400 : 
+                            {
+                                var errores_tpm = [];
+
+                                for(var error in response.data.errors)
+                                {
+                                    console.log("Error "+ response.data.errors[error]);
+                                    for(var internal_error in response.data.errors[error])
+                                            errores_tpm.push(response.data.errors[error][internal_error]);
+                                    
+                                }
+                                thisObj.agendarcita_error_mensaje = errores_tpm;
+
+
+                            }break;
+                            case 404 : 
+                            {
+                                thisObj.agendarcita_error_mensaje = ["Ya existe una cita para esta hora y fecha, elija otra hora o fecha"];
+
+                            }break;
+
+                            case 401 : 
+                            {
+                                if(localStorage.getItem('remember_user') == true)
+                                {
+                                    thisObj.$http.get('refresh_token').then(
+                                        //sucess
+                                        function(response){
+
+                                            localStorage.setItem('token', response.data.token);
+                                            thisObj.sendCalendarJSON(event);
+
+                                        },
+                                        //error
+                                        function(response){
+                                            localStorage.removeItem('token');
+                                            thisObj.$router.push('admin');
+                                        });
+                                }
+                                else{
+                                    localStorage.removeItem('token');
+                                    thisObj.$router.push('admin');
+
+                                }
+
+                            }break;
+                            default : {
+                                thisObj.agendarcita_error_mensaje = ["Ha ocurrido un error inesperado, intente más tarde"];
+                            }
+                          }	
+						 
 						});
     		},
     		addMinutes : function(date,minutes){

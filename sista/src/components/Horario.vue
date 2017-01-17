@@ -21,12 +21,12 @@
 <h3>De: </h3>
 
 <select v-model="hora_inicial">
-<option v-for="n in range(0,23)">{{ n }}</option>
+<option v-for="n in range(0,24)">{{ n }}</option>
 </select>
 
 <h3>A: </h3>
 <select v-model="hora_final">
-<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
+<option v-for="h in range(hora_inicial,24)">{{ h }}</option>
 </select>
 
 inicial : {{hora_inicial}}
@@ -216,7 +216,7 @@ export default {
   	rangeDisp : function(start,end,horas)
   	{
   		start = parseInt(start);
-  		end = parseInt(end);
+  		end = parseInt(end)-1;
   		var horaInLoop = null;
   		var horasTmp = [];
   		for(start; start <=end; start++)
@@ -267,9 +267,13 @@ export default {
   	},
   	updateHorasRange :function(){
   		var objThis = this;
+      var range_tmp = this.range(objThis.hora_inicial,objThis.hora_final-1);
+      console.log(range_tmp);
   		for (var i = 0; i < objThis.dias.length; i++) {
   			objThis.dias[i].horas =  this.rangeDisp(objThis.hora_inicial,objThis.hora_final,objThis.dias[i].horas);
   			objThis.sortByKey(objThis.dias[i].horas, 'hora');
+        console.log(objThis.dias[i].horas, range_tmp);
+    //    if(objThis.dias[i].horas.length === range_tmp.length) objThis.dias[i].full = true;
 
   		};
   	}

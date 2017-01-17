@@ -891,9 +891,13 @@ footer
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
   					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.
 				</div>
-							<select v-model="tipo_id">
-								<option v-for="servicio in servicios" :value="servicio.id">{{servicio.nombre}}</option>
-							</select>
+
+							 <div class="form-group">
+              					<label for="message-text" class="form-control-label">Servicio:</label>
+              					<select class="form-control" v-model="tipo_id">
+									<option v-for="servicio in servicios" :value="servicio.id">{{servicio.nombre}}</option>
+								</select>
+            				</div>
   							<div id="calendar"></div>	
         					<div></div>
         					<div><span class="glyphicon glyphicon-stop IndicadorVerde"></span> <span class="LabelIndicador">Alta disponibilidad</span></div>
@@ -1079,7 +1083,8 @@ import 'assets/js/es.js';
     			disponibilidad_servicio : []
     		}
     	},
-    	mounted(){    		
+    	mounted(){  
+
     			this.fetchDatas();
 
     			$(".navbar a,a.btn-appoint, .quick-info li a, .overlay-detail a").on('click', function(event) {
@@ -1130,7 +1135,7 @@ import 'assets/js/es.js';
     		},
     		servicioDisponibilidadColoreado : function(){
 	                var thisObj = this;
-	                this.$http.get('disponibilidad',{params : {'tipo_id' : thisObj.tipo_id}}).then(
+	                this.$http.get('disponibilidad',{params : {'tipo_id' : thisObj.tipo_id,'calendario_id' : this.$store.state.calendario_id}}).then(
 	                    //success
 	                    function(response){
 	                        var disponibilidad = response.data;
@@ -1207,10 +1212,31 @@ import 'assets/js/es.js';
             selectable: true,
             selectHelper: true,            
             dayRender: function (date, cell) {
+            			var disponibilidad = thisObj.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
+            			if(disponibilidad)
+            			{
+            				switch(disponibilidad)
+            				{
+            					case 1: cell.css("background-color", "#A5DBEB");
+            					break;
+            					case 2: cell.css("background-color", "#FFFF84");
+            					break;
+            					case 3: cell.css("background-color", "#FF7575"); 
+            					break;
 
-            			console.log(thisObj.disponibilidad_servicio);
+            				}
+            			}
+            			else{
+            				
+            				var date_d  = moment(date).format("YYYY-MM-DD");
+            				var today = moment(new Date()).format("YYYY-MM-DD");
+		    				if(date_d < today)	cell.css("background-color", "#F5F5F5");
+		    				else cell.css("background-color", "#A5DBEB");
 
-                        cell.css("background-color", "#FF6961");
+            			}
+
+
+                        
                         },
             editable: true,
             eventLimit: true, // allow "more" link when too many events

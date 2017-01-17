@@ -234,7 +234,7 @@
         methods : {
         	fetchDatas : function(){
 
-        		this.$http.get('tipo?token='+localStorage.getItem('token')).then(
+        	this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}}).then(
         			//success
         			function(response){
 
