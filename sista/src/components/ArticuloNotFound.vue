@@ -49,7 +49,7 @@ background: linear-gradient(to left, #7474BF , #348AC7); /* W3C, IE 10+/ Edge, F
                 <div class="panel-body" align="center" >
 
                 	<div id="error">
-						<h1>Eror 404</h1>
+						<h1>Error 404</h1>
 	                	<i class="fa fa-close fa-3x"></i>
 
 					<h1><small>El articulo que estás tratando de buscar no existe</small></h1>

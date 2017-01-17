@@ -1083,8 +1083,6 @@ import 'assets/js/es.js';
     	},
 
     	mounted(){    		
-    			this.createCalendar();
-    	
 
     			this.fetchDatas();
 
@@ -1108,10 +1106,9 @@ import 'assets/js/es.js';
 			        }
 			    }
     });
+    		},
 
     //fecha ,disponibilidad
-
-    			},
 
     		watch:{
     			'tipo_id': function(){

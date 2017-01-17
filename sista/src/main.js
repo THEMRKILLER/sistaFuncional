@@ -25,16 +25,15 @@ Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
-Vue.http.options.root = 'http://192.168.0.14/Sista/public/api/v1';
+Vue.http.options.root = 'http://200.77.73.172/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
 
-
-
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
+import 'jquery-confirm'
 var moment = require('moment');
 moment().format();
 import App from 'components/Header'
