@@ -1049,8 +1049,6 @@ footer
 </div>
 </div>
 <!-- FIN MODAL -->
-<button id="tool" title="hey!">Hola</button>
-
 	</div>
 
 </template>
@@ -1083,7 +1081,10 @@ import 'assets/js/es.js';
     			disponibilidad_servicio : []
     		}
     	},
-    	mounted(){  
+
+    	mounted(){    		
+    			this.createCalendar();
+    	
 
     			this.fetchDatas();
 
@@ -1111,6 +1112,7 @@ import 'assets/js/es.js';
     //fecha ,disponibilidad
 
     			},
+
     		watch:{
     			'tipo_id': function(){
     				this.servicioDisponibilidadColoreado();
