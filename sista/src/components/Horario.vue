@@ -1,66 +1,131 @@
-<style>
+<style scoped>
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+@import url(https://fonts.googleapis.com/css?family=PT+Sans);
+  h3, h4, option{
+  font-family: 'Oswald', sans-serif;
+  }
+  #days{
+    font-family: 'PT Sans', sans-serif;
+  }
+
 .hora_dia{
 	display: inline-block;
 }
+hr {border: 0 ; border-top: 4px double gray; width: 100%;}
 
 </style>
 <template>
-
-<div id="horario_root">
-
-<h4>Dias laborales : </h4>
-
-<div id="dias_semana">
-	<div v-for="dia in dias">
- 		<input type="checkbox" :name="dia.nombre" v-model="dia.laboral" :value="dia.dia"/> {{dia.nombre}}
-	</div>
+<div>
+<transition>
+<div id="TablaNoEditable" v-if="MostrarNoEditable">
+<button v-on:click="muestraBoton()" class="btn btn-primary">
+  Editar horario
+</button>
+<br>
+<br>
+<div id="tablaDeHorarios" v-if="!mostrarEditable">
+  <div class="well">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Día de la semana</th>
+        <th>Día</th>
+        <th>Disponibilidad (Hrs)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="dia in dias">
+        <td>{{dia.nombre}}</td>
+        <td>{{dia.dia}}</td>
+        <td v-if="dia.full">Todo el día</td>
+        <td v-else-if="dia.nombre==='Domingo'">Dia no laboral</td>
+        <th v-else>
+          <span  v-for="hora in dia.horas">
+          <td v-if="hora.disponible">
+            {{hora.hora}}
+          </td>
+          </span>
+        </th>        
+      </tr>
+    </tbody>
+  </table>
+  </div>
 </div>
-
-<h4>Horario: </h4>
-
+</div>
+</transition>
+<div v-if="mostrarEditable">
+<button class="btn btn-danger" v-on:click="muestraBoton()">Cancelar edición</button>
+<br>
+<br>
+  <transition name="fade">
+  <div id="horario_root">
+  <div id="dias_semana" class="well">
+    <h4>Dias laborales : </h4>
+      <div v-for="dia in dias" class="checkbox-inline">
+       <input type="checkbox" :name="dia.nombre" v-model="dia.laboral" :value="dia.dia"/> <label id="days">{{dia.nombre}}</label>
+  </div>
+</div>
+<hr/>
+<div class="well">
+<h4>Horario</h4>
+<div class="checkbox-inline">
 <h3>De: </h3>
-
 <select v-model="hora_inicial">
 <option v-for="n in range(0,23)">{{ n }}</option>
 </select>
-
+</div>
+<div class="checkbox-inline center">
 <h3>A: </h3>
 <select v-model="hora_final">
 <option v-for="h in range(hora_inicial,23)">{{ h }}</option>
 </select>
-
-inicial : {{hora_inicial}}
-final :  {{hora_final}}
-<div v-for="dia in dias">
-	<div v-if="dia.laboral" >
-		DIA : {{dia.nombre}}
-		<div class="hora_dia" v-for="hora in dia.horas">
-			<div v-if="dia.full">
-				{{hora.hora}} <input type="checkbox" v-model="hora.disponible" :value="hora.hora" readonly="true"/> 
-					{{habilitarHoras(hora)}}
-			</div>
-			<div v-else>
-
-				{{hora.hora}} <input type="checkbox" v-if="enArreglo(dia.horas_s,hora.hora)"  v-model="hora.disponible" :value="hora.hora" />
-				<input type="checkbox" v-else  v-model="hora.disponible" :value="hora.hora"/>
-			</div>
-		</div>
-		Todo el día <input type="checkbox" v-model="dia.full"> 
-
- 		
-	</div>
-	
-	
+</div>
+<br>
+<br>
 </div>
 
-<button class="btn btn-primary" v-on:click="actualizarDiasHabiles">Actualizar días hábiles</button>
-
-
+<hr>
+<div class="well">
+  <table class="table">
+    <thead>      
+      <tr>
+        <th>Día de la semana</th>
+        <th>Seleccione las horas</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr v-for="dia in dias" v-if="dia.laboral">
+      <td v-if="dia.laboral"><label id="days">{{dia.nombre}}</label></td>
+      <td v-for="hora in dia.horas">
+        <label v-if="dia.full">
+          {{hora.hora}} Hrs <input type="checkbox" v-model="hora.disponible" :value="hora.hora" readonly="true"/>
+          {{habilitarHoras(hora)}}
+        </label>
+        <label v-else>
+          <td>{{hora.hora}} Hrs<input type="checkbox" v-if="enArreglo(dia.horas_s,hora.hora)"  v-model="hora.disponible" :value="hora.hora" />
+        <input type="checkbox" v-else  v-model="hora.disponible" :value="hora.hora"/>    
+    </td>    
+    </label>
+      </td> 
+      Todo el día <input type="checkbox" v-model="dia.full">     
+  </tr>
+      
+    </tbody>
+  </table>
+ 
+</div>
+<div class="container">
+  
+  <button class="btn btn-primary" v-on:click="actualizarDiasHabiles" style="margin-left: 200px;">Actualizar</button>
+<button class="btn btn-danger" style="margin-left: 90px;" v-on:click="muestraBoton()">Cancelar</button>
 
 </div>
 
 
-
+</div>
+</div>
+</transition>
+</div>
 </template>
 
 
@@ -71,8 +136,11 @@ export default {
   	this.fetchDatas();
 
   },
-  data () {
+  data () {    
     return {
+      mostrarEditable: false,
+      MostrarNoEditable: true,
+      btnCancelar: false,
     		hora_inicial : 0,
     		hora_final : 0,
     		hora_inicial_bind : [],
@@ -147,6 +215,12 @@ export default {
     }
   },
   methods : {
+    muestraBoton: function(){
+      this.btnCancelar = !this.btnCancelar;
+      this.mostrarEditable = !this.mostrarEditable;
+      this.MostrarNoEditable = !this.MostrarNoEditable;
+      return this.btnCancelar && this.mostrarEditable && this.MostrarNoEditable;
+    },
   	//habilita una hora y se llama desde el template
   	habilitarHoras : function(hora){
   		hora.disponible = true;

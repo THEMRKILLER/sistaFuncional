@@ -1,10 +1,33 @@
 <template>
 <div id="fechas_inhabiles_root">
 
-	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhabil</button>
-
-	{{fechas_inhabiles}}
-
+	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
+	<!-- {{fechas_inhabiles}} -->
+  <br><br>
+    <div class="well">
+      <table class="table">
+        <thead class="thead-inverse">
+          <tr>
+            <th>Fecha</th>
+            <th>Disponibilidad</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="">
+            <td></td>
+            <td></td>
+            <td>
+              <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-target="#myModal"></button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger" id="botonDelete" title="Eliminar servicio" v-on:click="confirmDialog()">X</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
 <!--Modal fecha inhabil-->
 <div id="fecha_inhabil_modal" class="modal fade" role="dialog">
@@ -37,11 +60,7 @@
 				<select v-model="hora_final">
 					<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
 				</select>
-            
       	</div>
-
-
-      	
       <div class="modal-footer">
 
       	{{fecha_inhabil}}
@@ -60,6 +79,8 @@
 </template>
 
 <script>
+import "jquery-confirm/css/jquery-confirm.css";
+
 export default {
   name: 'fecha_inhabil',
   data () {
@@ -73,6 +94,7 @@ export default {
     }
   },
   mounted(){
+    
   	var thisobj = this;
   	 $( "#datepicker" ).datepicker({
                        dateFormat: 'yy-mm-dd',
@@ -99,6 +121,28 @@ export default {
   			);
 
   	},
+
+    confirmDialog: function(){
+          $.confirm({
+            title: '¿Está seguro de eliminar el elemento?',
+            content: 'Simple confirm!',
+            buttons: {              
+              Sí: {
+              text: 'Sí',
+              btnClass: 'btn-warning',              
+              action: function () {
+                this.$content
+                // reference to the content
+                $.alert('¡Eliminado!');
+              }
+            },
+              Cancelar: function () {
+                
+              }              
+          }
+      });
+    },
+
   	fetchDatas : function(){
   		this.$http.get('fecha_inhabil',{params : {'calendario_id' : this.$store.state.calendario_id }}).then(
 
@@ -121,6 +165,21 @@ export default {
   		for(start; start <=end; start++) range.push(start);
   		return range;
   	},
+    getElementID: function(id){
+                /*this.ArregloID = id;
+                //imprimo los ids seleccionados
+                this.editIdEvent = id;
+                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
+                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
+                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
+                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
+                */
+            },
+            deleteTheEvent: function(id_button) {
+                /*this.ArregloID = id_button;
+                this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
+                */
+    },
   }
 }
 </script>

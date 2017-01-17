@@ -1078,9 +1078,7 @@ import 'assets/js/es.js';
     		}
     	},
     	mounted(){    		
-    			this.createCalendar();
-    		},
-
+    			//this.createCalendar();
     			this.fetchDatas();
 
     			$(".navbar a,a.btn-appoint, .quick-info li a, .overlay-detail a").on('click', function(event) {
@@ -1103,10 +1101,9 @@ import 'assets/js/es.js';
 			        }
 			    }
     });
+    		},
 
     //fecha ,disponibilidad
-
-    			},
 
     		watch:{
     			'tipo_id': function(){
