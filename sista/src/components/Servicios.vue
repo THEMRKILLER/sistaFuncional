@@ -205,7 +205,6 @@
 
     	mounted(){
     		this.fetchDatas();
-
     	},
 
     	data(){            

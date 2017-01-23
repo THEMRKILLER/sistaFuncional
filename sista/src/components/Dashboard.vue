@@ -165,14 +165,13 @@
                                         {{ hour.text }}
                                     </option>
                                 </select>
-                            <select v-else class="form-control" name="fecha_inicio" disabled></select>
                         </div> 
                     
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
                             <input type="text" id="datepicker" class="form-control" :value="event_selected_fecha">
                             {{event_selected_fecha}}
-                        </select>
+                       
                     </div>
                     
                     
@@ -298,6 +297,7 @@
                 for (var i = 0; i < this.disponibilidad_servicio.length; i++) {
                    availableDates.push( this.disponibilidad_servicio[i].fecha);
                 };
+
 
             $( "#datepicker" ).datepicker({
                     dateFormat: 'yy-mm-dd',

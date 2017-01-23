@@ -1,79 +1,84 @@
 <template>
-<div id="fechas_inhabiles_root">
 
-	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
-	<!-- {{fechas_inhabiles}} -->
-  <br><br>
-    <div class="well">
-      <table class="table">
-        <thead class="thead-inverse">
-          <tr>
-            <th>Fecha</th>
-            <th>Disponibilidad</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="">
-            <td></td>
-            <td></td>
-            <td>
-              <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-target="#myModal"></button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger" id="botonDelete" title="Eliminar servicio" v-on:click="confirmDialog()">X</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div id="fechas_inhabiles_root">
+
+    	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
+    	<!-- {{fechas_inhabiles}} -->
+      <br><br>
+
+
+        <div class="well">
+          <table class="table">
+            <thead class="thead-inverse">
+              <tr>
+                <th>Fecha</th>
+                <th>Disponibilidad</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="">
+                <td></td>
+                <td></td>
+                <td>
+                  <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-target="#myModal"></button>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-danger" id="botonDelete" title="Eliminar servicio" v-on:click="confirmDialog()">X</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+    <!--Modal fecha inhabil-->
+    <div id="fecha_inhabil_modal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Agregar una fecha inhabil</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">             
+                <label for="message-text" class="form-control-label">Seleccione Fecha</label>
+                <input type="text" id="datepicker" class="form-control" :value="fecha_inhabil">
+          	</div>
+          	<div class="form-group">
+          		<label for="completo-text" class="form-control-label">Todo el día</label>
+          		<input type="checkbox" name="completo-text" v-model="completo">
+          	</div>
+          	<div class="form-group" v-if="!completo">             
+                <label for="message-text" class="form-control-label">Horario</label>
+                <h3>De: </h3>
+
+    				<select v-model="hora_inicial">
+    					<option v-for="n in range(0,23)">{{ n }}</option>
+    				</select>
+
+    			<h3>A: </h3>
+    				<select v-model="hora_final">
+    					<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
+    				</select>
+          	</div>
+          <div class="modal-footer">
+
+          	{{fecha_inhabil}}
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button class="btn btn-success" v-on:click="agregarFecha">Inhabilitar Fecha</button>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-<!--Modal fecha inhabil-->
-<div id="fecha_inhabil_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Agregar una fecha inhabil</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">             
-            <label for="message-text" class="form-control-label">Seleccione Fecha</label>
-            <input type="text" id="datepicker" class="form-control" :value="fecha_inhabil">
-      	</div>
-      	<div class="form-group">
-      		<label for="completo-text" class="form-control-label">Todo el día</label>
-      		<input type="checkbox" name="completo-text" v-model="completo">
-      	</div>
-      	<div class="form-group" v-if="!completo">             
-            <label for="message-text" class="form-control-label">Horario</label>
-            <h3>De: </h3>
-
-				<select v-model="hora_inicial">
-					<option v-for="n in range(0,23)">{{ n }}</option>
-				</select>
-
-			<h3>A: </h3>
-				<select v-model="hora_final">
-					<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
-				</select>
-      	</div>
-      <div class="modal-footer">
-
-      	{{fecha_inhabil}}
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button class="btn btn-success" v-on:click="agregarFecha">Inhabilitar Fecha</button>
-      </div>
     </div>
 
   </div>
-</div>
-
-
-</div>
 
 
 </template>

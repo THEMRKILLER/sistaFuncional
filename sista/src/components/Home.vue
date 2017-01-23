@@ -1237,7 +1237,7 @@ import 'assets/js/es.js';
 
                         
                         },
-            editable: true,
+            editable: trFue,
             eventLimit: true, // allow "more" link when too many events
             events: this.citas
             
