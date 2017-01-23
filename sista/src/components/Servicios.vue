@@ -41,7 +41,7 @@
                           <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
                           </td>
                           <td>
-                          <button v-on:click="deleteTheEvent(servicio.id)" type="button" class="btn btn-danger" title="Eliminar servicio" data-toggle="modal" href="#confirmOverlay">X</button>
+                          <button v-on:click="confirmDialog(servicio.id)" type="button" class="btn btn-danger" title="Eliminar servicio">X</button>
                           </td>
                       </tr>
                       <tr v-else>
@@ -89,20 +89,16 @@
                         </div>
 
                     </div>
-
-
-
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                             <button class="btn btn-primary" v-on:click="updateServicio">Guardar cambios</button>
                         </div>
                     </div>
                 </div>
-        </div> 
+        </div>
 <!-- modal to show -->
 
-<!-- MODAL DELETE -->
+<!-- MODAL DELETE
 
     <div id="confirmOverlay" class="modal fade">
     <div id="confirmBox" class="modal-content">
@@ -117,7 +113,7 @@
     </div>
 </div>
     
-<!-- MODAL DELETE -->
+MODAL DELETE -->
 
 			<!--Modal para agregar servicio -->
 			<div id="servicio_modal" class="modal fade" role="dialog">
@@ -184,11 +180,7 @@
 				        	
 						</h4>
 			      	</div>
-
-
-
 			      </div>
-
 			      <div class="modal-footer">
 			      	<button type="button" class="btn btn-md btn-success" v-on:click="registrarServicio">Registrar</button>
 			        <button v-if="!nombre == ''" type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancelarRegistro">Cancelar</button>
@@ -280,7 +272,31 @@
         			);
 
         	},
-
+//Cannot read property '11' of undefined //////////////////////////////////
+            confirmDialog: function(id_button){
+                var id_button = id_button;
+          $.confirm({
+            title: '¿Está seguro de eliminar el elemento?',
+            content: '',
+            buttons: {              
+              Sí: {
+              text: 'Sí',
+              btnClass: 'btn-warning',
+              action: function () {
+                /*this.$content*/
+                this.ArregloID = id_button;
+                this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
+                deleteServicio();
+                // reference to the content
+                $.alert('¡Eliminado!');
+              }
+            },
+              Cancelar: function () {
+                
+              }              
+          }
+      });
+    },
         	registrarServicio : function(event){
 
         	$(event.target).attr('disabled',true);
@@ -376,10 +392,10 @@
                 this.editCostEvent = this.servicios[this.ArregloID -1].costo;
                 this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
             },
-            deleteTheEvent: function(id_button) {
+            /*deleteTheEvent: function(id_button) {
                 this.ArregloID = id_button;
                 this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
-    },
+    },      */
         }
     }
 </script>

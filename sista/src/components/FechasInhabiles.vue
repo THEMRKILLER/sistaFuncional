@@ -1,5 +1,40 @@
 <template>
 
+<div id="fechas_inhabiles_root">
+
+	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
+
+  <br><br>
+    <div class="well">
+      <table class="table">
+        <thead class="thead-inverse">
+          <tr>
+            <th>Fecha</th>
+            <th>Disponibilidad</th>
+            <th>Cancelar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="data in fechas_inhabiles">
+            <td>{{data.dia}}</td>
+            <td v-if="data.completo===1">
+              <label>Día no laboral</label>
+            </td>
+            <td v-else>
+            <span v-for="hora in data.horas">
+              <td>
+                {{hora.hora}}
+              </td>
+            </span>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger" id="botonDelete" title="Eliminar servicio" v-on:click="confirmDialog()">X</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div id="fechas_inhabiles_root">
 
     	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
@@ -72,6 +107,42 @@
           </div>
         </div>
 
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar una fecha inhabil</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">             
+            <label for="message-text" class="form-control-label">Seleccione Fecha</label>
+            <input type="text" id="datepicker" class="form-control" :value="fecha_inhabil">
+      	</div>
+      	<div class="form-group">
+      		<label for="completo-text" class="form-control-label">Todo el día</label>
+      		<input type="checkbox" name="completo-text" v-model="completo">
+      	</div>
+      	<div class="checkbox-inline" v-if="!completo">             
+            <label style="font-family: 'PT Sans', sans-serif; margin-left:-10px;" for="message-text" class="form-control-label">Horario</label>
+            <h3>De: </h3>
+
+				<select v-model="hora_inicial">
+					<option v-for="n in range(0,23)">{{ n }}</option>
+				</select>
+        </div>
+        <div class="checkbox-inline center">
+        <br>
+			<h3 style="margin-top:25px;">A: </h3>
+				<select v-model="hora_final">
+					<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
+				</select>
+      	</div>
+      <div class="modal-footer">
+
+      	{{fecha_inhabil}}
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button class="btn btn-success" v-on:click="agregarFecha">Inhabilitar Fecha</button>
       </div>
     </div>
 
@@ -91,6 +162,9 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
+      editFecha: '',
+      editDisponibilidad: '',
+      ArregloID: [],
       fecha_inhabil : moment(new Date()).format("YYYY-MM-DD"),
       completo : false,
       hora_inicial : 0,
@@ -130,15 +204,13 @@ export default {
     confirmDialog: function(){
           $.confirm({
             title: '¿Está seguro de eliminar el elemento?',
-            content: 'Simple confirm!',
             buttons: {              
               Sí: {
               text: 'Sí',
               btnClass: 'btn-warning',              
               action: function () {
-                this.$content
                 // reference to the content
-                $.alert('¡Eliminado!');
+                $.alert('¡La fecha ha sido cancelada!');
               }
             },
               Cancelar: function () {
@@ -169,18 +241,8 @@ export default {
   		var range = [];
   		for(start; start <=end; start++) range.push(start);
   		return range;
-  	},
-    getElementID: function(id){
-                /*this.ArregloID = id;
-                //imprimo los ids seleccionados
-                this.editIdEvent = id;
-                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
-                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
-                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
-                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
-                */
-            },
-            deleteTheEvent: function(id_button) {
+  	},    
+    deleteTheEvent: function(id_button) {
                 /*this.ArregloID = id_button;
                 this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
                 */

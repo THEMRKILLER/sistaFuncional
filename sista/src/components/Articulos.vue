@@ -15,9 +15,43 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#Home">Inicio</a></li>
-            <li><a href="#redactar">Crear Articulo</a></li>
-            <li class="active"><a href="">Articulos</a></li>            
+            <li class="nav-item">
+              <router-link to="/">Inicio</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/settings">Configuración</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/redactar">Nuevo artículo</router-link>
+            </li>
+            <li class="nav-item active">
+              <router-link to="/articulos">Artículos</router-link>
+            </li>
+            <div style="margin-top: 10px; margin-left: 790px;">
+              <li class="dropdown">
+                <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
+                </a>
+                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
+                  <div class="container">                  
+                    <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:7%; margin-left: 0px; margin-top: 10px;'>
+                    <div style="margin-left: 120px; margin-top: -80px;" id="userName">
+                      <label style="margin-left: -23px;">
+                        Usuario
+                      </label><br>
+                      <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">
+                      usuario@prueba.com
+                      </label>
+                    </div>                    
+                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" data-toggle="modal" href="#profileEdition">Editar perfil</a></label>                    
+                  </div>
+                  <hr style="margin-top:5px;">
+                  <div style="margin-left: 170px;">
+                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button">Cerrar sesión</button>
+                  </div>
+                </ul>
+              </li>
+            </div>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

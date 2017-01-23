@@ -146,9 +146,25 @@ nav ul li a .tercero {
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href=""><span class="primero"><li class=""></li></span> Inicio</a></li>
-            <li><a href="#redactar"><span class="segundo"><li class=""></li></span> Crear Articulo</a></li>
-            <li><a href="#articulos"><span class="segundo"><li class=""></li></span> Articulos</a></li>
+            <li class="nav-item">
+              <router-link to="/">Inicio</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/settings">Configuración</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/redactar">Nuevo artículo</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/articulos">Artículos</router-link>
+            </li>
+            <div style="margin-top: 10px; margin-left: 790px;">
+              <li class="nav-item">
+                <a class="nav-link" href="" v-on:click="closeSesion()">
+                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
+                </a>
+              </li>
+            </div>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
