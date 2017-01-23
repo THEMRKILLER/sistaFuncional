@@ -25,7 +25,7 @@ Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 
-Vue.http.options.root = 'http://200.77.73.172/Sista/public/api/v1';
+Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
@@ -34,6 +34,7 @@ window.$ = $;
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
 import 'jquery-confirm'
+import 'croppie'
 var moment = require('moment');
 moment().format();
 import App from 'components/Header'
@@ -61,6 +62,7 @@ const routes = [
   { path: '/redactar', component: require('components/Redactador.vue'),name: 'auth-required' },
   { path: '/articulo/:id', component: require('components/Articulo.vue')},
   { path: '/articulos', component: require('components/Articulos.vue')},
+  { path: '/profile', component: require('components/Profile.vue')},
   { path: '*', component: require('components/NotFound.vue') }
 
   ]

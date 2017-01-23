@@ -873,11 +873,11 @@ footer
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<h2 class="ser-title">Contact us</h2>
+					<h2 class="ser-title">Agenda una cita</h2>
 					<hr class="botm-line">
 				</div>
 				<div class="col-md-4 col-sm-4">
-			      <h3>Contact Info</h3>
+			      <h3>Información de contacto</h3>
 			      <div class="space"></div>
 			      <p><i class="fa fa-map-marker fa-fw pull-left fa-2x"></i>321 Awesome Street<br>
 			        New York, NY 17022</p>
@@ -886,7 +886,7 @@ footer
 			      <div class="space"></div>
 			      <p><i class="fa fa-phone fa-fw pull-left fa-2x"></i>+1 800 123 1234</p>
 			    </div>
-				<div class="col-md-8 col-sm-8 marb20">
+				<div class="col-md-8 col-sm-8 marb20" style="margin-top: -50px;">
 				<div class="alert alert-info fade in alert-dismissable">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
   					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.

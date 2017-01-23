@@ -2,7 +2,7 @@
 <div id="fechas_inhabiles_root">
 
 	<button class="btn btn-primary" data-toggle="modal" data-target="#fecha_inhabil_modal">Agregar Fecha Inhábil</button>
-	<!-- {{fechas_inhabiles}} -->
+
   <br><br>
     <div class="well">
       <table class="table">
@@ -10,16 +10,21 @@
           <tr>
             <th>Fecha</th>
             <th>Disponibilidad</th>
-            <th>Editar</th>
-            <th>Eliminar</th>
+            <th>Cancelar</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="">
-            <td></td>
-            <td></td>
-            <td>
-              <button type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-target="#myModal"></button>
+          <tr v-for="data in fechas_inhabiles">
+            <td>{{data.dia}}</td>
+            <td v-if="data.completo===1">
+              <label>Día no laboral</label>
+            </td>
+            <td v-else>
+            <span v-for="hora in data.horas">
+              <td>
+                {{hora.hora}}
+              </td>
+            </span>
             </td>
             <td>
               <button type="button" class="btn btn-danger" id="botonDelete" title="Eliminar servicio" v-on:click="confirmDialog()">X</button>
@@ -48,15 +53,17 @@
       		<label for="completo-text" class="form-control-label">Todo el día</label>
       		<input type="checkbox" name="completo-text" v-model="completo">
       	</div>
-      	<div class="form-group" v-if="!completo">             
-            <label for="message-text" class="form-control-label">Horario</label>
+      	<div class="checkbox-inline" v-if="!completo">             
+            <label style="font-family: 'PT Sans', sans-serif; margin-left:-10px;" for="message-text" class="form-control-label">Horario</label>
             <h3>De: </h3>
 
 				<select v-model="hora_inicial">
 					<option v-for="n in range(0,23)">{{ n }}</option>
 				</select>
-
-			<h3>A: </h3>
+        </div>
+        <div class="checkbox-inline center">
+        <br>
+			<h3 style="margin-top:25px;">A: </h3>
 				<select v-model="hora_final">
 					<option v-for="h in range(hora_inicial,23)">{{ h }}</option>
 				</select>
@@ -86,6 +93,9 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
+      editFecha: '',
+      editDisponibilidad: '',
+      ArregloID: [],
       fecha_inhabil : moment(new Date()).format("YYYY-MM-DD"),
       completo : false,
       hora_inicial : 0,
@@ -125,15 +135,13 @@ export default {
     confirmDialog: function(){
           $.confirm({
             title: '¿Está seguro de eliminar el elemento?',
-            content: 'Simple confirm!',
             buttons: {              
               Sí: {
               text: 'Sí',
               btnClass: 'btn-warning',              
               action: function () {
-                this.$content
                 // reference to the content
-                $.alert('¡Eliminado!');
+                $.alert('¡La fecha ha sido cancelada!');
               }
             },
               Cancelar: function () {
@@ -164,18 +172,8 @@ export default {
   		var range = [];
   		for(start; start <=end; start++) range.push(start);
   		return range;
-  	},
-    getElementID: function(id){
-                /*this.ArregloID = id;
-                //imprimo los ids seleccionados
-                this.editIdEvent = id;
-                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
-                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
-                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
-                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
-                */
-            },
-            deleteTheEvent: function(id_button) {
+  	},    
+    deleteTheEvent: function(id_button) {
                 /*this.ArregloID = id_button;
                 this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
                 */

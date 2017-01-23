@@ -16,7 +16,6 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
 </style>
 <template>
 <div>
-<transition>
 <div id="TablaNoEditable" v-if="MostrarNoEditable">
 <button v-on:click="muestraBoton()" class="btn btn-primary">
   Editar horario
@@ -50,37 +49,35 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
   </div>
 </div>
 </div>
-</transition>
 <div v-if="mostrarEditable">
 <button class="btn btn-danger" v-on:click="muestraBoton()">Cancelar edición</button>
 <br>
 <br>
-  <transition name="fade">
   <div id="horario_root">
-  <div id="dias_semana" class="well">
-    <h4>Dias laborales : </h4>
-      <div v-for="dia in dias" class="checkbox-inline">
-       <input type="checkbox" :name="dia.nombre" v-model="dia.laboral" :value="dia.dia"/> <label id="days">{{dia.nombre}}</label>
-  </div>
-</div>
-<hr/>
-<div class="well">
-<h4>Horario</h4>
-<div class="checkbox-inline">
-<h3>De: </h3>
-<select v-model="hora_inicial">
-<option v-for="n in range(0,24)">{{ n }}</option>
-</select>
-</div>
-<div class="checkbox-inline center">
-<h3>A: </h3>
-<select v-model="hora_final">
-<option v-for="h in range(hora_inicial,24)">{{ h }}</option>
-</select>
-</div>
-<br>
-<br>
-</div>
+    <div id="dias_semana" class="well">
+      <h4>Dias laborales : </h4>
+        <div v-for="dia in dias" class="checkbox-inline">
+          <input type="checkbox" :name="dia.nombre" v-model="dia.laboral" :value="dia.dia"/> <label id="days">{{dia.nombre}}</label>
+        </div>
+      </div>
+      <hr/>
+      <div class="well">
+        <h4>Horario</h4>
+          <div class="checkbox-inline">
+            <h3>De: </h3>
+            <select v-model="hora_inicial">
+              <option v-for="n in range(0,24)">{{ n }}</option>
+            </select>
+          </div>
+          <div class="checkbox-inline center">
+            <h3>A: </h3>
+            <select v-model="hora_final">
+              <option v-for="h in range(hora_inicial,24)">{{ h }}</option>
+            </select>
+          </div>
+          <br>
+          <br>
+      </div>
 
 <hr>
 <div class="well">
@@ -101,13 +98,12 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
         </label>
         <label v-else>
           <td>{{hora.hora}} Hrs<input type="checkbox" v-if="enArreglo(dia.horas_s,hora.hora)"  v-model="hora.disponible" :value="hora.hora" />
-        <input type="checkbox" v-else  v-model="hora.disponible" :value="hora.hora"/>    
-    </td>    
-    </label>
+            <input type="checkbox" v-else  v-model="hora.disponible" :value="hora.hora"/>    
+          </td>    
+        </label>
       </td> 
       Todo el día <input type="checkbox" v-model="dia.full">     
-  </tr>
-      
+    </tr>
     </tbody>
   </table>
  
@@ -115,19 +111,18 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
 <div class="container">
   
   <button class="btn btn-primary" v-on:click="actualizarDiasHabiles" style="margin-left: 200px;">Actualizar</button>
-<button class="btn btn-danger" style="margin-left: 90px;" v-on:click="muestraBoton()">Cancelar</button>
-
+  <button class="btn btn-danger" style="margin-left: 90px;" v-on:click="muestraBoton()">Cancelar</button>
 </div>
 
 
 </div>
 </div>
-</transition>
 </div>
 </template>
 
 
 <script>
+import "jquery-confirm/css/jquery-confirm.css";
 export default {
   name: 'horario',
   mounted(){
@@ -233,7 +228,11 @@ export default {
   		this.$http.post('dias_habiles?token='+localStorage.getItem('token'),data).then(
   			function(response){
   				$(event.target).attr('disabled',false);
-
+          //alert
+          $.alert({
+            title: '¡Días actualizados correctamente!',
+          });
+          this.muestraBoton();
   				console.log(response.data);
   			},
   			function(response){
