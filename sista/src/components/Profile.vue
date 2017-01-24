@@ -1,3 +1,6 @@
+<style>
+    @import url('http://t4t5.github.io/sweetalert/dist/sweetalert.css');
+</style>
 <template>
 	
 <div>
@@ -33,9 +36,11 @@
     <br>
     <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;">
     <br>
-    <div class="card">            
-            <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style="margin-left:1px; width: 250px;">
-            <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
+    <div class="card">
+        <a type="button" data-toggle="modal" href="#photoEdition">
+            <img id="profile-img" class="profile-img-card" :src="profileImage" style="margin-left:1px; width: 250px;">
+        </a>
+        <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
             <label>Usuario</label>
             <br>            
             <label style="color: #A4A4A4">usuario@gmail.com</label>
@@ -45,10 +50,37 @@
             <label>Cédula profesional</label>
             <br>
             <button class="btn btn-default" style="margin-left: 0px; margin-top: 50px;" data-toggle="modal" href="#profileEdition">Editar perfil</button>
-            </div>            
+        </div>            
     </div>
 
     <!-- MODAL EDICION PERFIL -->
+    <div id="photoEdition" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label class="modal-title vanilla-result">Selecciona tu foto de perfil</label>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="profileCard">
+                    <div class="croppie-container" id="result">
+                    <div id="vanilla-demo"></div>
+                    </div>
+                        <input type="file" id="files" v-on:change="onFileChange" style="margin-left:-20px; margin-top: 10px;" accept="image/*">
+                    </div>                    
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary sendDta">Guardar cambios</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- MODAL EDICION DATOS USUARIOS -->
     <div id="profileEdition" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -60,23 +92,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="profileCard">
-                    <div class="croppie-container" id="upload-demo">
-                    <!--
-                        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style="margin-left:1px; width: 100px;">
-                        -->
-                    </div>
-                        <!--
-                        <div class="" style="margin-left: 130px; margin-top: -120px; width:350px;">
+                        <div class="" style="margin-left: 90px; margin-top: -10px; width:350px;">
                             <label>Nombre</label>
-                            <input class="form-control" type="text" id="newName">
+                            <input class="form-control" type="text" id="newName" v-model="editName">
+                            <label>Correo elecrónico</label>
+                            <input class="form-control" type="text" id="newEmail" v-model="editEmail">
                             <label>Contraseña</label>
                             <input class="form-control" type="text" id="newPass">
                             <label>Escribe otra vez tu contraseña</label>
                             <input class="form-control" type="text" id="newPassValidation">
                             <label>Cédula profesional</label>
-                            <input class="form-control" type="text" id="newCedula">
-                        </div> -->
-                        <input type="file" id="upload" value="" style="margin-left:-20px; margin-top: 10px;" accept="image/*">
+                            <input class="form-control" type="text" id="newCedula" v-model="editCedula">
+                        </div>                        
                     </div>                    
                 </div>
                 <div class="modal-footer">
@@ -85,51 +112,131 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+
+
 </div>
 
 
 </template>
 
 
-
+<script src="http://t4t5.github.io/sweetalert/dist/sweetalert-dev.js"></script>
 <script>
+import '../assets/css/croppie.css';
 import '../assets/js/croppie.js';
-import '../assets/css/croppie.css'
+import '../assets/js/jquery.min.js';
     export default {    	
     	data(){
     		return	{
     				msg: 'ok',
                     user : null,
-
+                    img_selected : '',
+                    croppie_obj : null,
+                    editName: '',
+                    editPassword: '',
+                    editPassword2: '',
+                    editCedula: '',
+                    editEmail: '',
+                    profileImage: ''
     			}         
     	   },
            mounted(){
-            this.cropImage();
-            this.fetchDatas();
+            this.fetchDatas();            
+            this.demoVanilla();
            },
            methods: {
-                cropImage: function(){
-                    var uploadCrop = $('#upload-demo').croppie({
-                    enableExif: true,
-                    viewport: {
-                        width: 200,
-                        height: 200,
-                        type: 'circle'
-                    },
-                    boundary: {
-                        width: 300,
-                        height: 300
-                    }
-                });
+
+            onFileChange : function (e) {
+              var thisObj = this;
+              var files = e.target.files || e.dataTransfer.files;
+              if (!files.length)
+                return;
+
+              this.createImage(files[0]);
+
+            },
+            createImage : function(file) {
+              
+              var image = new Image();
+              var reader = new FileReader();
+
+              var vm = this;
+
+
+              reader.onload = (e) => {
+                vm.img_selected = e.target.result;
+                 vm.croppie_obj.bind({
+                url: vm.img_selected,
+                orientation: 1
+            });
+
+              };
+              reader.readAsDataURL(file);
+    },
+         
+            demoVanilla: function() {
+                var thisObj = this;
+
+                var vanillaResult = document.querySelector('.vanilla-result');
+                var vanillaSend = document.querySelector('.sendDta');
+                this.croppie_obj = new Croppie(document.getElementById('vanilla-demo'), {
+                viewport: {
+                width: 100,
+                height: 100,
+                type: 'circle'
+            },
+                boundary: {
+                    width: 300,
+                    height: 300
                 },
+                enableOrientation: true
+            });
+
+            this.croppie_obj.bind({
+                url: '',
+                orientation: 1
+            });
+            vanillaResult.addEventListener('click', function() {
+                thisObj.croppie_obj.result('canvas').then(resultVanilla);
+            });
+            vanillaSend.addEventListener('click', function(){
+                thisObj.croppie_obj.result('blob').then(function(blob){
+                    console.log(blob);
+                });
+            });
+        },
+
+            resultVanilla: function(result) {
+                swal({
+                    title: '',
+                    html: true,
+                    text: '<img src="' + result + '" />',
+                    allowOutsideClick: true
+                });
+            },
+            sendImage: function(){
+
+            },
                 fetchDatas : function(){
                     var thisObj = this;
                     this.$http.get('user_info',{params : {'user_id' : this.$store.state.calendario_id}}).then(
                         //success
                         function(response){
                             thisObj.user = response.data;
-                            console.log("Success ! ");
+
+                            //console.log("Success ! ");
+                            console.log(thisObj.user);
+                            this.editName = thisObj.user.nombre;
+                            this.editCedula = thisObj.user.cedula_profesional;
+                            this.editEmail = thisObj.user.correo_electronico;
+                            if(thisObj.user.avatar == null){
+                                this.profileImage = "//ssl.gstatic.com/accounts/ui/avatar_2x.png";
+                            }
+                            else{
+                                this.profileImage = thisObj.user.avatar;
+                            }
+
                         },
                         //error
                         function(response){
