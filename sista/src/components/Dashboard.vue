@@ -75,7 +75,7 @@
                   </div>
                   <hr style="margin-top:5px;">
                   <div style="margin-left: 170px;">
-                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button">Cerrar sesión</button>
+                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button" v-on:click="closeSesion">Cerrar sesión</button>
                   </div>
                 </ul>
               </li>
@@ -303,7 +303,6 @@
                 var tipo_id = this.event_selected_servicio_id;
                 var fecha = this.event_selected_fecha;
                 if(tipo_id != "")this.servicioHorasDisponibles(tipo_id,fecha);
-                else console.log("Nope " + tipo_id);
             },
             'event_selected_servicio_id' : function(){
                 var tipo_id = this.event_selected_servicio_id;
@@ -316,6 +315,7 @@
         },
     	methods : {
             closeSesion: function(){
+              this.$store.commit('logout');
 
             },
             formatoFecha: function(d){
@@ -360,7 +360,6 @@
                     minDate: new Date(), 
                     onSelect: function () {
                         thisObj.event_selected_fecha = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-                        console.log("Nuevo dia " + thisObj.event_selected_fecha);
                     },
                     beforeShowDay: function(d) {
                         var ymd = d.getFullYear() +'-';
@@ -374,7 +373,6 @@
                         var disponibilidad = thisObj.buscarPorDisponibilidad(ymd);
                         
                         if ( disponibilidad != false) {
-                                console.log(disponibilidad);
                                 switch(disponibilidad.disponibilidad)
                                 {
                                     case 1 : {
@@ -419,13 +417,12 @@
 
                     },
                     function(response){
-                        console.error(response.data);
+                        console.error(response.status);
                     }
                     );
             },
             servicioHorasDisponibles : function(servicio_id,fecha){
                 this.hours = [];
-                console.log("dia = " + new Date(fecha));
                 var dia = new Date(fecha).toISOString();
                // console.log(dia);
                 
@@ -500,7 +497,7 @@
                 thisObj.agendarcita_status_error = false;
                 thisObj.agendarcita_error_mensaje = [];
 
-    			this.$http.post('cita?token='+localStorage.getItem('token'), calendarInformation).then(
+    			this.$http.post('cita', calendarInformation).then(
 						//success
 						function(response){
 
@@ -676,7 +673,7 @@
     		fetchDatas : function(){
     		
                 var thisObj = this;
-    			this.$http.get('dashboard?token='+localStorage.getItem('token')).then(
+    			this.$http.get('dashboard').then(
     				//success
     				function(response){
     					this.citas = response.data.citas;
@@ -686,37 +683,7 @@
     				//error
     				function(response){
     					console.log("Error :( "+response.status);
-                        switch(response.status)
-                        {
-                            case 401 : {
-                                if(localStorage.getItem('remember_user') == true)
-                                {
-                                    thisObj.$http.get('refresh_token').then(
-                                        //sucess
-                                        function(response){
-
-                                            localStorage.setItem('token', response.data.token);
-                                            thisObj.fetchDatas();
-
-                                        },
-                                        //error
-                                        function(response){
-                                            localStorage.removeItem('token');
-                                            thisObj.$router.push('admin');
-                                        });
-                                }
-                                else{
-                                    localStorage.removeItem('token');
-                                    thisObj.$router.push('admin');
-
-                                }
-                            }break;
-
-                            case 404 : {
-                                       localStorage.removeItem('token');
-                                        thisObj.$router.push('admin');
-                            }break;
-                        }    
+                       
     				});
     		}
     	}

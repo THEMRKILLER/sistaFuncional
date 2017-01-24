@@ -153,7 +153,7 @@ export default {
       thisobj.fecha_inhabil_creando = true;
   		var horas = this.range(this.hora_inicial,this.hora_final);
   	  		var datas = {'fecha' : this.fecha_inhabil, 'completo': this.completo, 'horas' : horas};
-  		this.$http.post('fecha_inhabil?token='+localStorage.getItem('token'),datas).then(
+  		this.$http.post('fecha_inhabil',datas).then(
 
   			function(response){
           thisobj.neutralizarEstados(false);
@@ -276,7 +276,7 @@ export default {
   	},    
     borrarFechaInhabil: function(fecha_inhabil_id) {
         var thisObj = this;
-        this.$http.delete('fecha_inhabil?token='+localStorage.getItem('token'),{params : {'fecha_inhabil_id' : fecha_inhabil_id}}).then(
+        this.$http.delete('fecha_inhabil',{params : {'fecha_inhabil_id' : fecha_inhabil_id}}).then(
           //success
           function(response){
             console.log("Fecha cancelada con exito ! ");

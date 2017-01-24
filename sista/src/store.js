@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import Auth from './services/auth.js';
+Vue.use(require('vue-resource'))
 Vue.use(Vuex)
 
 // root state object.
@@ -9,12 +10,16 @@ const state = {
   calendario_id: 1
 }
 
+
 // mutations are operations that actually mutates the state.
 // each mutation handler gets the entire state tree as the
 // first argument, followed by additional payload arguments.
 // mutations must be synchronous and can be recorded by plugins
 // for debugging purposes.
 const mutations = {
+  logout () { 
+    Auth.logout(Vue);
+  }
   /**
   increment (state) {
     state.count++
@@ -28,6 +33,7 @@ const mutations = {
 // actions are functions that causes side effects and can involve
 // asynchronous operations.
 const actions = {
+  
   /**
   increment: ({ commit }) => commit('increment'),
   decrement: ({ commit }) => commit('decrement'),

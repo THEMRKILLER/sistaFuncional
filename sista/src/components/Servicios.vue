@@ -307,7 +307,7 @@ MODAL DELETE -->
 
 
         	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
-        	 this.$http.post('tipo?token='+localStorage.getItem('token'),datas_to_server).then(
+        	 this.$http.post('tipo',datas_to_server).then(
         	 	//success
         	 	function(response){
         	 		this.registro_estado_exitoso = true;
@@ -343,7 +343,7 @@ MODAL DELETE -->
 
                 var datas = {'id' : this.editIdEvent,'nombre' : this.editNameEvent, 'duracion' : this.editTimeEvent , 'costo' : this.editCostEvent, 'denominacion' : this.editDenominacionEvent};
 
-                this.$http.put('tipo?token='+localStorage.getItem('token'),datas).then(
+                this.$http.put('tipo',datas).then(
                     //success
                     function(response){
                         $(event.target).attr('disabled',false);
@@ -365,7 +365,7 @@ MODAL DELETE -->
                   $(event.target).attr('disabled',true);
                 var datas = {'id' : this.ArregloID};
 
-                this.$http.delete('tipo?token='+localStorage.getItem('token'),{params : {'id' : this.ArregloID}}).then(
+                this.$http.delete('tipo',{params : {'id' : this.ArregloID}}).then(
                     //success
                     function(response){
                         $(event.target).attr('disabled',false);

@@ -130,7 +130,6 @@ import '../assets/css/croppie.css'
                         function(response){
                             thisObj.user = response.data;
                             console.log("Success ! ");
-                            console.log(thisObj.user);
                         },
                         //error
                         function(response){

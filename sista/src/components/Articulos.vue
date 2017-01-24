@@ -128,7 +128,7 @@ export default {
   },
   methods:{
   	fetchDatas : function(){
-  		this.$http.get('articulos?token='+localStorage.getItem('token')).then(
+  		this.$http.get('articulos').then(
   			//success
   			function(response){
   				this.articulos = response.data;

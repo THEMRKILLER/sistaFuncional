@@ -229,7 +229,7 @@ export default {
   	actualizarDiasHabiles : function(event){
   		$(event.target).attr('disabled',true);
   		var data = {'dias':this.dias,'hora_inicio' : this.hora_inicial, 'hora_final' : this.hora_final};
-  		this.$http.post('dias_habiles?token='+localStorage.getItem('token'),data).then(
+  		this.$http.post('dias_habiles',data).then(
   			function(response){
   				$(event.target).attr('disabled',false);
           //alert
@@ -237,12 +237,12 @@ export default {
             title: '¡Días actualizados correctamente!',
           });
           this.muestraBoton();
-  				console.log(response.data);
+  				console.log(response.status);
   			},
   			function(response){
   				$(event.target).attr('disabled',false);
 
-  				console.error(response.data);
+  				console.error(response.status);
   			}
 
   			);
@@ -343,11 +343,9 @@ export default {
   	updateHorasRange :function(){
   		var objThis = this;
       var range_tmp = this.range(objThis.hora_inicial,objThis.hora_final-1);
-      console.log(range_tmp);
   		for (var i = 0; i < objThis.dias.length; i++) {
   			objThis.dias[i].horas =  this.rangeDisp(objThis.hora_inicial,objThis.hora_final,objThis.dias[i].horas);
   			objThis.sortByKey(objThis.dias[i].horas, 'hora');
-        console.log(objThis.dias[i].horas, range_tmp);
     //    if(objThis.dias[i].horas.length === range_tmp.length) objThis.dias[i].full = true;
 
   		};

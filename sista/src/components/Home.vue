@@ -1150,15 +1150,13 @@ import 'assets/js/es.js';
 
 	                    },
 	                    function(response){
-	                        console.error(response.data);
+	                        console.error(response.status);
 	                    }
 	                    );
             },
             servicioHorasDisponibles : function(){
                 this.hours = [];
-                console.log("dia = " + new Date(this.date_selected));
                 var dia = new Date(this.date_selected).toISOString();
-                console.log(dia);
                 
                 this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
                     //success

@@ -187,7 +187,7 @@ export default {
     	//console.log(this.caratula);
     	//return;
 
-    	this.$http.post('articulo?token='+localStorage.getItem('token'),datas_send).then(
+    	this.$http.post('articulo',datas_send).then(
     		//success
     		function(response){
           
@@ -199,7 +199,7 @@ export default {
           }, 2000);
 
 
-    			console.log(response.data);
+    			console.log(response.status);
 
     		},
     		//error
