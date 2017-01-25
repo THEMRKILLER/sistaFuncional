@@ -38,7 +38,7 @@
     <br>
     <div class="card">
         <a type="button" data-toggle="modal" href="#photoEdition">
-            <img id="profile-img" class="profile-img-card" :src="profileImage" style="margin-left:1px; width: 250px;">
+            <img id="profile-img" class="profile-img-card" :src="user.avatar" style="margin-left:1px; width: 250px;">
         </a>
         <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
             <label>Usuario</label>
@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendDta">Guardar cambios</button>
+                    <button type="button" class="btn btn-primary sendDta" v-on:click="sendImage">Guardar cambios</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -130,7 +130,7 @@ import '../assets/js/jquery.min.js';
     	data(){
     		return	{
     				msg: 'ok',
-                    user : null,
+                    user : [],
                     img_selected : '',
                     croppie_obj : null,
                     editName: '',
@@ -197,14 +197,9 @@ import '../assets/js/jquery.min.js';
                 url: '',
                 orientation: 1
             });
-            vanillaResult.addEventListener('click', function() {
-                thisObj.croppie_obj.result('canvas').then(resultVanilla);
-            });
-            vanillaSend.addEventListener('click', function(){
-                thisObj.croppie_obj.result('blob').then(function(blob){
-                    console.log(blob);
-                });
-            });
+       
+
+          
         },
 
             resultVanilla: function(result) {
@@ -216,7 +211,38 @@ import '../assets/js/jquery.min.js';
                 });
             },
             sendImage: function(){
+                var thisObj = this;
+                  this.croppie_obj.result('canvas').then(function(canvas){
+                    var data = {'avatar' : canvas};
+                    console.log(data);
+                   thisObj.$http.put('avatar',data).then(
+                        //success
+                        function(response){
+                            thisObj.user.avatar = response.data.avatar;
+                            $("#photoEdition").modal('hide');
+                            $.confirm({
+                                  icon: 'fa fa-check',
+                                    title: 'Correcto',
+                                    content: 'Foto de perfil cambiado correctamente',
+                                    type: 'green',
+                                    typeAnimated: true,
+                                    buttons: {
+                                        ok : {
+                                            text : 'Ok'
+                                        }
+                                    }
+                                });                      
 
+
+      },
+                        //error
+                        function(response){
+                            console.error("Error avatar :(");
+                        }
+
+                        );
+                });
+                 
             },
                 fetchDatas : function(){
                     var thisObj = this;
