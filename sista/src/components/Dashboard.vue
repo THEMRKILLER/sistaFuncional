@@ -26,6 +26,20 @@
 </style>
 <template>	
 	<div class="container">
+    <br><br><br>
+    <div class="jumbotron container-fluid">
+        <div v-if="laHoraDehoy < laHoraFinal">
+            <label>Atendiendo a: {{nombreActual}}</label>
+            <br>
+            <label>Servicio de: {{servicioActual}}</label>
+            <br>
+            <label>Cita termina a las: {{finalActual}}</label>        
+        </div>
+        <div v-else>
+        <!-- manera variable boleana para esconder y mostrarlo -->
+            <label>El doctor se encuentra disponible</label>
+        </div>
+    </div>
 
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -85,7 +99,7 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-    <br><br><br><br>
+    <br>
 <div class="panel panel-default">
   <div class="panel-heading">Calendario
     <div v-if="!agendarcita_status_neutral" align="center">
@@ -254,14 +268,23 @@
 
 <script>
 
-
+/*
+Aceddiendo a las variables de VUEX : this.$store.state.nombre_de_tu_variable
+ejemplo : this.$store.state.calendario_id 
+*/
     export default {
 
     	name:'dashboard',
 
     	data: function(){
     		return {
-    			//id_cita: '',
+    			citas: [],
+                msCitas: [],
+                laHoraDehoy: '',
+                laHoraFinal: '',
+                nombreActual: '',
+                servicioActual: '',
+                finalActual: '',
     			calendario_id: 1,
     			tipo_id: '',
     			fecha_inicio: '',
@@ -287,13 +310,61 @@
                 event_selected_servicio_id : 0,
     			hours:[],
                 reagendar : false,
-                disponibilidad_servicio : []
+                disponibilidad_servicio : [],
+                citas_fake : [
+                {
+                    id: 10,
+                    title: "Limpieza Dental",
+                    start: "2017-01-26 15:28:00",
+                    end: "2017-01-26 15:29:00",
+                    cliente_nombre: 'Juan Camaney',
+                    cliente_telefono: '9611234550',
+                    cliente_email: 'papuchoSexy@gmail.com',
+                    servicio: "Limpieza Dental"                    
+                },
+                {
+                    id: 11,
+                    title: "Parto",
+                    start: "2017-01-26 15:29:00",
+                    end: "2017-01-26 15:29:30",
+                    cliente_nombre: 'Chaquira',
+                    cliente_telefono: '9611234550',
+                    cliente_email: 'LaWeaSexy@sexyvaguitas.com',
+                    servicio: "Parto"
+                },
+                {
+                    id: 12,
+                    title: "Chequeo de prostata",
+                    start: "2017-01-26 12:52:00",
+                    end: "2017-01-26 12:52:30",
+                    cliente_nombre: 'Ramiro cuay :v',
+                    cliente_telefono: '9611234550',
+                    cliente_email: 'pnxD@gmail.com',
+                    servicio: "Chequeo de prostata"
+                },
+                ]
 
     		}
     	},
     	mounted(){
             var thisObj = this;
-            this.fetchDatas();
+            this.fetchDatas(); 
+            //alert(this.$store.state.variable_prueba);     
+            //se recorre citas fake
+            for(var i=0 ; i < this.citas_fake.length; i++ )
+            {
+                //se guarda en una variable cita la cita que se està recorriendo 
+                var cita = this.citas_fake[i];
+                // si la cita no està registrada en vuex 
+                if(!this.$store.state.citas_programadas[cita.id])
+                {
+                    this.$store.commit('agregarCitaProgramada', {
+                        cita: cita
+                    });
+                    //settimeout                    
+                    this.calcMs(cita);
+                }
+            }            
     	},
         watch : {
             'tipo_id' : function(){
@@ -316,6 +387,46 @@
            
         },
     	methods : {
+            calcMs: function(citaFalsa){
+                var msTotal;
+                var vm = this;
+                    var fechaActual =  new Date();
+                    var fechaCita = new Date(citaFalsa.start);
+                    var fechaFinalCita = new Date(citaFalsa.end);
+                    var msHastaHoy = fechaActual.getTime();
+                    var msCitaInicio = fechaCita.getTime();                 
+                    //milisegundos que faltan para la cita   
+                    msTotal = msCitaInicio - msHastaHoy;
+                    //si los milisegundos totales son mayores a cero
+                if(msTotal>0)
+                {                 
+                //proximo cliente                   
+                    //se muestran los datos del cliente en el tiempo que falte para la cita
+                    setTimeout(function() {
+                    vm.nombreActual = citaFalsa.cliente_nombre;
+                    vm.servicioActual = citaFalsa.title;
+                    vm.finalActual = moment(citaFalsa.end).format("HH:mm:ss");
+                }, msTotal);
+                } 
+                //cliente actual: si no se muestra los datos del cliente que su cita aún no haya concluido
+                else{
+                    if(fechaActual < fechaFinalCita){
+                        this.laHoraDehoy = fechaActual;
+                        this.laHoraFinal = fechaFinalCita;
+                        setTimeout(function() {
+                        vm.nombreActual = citaFalsa.cliente_nombre;
+                        vm.servicioActual = citaFalsa.title;
+                        vm.finalActual = moment(citaFalsa.end).format("HH:mm:ss");
+                    }, 0);                        
+                        setTimeout(function() {
+                        vm.nombreActual = '';
+                        vm.servicioActual = '';
+                        vm.finalActual = '';
+                    }, 1000);
+                }
+            }
+        },
+
             closeSesion: function(){
               this.$store.commit('logout');
 
@@ -338,7 +449,7 @@
                 var datas  = {};
                 this.$http.put('cita-r',datas).then(
                     //success
-                    function(response){
+                    function(response){º
 
                     },
                     //error

@@ -35,6 +35,7 @@ window.$ = $;
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
 import 'jquery-confirm'
+import 'moment';
 var moment = require('moment');
 moment().format();
 import App from 'components/Header'

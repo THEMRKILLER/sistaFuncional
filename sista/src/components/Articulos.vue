@@ -27,6 +27,9 @@
             <li class="nav-item active">
               <router-link to="/articulos">Artículos</router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/dashboard">Citas</router-link>
+            </li>
             <div style="margin-top: 10px; margin-left: 790px;">
               <li class="dropdown">
                 <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
@@ -43,7 +46,7 @@
                       usuario@prueba.com
                       </label>
                     </div>                    
-                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" data-toggle="modal" href="#profileEdition">Editar perfil</a></label>                    
+                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" href="/profile">Editar perfil</a></label>                    
                   </div>
                   <hr style="margin-top:5px;">
                   <div style="margin-left: 170px;">
@@ -84,7 +87,7 @@
                             </div>
                             
                             <div class="post-prev-info font-alt">
-                                <a href="">John Doe</a> | 10 December
+                                <a href="">{{articulo.autor}}</a> | {{convertirFecha(articulo.fecha.date)}}
                             </div>
                             
                             <div class="post-prev-text">
@@ -120,6 +123,7 @@ export default {
   data () {
     return {
     	articulos : [],
+      hora: [],
     	error : false
     }
   },
@@ -131,7 +135,7 @@ export default {
   		this.$http.get('articulos').then(
   			//success
   			function(response){
-  				this.articulos = response.data;
+  				this.articulos = response.data;          
   			},
   			//error
   			function(response){
@@ -145,6 +149,11 @@ export default {
 
   			);
   	},
+    convertirFecha: function(fecha){
+      moment.lang('es');
+      return moment(fecha, "YYYYMMDD").fromNow();
+    },
+
     goArticulo : function(id){
       this.$router.push('articulo/'+id);
     }

@@ -7,9 +7,27 @@ Vue.use(Vuex)
 // root state object.
 // each Vuex instance is just a single state tree.
 const state = {
-  calendario_id: 1
+  calendario_id: 1,
+  citas_programadas : [],
+  variable_prueba : "hola mundo"
 }
 
+
+//citas_programadas =['1' : {'nombre' : 'Julio Jaramillo', 'start' : '2017-01-03'} , '2' : {'nombre' : 'Homero ' ,  ....} ];
+/*
+id_cita = 1 
+ 
+ var cita = citas_programadas[id_cita] 
+
+if(cita)
+´,
+,
+,
+else 
+,
+,
+,
+*/
 
 // mutations are operations that actually mutates the state.
 // each mutation handler gets the entire state tree as the
@@ -19,6 +37,18 @@ const state = {
 const mutations = {
   logout () { 
     Auth.logout(Vue);
+  },
+  agregarCitaProgramada(state,payload){
+
+    var id_cita = payload.cita.id;
+    var cita = payload.cita;
+
+    if(!state.citas_programadas[id_cita])
+    {
+      state.citas_programadas[id_cita] = {'title' : cita.title, 'start' : cita.start, 'end': cita.end, 'nombre': cita.cliente_nombre, 'telefono': cita.cliente_telefono, 'email': cita.cliente_email, 'servicio': cita.servicio};
+    }
+
+    
   }
   /**
   increment (state) {
