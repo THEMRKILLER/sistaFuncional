@@ -5,8 +5,8 @@ export default {
     // authentication status
     authenticated: false,
 
-   check : function(status,vm){
-     switch(status)
+   check : function(response,vm){
+     switch(response.status)
                         {
                             case 401 : {
                                 if(localStorage.getItem('remember_user') == true)
@@ -28,6 +28,13 @@ export default {
 
                                 }
                             }break;
+
+                            case 400 : {
+                                if(response.data.error == 'token_not_provided')
+                                {
+                                    this.clearToken();
+                                }
+                            }
 
                            
                         }    

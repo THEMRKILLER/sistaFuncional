@@ -90,6 +90,7 @@
     <br>
     <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;">
     <br>
+
     <div class="card" style="height:370px;">
         <div class="profile-img-container">
             <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="profileImage" style="width:250px;">
@@ -102,6 +103,13 @@
             
         <div class="container" style="margin-left: 300px; margin-top: -230px; width:500px;">
             <label>{{editName}}</label>
+
+    <div class="card">
+        <a type="button" data-toggle="modal" href="#photoEdition">
+            <img id="profile-img" class="profile-img-card" :src="user.avatar" style="margin-left:1px; width: 250px;">
+        </a>
+        <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
+            <label>Usuario</label>
             <br>            
             <label style="color: #A4A4A4">{{editEmail}}</label>
             <br>
@@ -140,7 +148,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendDta">Guardar cambios</button>
+                    <button type="button" class="btn btn-primary sendDta" v-on:click="sendImage">Guardar cambios</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
@@ -195,7 +203,7 @@ import '../assets/js/jquery.min.js';
     	data(){
     		return	{
     				msg: 'ok',
-                    user : null,
+                    user : [],
                     img_selected : '',
                     croppie_obj : null,
                     editName: '',
@@ -262,14 +270,9 @@ import '../assets/js/jquery.min.js';
                 url: 'http://foliotek.github.io/Croppie/demo/cat.jpg',
                 orientation: 1
             });
-            vanillaResult.addEventListener('click', function() {
-                thisObj.croppie_obj.result('canvas').then(resultVanilla);
-            });
-            vanillaSend.addEventListener('click', function(){
-                thisObj.croppie_obj.result('blob').then(function(blob){
-                    console.log(blob);
-                });
-            });
+       
+
+          
         },
 
             resultVanilla: function(result) {
@@ -281,7 +284,38 @@ import '../assets/js/jquery.min.js';
                 });
             },
             sendImage: function(){
+                var thisObj = this;
+                  this.croppie_obj.result('canvas').then(function(canvas){
+                    var data = {'avatar' : canvas};
+                    console.log(data);
+                   thisObj.$http.put('avatar',data).then(
+                        //success
+                        function(response){
+                            thisObj.user.avatar = response.data.avatar;
+                            $("#photoEdition").modal('hide');
+                            $.confirm({
+                                  icon: 'fa fa-check',
+                                    title: 'Correcto',
+                                    content: 'Foto de perfil cambiado correctamente',
+                                    type: 'green',
+                                    typeAnimated: true,
+                                    buttons: {
+                                        ok : {
+                                            text : 'Ok'
+                                        }
+                                    }
+                                });                      
 
+
+      },
+                        //error
+                        function(response){
+                            console.error("Error avatar :(");
+                        }
+
+                        );
+                });
+                 
             },
                 fetchDatas : function(){
                     var thisObj = this;

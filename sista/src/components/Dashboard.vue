@@ -193,7 +193,7 @@
 </div>
 <!-- FIN MODAL -->
 
-<!-- segundo modal -->
+<!-- reagendar modal -->
 	<div id="segundoModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -234,13 +234,14 @@
                                     </option>
                                 </select>
                             <select v-else class="form-control" name="fecha_inicio" disabled></select>
+
                         </div> 
                     
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
                             <input type="text" id="datepicker" class="form-control" :value="event_selected_fecha">
-                            {{event_selected_fecha}}
-                        </select>
+                  
+                      
                     </div>
                     
                     
@@ -300,6 +301,7 @@ ejemplo : this.$store.state.calendario_id
                 agendarcita_error_mensaje : [],
     			date_selected : '',
                 servicios : [],
+                event_selected_id : null,
                 event_selected_cliente_nombre : '',
                 event_selected_hora_inicio : '',
                 event_selected_fecha : new Date(),
@@ -446,16 +448,28 @@ ejemplo : this.$store.state.calendario_id
                 thisObj.servicioDisponibilidadColoreado(this.event_selected_servicio_id);
             },
             reagendarCita : function(){
-                var datas  = {};
+                var datas  = {'id_cita' : this.event_selected_id,'servicio_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
+                console.log(datas);
+                //event_selected_id
+                //event_selected_servicio_id
+                //fecha_inicio
+                //event_selected_fecha
+
                 this.$http.put('cita-r',datas).then(
                     //success
-                    function(response){º
+
+                    function(response){
+
+                    },
+
+                    function(response){
+                      console.log("Success");
 
                     },
                     //error
-                    function(response){}
-
-                    );
+                    function(response){
+                      console.error("Error :(");
+                    });
             },
             cerrarModalCita : function(){
                 this.reagendar = false;
@@ -662,31 +676,7 @@ ejemplo : this.$store.state.calendario_id
 
                             }break;
 
-                            case 401 : 
-                            {
-                                if(localStorage.getItem('remember_user') == true)
-                                {
-                                    thisObj.$http.get('refresh_token').then(
-                                        //sucess
-                                        function(response){
-
-                                            localStorage.setItem('token', response.data.token);
-                                            thisObj.sendCalendarJSON(event);
-
-                                        },
-                                        //error
-                                        function(response){
-                                            localStorage.removeItem('token');
-                                            thisObj.$router.push('admin');
-                                        });
-                                }
-                                else{
-                                    localStorage.removeItem('token');
-                                    thisObj.$router.push('admin');
-
-                                }
-
-                            }break;
+                            
                             default : {
                                 thisObj.agendarcita_error_mensaje = ["Ha ocurrido un error inesperado, intente más tarde"];
                             }
@@ -721,6 +711,7 @@ ejemplo : this.$store.state.calendario_id
 
         	eventClick: function(event, jsEvent, view, start, end){
         		//var formDate = $.fullCalendar.formatDate(event.start, 'MM-dd-yyyy');
+                thisObj.event_selected_id = event.id;
                 thisObj.event_selected_servicio = event.title;
                 thisObj.event_selected_cliente_nombre = event.cliente_nombre;
                 thisObj.event_selected_cliente_telefono = event.cliente_telefono;

@@ -127,7 +127,7 @@ Vue.http.interceptors.push((request, next)  => {
   next((response) => {
 
       console.log('status: ' + response.status)
-      Auth.check(response.status);
+      Auth.check(response);
 
 
   });

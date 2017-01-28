@@ -230,9 +230,9 @@ nav ul li a .tercero {
                                 <div class="widget-body">
                                     <ul class="clearlist widget-posts">
                                         <li class="clearfix">
-                                            <a href=""><img src="../assets/img/user-avatar.png" alt="" class="widget-posts-img img-circle" /></a>
+                                            <a href=""><img :src="autor.avatar" alt="" class="widget-posts-img img-circle" /></a>
                                             <div class="widget-posts-descr">
-                                                <a href="#" title="">Usuario</a>
+                                                <a href="#" title="">{{autor.name}}</a>
                                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod 
 tempor incididunt ut labore et dolore magna aliqua. 
                                             </div>
