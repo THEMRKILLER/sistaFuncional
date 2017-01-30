@@ -6,6 +6,7 @@ export default {
     authenticated: false,
 
    check : function(response,vm){
+
      switch(response.status)
                         {
                             case 401 : {
@@ -15,16 +16,16 @@ export default {
                                         //sucess
                                         function(response){
 
-                                            this.clearToken();
+                                            this.clearToken(vm);
 
                                         },
                                         //error
                                         function(response){
-                                            this.clearToken();
+                                            this.clearToken(vm);
                                         });
                                 }
                                 else{
-                                    this.clearToken();
+                                    this.clearToken(vm);
 
                                 }
                             }break;
@@ -32,7 +33,7 @@ export default {
                             case 400 : {
                                 if(response.data.error == 'token_not_provided')
                                 {
-                                    this.clearToken();
+                                    this.clearToken(vm);
                                 }
                             }
 
@@ -41,20 +42,22 @@ export default {
     
    },
     // To log out
-    clearToken : function(){
+    clearToken : function(vm){
+        console.log("VM = " + vm);
         localStorage.removeItem('token');
         this.authenticated = false;
-        router.push('/admin')
+        vm.$store.state.socket.emit('leave', {'id_user' : vm.state.calendario_id});
+        router.push('/admin');
     },
     logout: function(vm) {
-        var thisObj = this;
-        vm.http.post('logout').then(
+        console.log("Logout in ");
+        var _vm = this;
+        vm.$http.post('logout').then(
             //success
             function(response){
                 console.log("Logout success !");
-                localStorage.removeItem('token');
-                thisObj.authenticated = false;
-                router.push('/admin')
+                vm.$store.state.commit('resetid');
+                _vm.clearToken(vm.$store);
             },
             //error
             function(response){

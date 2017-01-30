@@ -95,6 +95,7 @@
     
 <ul class="nav nav-tabs nav-justified">
       <li class="active"><a id="naviTabs" data-toggle="tab" href="#servicios" >Servicios</a></li>
+      <li><a id="naviTabs" data-toggle="tab" href="#cupones" >Cupones</a></li>
       <li><a id="naviTabs" data-toggle="tab" href="#horarios" >Horarios</a></li>
       <li><a id="naviTabs" data-toggle="tab" href="#fechas_inhabiles" >Fechas Inhabiles</a></li>
   </ul>
@@ -110,6 +111,14 @@
 
       </div>
     </div>
+      <div id="cupones" class="tab-pane fade">
+      <div class="panel panel-default container">
+        <div class="panel-body">
+          <h3>Cupones</h3>
+            <cupones></cupones>
+        </div>
+      </div>
+    </div>
 
     <div id="fechas_inhabiles" class="tab-pane fade">
       <div class="panel panel-default container">
@@ -119,6 +128,7 @@
         </div>
       </div>
     </div>
+
     <!-- segunda vista -->
     <div id="horarios" class="tab-pane fade">
       <div class="panel panel-default container" style="max-width: 800px;">

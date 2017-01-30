@@ -21,16 +21,16 @@ import 'jquery-ui/themes/base/all.css'
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
+Vue.component('cupones', require('components/Cupones.vue'));
 
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
-
-
 
 Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
+
 
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
@@ -55,6 +55,7 @@ Vue.use(VeeValidate, config);
 
 
 const routes = [
+
   { path: '/', component: require('components/Home.vue')},
   { path: '/admin', component: require('components/Login.vue') },
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
@@ -102,12 +103,12 @@ router.beforeEach((r, redirect, next) => {
   if(r.name === 'auth-required')
   {
      if(localStorage.getItem('token') !== null) next();
-      else Auth.clearToken();
+      else Auth.clearToken(store);
   }
   else{
     if (r.path === '/admin'){
         if(localStorage.getItem('token') == null) next();
-        else router.push('dashboard')
+        else router.push('dashboard');
   }
   
   next()
@@ -120,13 +121,13 @@ router.beforeEach((r, redirect, next) => {
 
 Vue.http.interceptors.push((request, next)  => {
  request.headers.set('Authorization', 'Bearer: ' + localStorage.getItem('token'));
-  request.headers.set('Accept', 'application/json');
+ request.headers.set('Accept', 'application/json');
 
   // continue to next interceptor
   next((response) => {
 
       console.log('status: ' + response.status)
-      Auth.check(response);
+      Auth.check(response,store);
 
 
   });

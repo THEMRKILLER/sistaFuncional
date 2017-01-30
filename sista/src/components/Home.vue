@@ -538,7 +538,6 @@ footer
 }
 
 </style>
-
 <template>	
 	<div>
 
@@ -553,6 +552,7 @@ footer
 
 		<!--banner-->
 	<section id="banner" class="banner">
+
 		<div class="bg-color">
 			<nav class="navbar navbar-default navbar-fixed-top">
 			  <div class="container">
@@ -1048,6 +1048,8 @@ footer
       </div>
 </div>
 </div>
+<button class="btn btn-warning" v-on:click="notificar">Notificar ! </button>
+
 <!-- FIN MODAL -->
 	</div>
 
@@ -1116,6 +1118,12 @@ import 'assets/js/es.js';
     			}
     		},
     	methods:{
+    		notificar : function(){
+    			var vm = this;
+    			console.log("Se va a notificar! ");
+    			vm.$store.state.socket.emit('notificar_cita',{'id_user' : vm.$store.state.calendario_id});
+
+    		},
     		fetchDatas : function(){
     			var thisObj = this;
     			this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}}).then(

@@ -99,7 +99,7 @@
 </div>		
 
 <!-- INICIO MODAL -->
-
+{{citas}}
 <div id="calendarModal" class="modal fade">
 <div class="modal-dialog">
     <div class="modal-content">
@@ -263,6 +263,7 @@
     	data: function(){
     		return {
     			//id_cita: '',
+          citas : [],
     			calendario_id: 1,
     			tipo_id: '',
     			fecha_inicio: '',
@@ -319,9 +320,14 @@
         },
     	methods : {
             closeSesion: function(){
-              this.$store.commit('logout');
+              var vml = this;
+              vml.$store.commit('logout', {
+                    vm: vml
+              });
+              
 
             },
+            
             formatoFecha: function(d){
                 var ymd = d.getFullYear() +'-';
                         ymd +=  (d.getMonth()<9) ? ("0"+ (d.getMonth()+1)) : (d.getMonth()+1);
@@ -337,7 +343,7 @@
                 thisObj.servicioDisponibilidadColoreado(this.event_selected_servicio_id);
             },
             reagendarCita : function(){
-                var datas  = {'id_cita' : this.event_selected_id,'servicio_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
+                var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
                 console.log(datas);
                 //event_selected_id
                 //event_selected_servicio_id
@@ -665,7 +671,8 @@
     				//success
     				function(response){
     					this.citas = response.data.citas;
-                        this.servicios = response.data.servicios;
+              console.log(this.citas);
+                      this.servicios = response.data.servicios;
                         thisObj.createCalendar();
                     },
     				//error

@@ -3,11 +3,16 @@ import Vuex from 'vuex'
 import Auth from './services/auth.js';
 Vue.use(require('vue-resource'))
 Vue.use(Vuex)
+var io = require("socket.io-client");
+window.io = io;
 
 // root state object.
 // each Vuex instance is just a single state tree.
 const state = {
-  calendario_id: 1
+  calendario_id: 1,
+  user_id : null,
+  socket : io.connect('http://192.168.0.17:3000')
+
 }
 
 
@@ -17,9 +22,20 @@ const state = {
 // mutations must be synchronous and can be recorded by plugins
 // for debugging purposes.
 const mutations = {
-  logout () { 
-    Auth.logout(Vue);
-  }
+  logout (state,payload) { 
+    Auth.logout(payload.vm);
+  },
+  setid (state, payload) {
+    state.user_id = payload.id
+  },
+  resetid (state)
+  {
+    state.user_id = null
+  },
+  
+
+
+
   /**
   increment (state) {
     state.count++

@@ -54,6 +54,16 @@ import '../assets/css/loginCSS.css'
     			}
     	},
     	methods: {
+    		socket : function(){
+              var vm = this;
+
+              vm.$store.state.socket.emit('join', {'id_user' : vm.$store.state.calendario_id});
+               vm.$store.state.socket.on('nueva_cita', function(data) {
+                alert("Nueva cita! ");
+              });
+           
+
+            },
     		sendDatos: function(){
     			this.errorMessage = '';
     			var information = {
@@ -66,11 +76,14 @@ import '../assets/css/loginCSS.css'
 						//success
 						function(response){
 							//se recibe el token de manera exitosa
-							localStorage.setItem('token', response.data.token);
+							localStorage.setItem('token', response.data.token.token);
 							localStorage.setItem('user_remember',true);
-							this.$http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-
+							this.$store.commit('setid', {
+								  id: response.data.user_id
+								});
+							this.socket();
 							objThis.$router.push('/dashboard');
+
 
 						},
 						//error

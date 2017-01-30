@@ -60,7 +60,7 @@ img {
   </div>
   <div class="form-group">
     <label for="email">Resumen</label>
-    <textarea type="text" class="form-control" id="resumen" v-model="resumen" placeholder="Redacta brevemente un resumen del artículo que vas a escribir">
+    <textarea type="text" class="form-control" id="resumen" v-model="resumen" placeholder="Redacta brevemente un resumen del artículo que vas a escribir" maxlength="255">
   </div>
   <div class="form-group">
     <label for="email">Imagen de carátula</label>
