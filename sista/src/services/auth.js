@@ -43,10 +43,10 @@ export default {
    },
     // To log out
     clearToken : function(vm){
-        console.log("VM = " + vm);
+       
         localStorage.removeItem('token');
         this.authenticated = false;
-        vm.$store.state.socket.emit('leave', {'id_user' : vm.state.calendario_id});
+        vm.state.socket.emit('leave', {'id_user' : vm.state.calendario_id});
         router.push('/admin');
     },
     logout: function(vm) {

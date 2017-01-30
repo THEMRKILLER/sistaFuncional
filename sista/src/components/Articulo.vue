@@ -158,6 +158,9 @@ nav ul li a .tercero {
             <li class="nav-item">
               <router-link to="/articulos">Artículos</router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/dashboard">Citas</router-link>
+            </li>
             <div style="margin-top: 10px; margin-left: 790px;">
               <li class="nav-item">
                 <a class="nav-link" href="" v-on:click="closeSesion()">

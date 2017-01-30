@@ -35,6 +35,7 @@ window.$ = $;
 import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
 import 'jquery-confirm'
+import 'moment';
 var moment = require('moment');
 moment().format();
 import App from 'components/Header'
@@ -103,7 +104,10 @@ router.beforeEach((r, redirect, next) => {
   if(r.name === 'auth-required')
   {
      if(localStorage.getItem('token') !== null) next();
-      else Auth.clearToken(store);
+      else{ 
+      
+        Auth.clearToken(store);
+      }
   }
   else{
     if (r.path === '/admin'){

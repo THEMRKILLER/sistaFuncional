@@ -11,10 +11,27 @@ window.io = io;
 const state = {
   calendario_id: 1,
   user_id : null,
-  socket : io.connect('http://192.168.0.17:3000')
-
+  socket : io.connect('http://192.168.0.17:3000'),
+  citas_programadas : [],
+  variable_prueba : "hola mundo"
 }
 
+
+//citas_programadas =['1' : {'nombre' : 'Julio Jaramillo', 'start' : '2017-01-03'} , '2' : {'nombre' : 'Homero ' ,  ....} ];
+/*
+id_cita = 1 
+ 
+ var cita = citas_programadas[id_cita] 
+
+if(cita)
+´,
+,
+,
+else 
+,
+,
+,
+*/
 
 // mutations are operations that actually mutates the state.
 // each mutation handler gets the entire state tree as the
@@ -33,9 +50,18 @@ const mutations = {
     state.user_id = null
   },
   
+  agregarCitaProgramada(state,payload){
 
+    var id_cita = payload.cita.id;
+    var cita = payload.cita;
 
+    if(!state.citas_programadas[id_cita])
+    {
+      state.citas_programadas[id_cita] = {'title' : cita.title, 'start' : cita.start, 'end': cita.end, 'nombre': cita.cliente_nombre, 'telefono': cita.cliente_telefono, 'email': cita.cliente_email, 'servicio': cita.servicio};
+    }
 
+    
+  }
   /**
   increment (state) {
     state.count++

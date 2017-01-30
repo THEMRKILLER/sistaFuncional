@@ -1,5 +1,59 @@
 <style>
     @import url('http://t4t5.github.io/sweetalert/dist/sweetalert.css');
+/*
+    background: rgba(78,144,254,.7);
+    bottom: 0;
+    color: #fff;
+    font-size: 9px;
+    font-weight: bold;
+    left: 0;
+    line-height: 9px;
+    position: absolute;
+    padding: 7px 0;
+    text-align: center;
+    width: 96px;
+*/
+    #changeIt{
+        position: absolute;
+        padding: 7px 0px;
+        opacity: 0.5;        
+        width: 176px;
+        height: 35px;
+        left: 375px;
+        bottom: 260px;
+    }
+
+    .profile-img-container {
+    position: relative;
+    display: inline-block; /* added */
+    overflow: hidden; /* added */
+}
+
+.profile-img-container:hover a {
+    opacity: 1; /* added */
+    top: 0; /* added */
+    z-index: 500;
+
+
+}
+
+.profile-img-container:hover img{
+  opacity: 0.5;
+}
+
+
+/* added */
+.profile-img-container a {
+    display: block;
+    position: absolute;
+    top: -100%;
+    opacity: 0;
+    left: -335px;
+    bottom: -145px;
+    right: 0;
+    text-align: center;
+    color: inherit;
+}
 </style>
 <template>
 	
@@ -36,6 +90,20 @@
     <br>
     <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;">
     <br>
+
+    <div class="card" style="height:370px;">
+        <div class="profile-img-container">
+            <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="profileImage" style="width:250px;">
+            <a type="button" data-toggle="modal" href="#photoEdition">
+            <div id="changeIt" class="btn-lg">
+                <i class="fa fa-camera fa-6" aria-hidden="true"></i>
+            </div>                
+            </a>
+        </div>
+            
+        <div class="container" style="margin-left: 300px; margin-top: -230px; width:500px;">
+            <label>{{editName}}</label>
+
     <div class="card">
         <a type="button" data-toggle="modal" href="#photoEdition">
             <img id="profile-img" class="profile-img-card" :src="user.avatar" style="margin-left:1px; width: 250px;">
@@ -43,16 +111,23 @@
         <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
             <label>Usuario</label>
             <br>            
-            <label style="color: #A4A4A4">usuario@gmail.com</label>
-            <br>
-            <label>0123456789ABCDE</label>
+            <label style="color: #A4A4A4">{{editEmail}}</label>
             <br>
             <label>Cédula profesional</label>
             <br>
+            <label style="color: #A4A4A4">{{editCedula}}</label>
+            <br>            
             <button class="btn btn-default" style="margin-left: 0px; margin-top: 50px;" data-toggle="modal" href="#profileEdition">Editar perfil</button>
         </div>            
     </div>
-
+<!--  
+<span>
+    <div class="avatar-overlay velocity-animating" style="opacity: 0.45649;">
+        <span class="icon icon-camera-light"></span>
+            <div class="avatar-overlay-text">Cambiar foto de perfil</div>
+    </div>
+        </span>
+-->    
     <!-- MODAL EDICION PERFIL -->
     <div id="photoEdition" class="modal fade">
         <div class="modal-dialog" role="document">
@@ -113,10 +188,8 @@
             </div>
         </div>
     </div>
-
-
 </div>
-
+</div>
 
 </template>
 
@@ -138,7 +211,7 @@ import '../assets/js/jquery.min.js';
                     editPassword2: '',
                     editCedula: '',
                     editEmail: '',
-                    profileImage: ''
+                    profileImage: '//ssl.gstatic.com/accounts/ui/avatar_2x.png'
     			}         
     	   },
            mounted(){
@@ -194,7 +267,7 @@ import '../assets/js/jquery.min.js';
             });
 
             this.croppie_obj.bind({
-                url: '',
+                url: 'http://foliotek.github.io/Croppie/demo/cat.jpg',
                 orientation: 1
             });
        
