@@ -1,12 +1,14 @@
 <template>
 	
 <div>
-	
+
+    <div v-if="$store.state.header">
+        <superheader></superheader>
+    </div>	
+    <div v-else><h1>NONONO</h1></div>
 
 	<div>
 
-
-    	
 	<router-view></router-view>
 
 

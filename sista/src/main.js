@@ -22,10 +22,10 @@ Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
 Vue.component('cupones', require('components/Cupones.vue'));
-
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
+Vue.component('superheader', require('components/Superheader.vue'));
 
-Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';
+Vue.http.options.root = 'http://192.168.0.20/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
@@ -101,11 +101,14 @@ router.mode = 'html5';
 import Auth from './services/auth.js';
 
 router.beforeEach((r, redirect, next) => {
+  if(r.path == '/' || r.path == '/admin') store.commit('changeheadermain');
+  else store.commit('changeheader');
+
   if(r.name === 'auth-required')
   {
      if(localStorage.getItem('token') !== null) next();
       else{ 
-      
+
         Auth.clearToken(store);
       }
   }
@@ -125,7 +128,6 @@ router.beforeEach((r, redirect, next) => {
 
 Vue.http.interceptors.push((request, next)  => {
  request.headers.set('Authorization', 'Bearer: ' + localStorage.getItem('token'));
- request.headers.set('Accept', 'application/json');
 
   // continue to next interceptor
   next((response) => {

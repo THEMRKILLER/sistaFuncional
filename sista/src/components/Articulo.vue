@@ -132,47 +132,6 @@ nav ul li a .tercero {
       <articulonotfound></articulonotfound>
     </div>
     <div v-else>
-    <header>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="../assets/img/logo2.png" class="img-responsive" style="width: 140px; margin-top: -16px;"></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/settings">Configuración</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/articulos">Artículos</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/dashboard">Citas</router-link>
-            </li>
-            <div style="margin-top: 10px; margin-left: 790px;">
-              <li class="nav-item">
-                <a class="nav-link" href="" v-on:click="closeSesion()">
-                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
-                </a>
-              </li>
-            </div>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-</header>
       <section class="page-section">
                 <div class="container relative" v-if="articulo">
                     

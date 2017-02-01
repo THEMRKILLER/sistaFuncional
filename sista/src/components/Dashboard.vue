@@ -41,64 +41,7 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="../assets/img/logo2.png" class="img-responsive" style="width: 140px; margin-top: -16px;"></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/settings">Configuración</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/articulos">Artículos</router-link>
-            </li>
-            <li class="nav-item active">
-              <router-link to="/dashboard">Citas</router-link>
-            </li>
-            <div style="margin-top: 10px; margin-left: 790px;">
-              <li class="dropdown">
-                <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
-                </a>
-                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
-                  <div class="container">                  
-                    <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:7%; margin-left: 0px; margin-top: 10px;'>
-                    <div style="margin-left: 120px; margin-top: -80px;" id="userName">
-                      <label style="margin-left: -23px;">
-                        Usuario
-                      </label><br>
-                      <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">
-                      usuario@prueba.com
-                      </label>
-                    </div>                    
-                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" href="/profile">Editar perfil</a></label>                    
-                  </div>
-                  <hr style="margin-top:5px;">
-                  <div style="margin-left: 170px;">
-                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button" v-on:click="closeSesion">Cerrar sesión</button>
-                  </div>
-                </ul>
-              </li>
-            </div>
-
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+   
     <br>
 <div class="panel panel-default">
   <div class="panel-heading">Calendario
@@ -145,7 +88,7 @@
             <label for="message-text" class="form-control-label">Servicio</label>
             	<select class="form-control" v-model="tipo_id">
             	<option v-for="servicio in servicios" :value="servicio.id">
-            		{{ servicio.nombre }}
+            		{{ servicio.nombre }} | Duración : {{servicio.duracion}} minutos
             	</option>
   					
 				</select>
@@ -279,7 +222,7 @@ ejemplo : this.$store.state.calendario_id
 
     	data: function(){
     		return {
-
+                calendario : null,
     			citas: [],
                 msCitas: [],
                 laHoraDehoy: '',
@@ -287,20 +230,20 @@ ejemplo : this.$store.state.calendario_id
                 nombreActual: '',
                 servicioActual: '',
                 finalActual: '',
-          			calendario_id: 1,
-          			tipo_id: '',
-          			fecha_inicio: '',
-          			fecha_final: '',
-          			cliente_nombre: '',
-          			cliente_telefono: '',
-          			cliente_email: '',
-          			hora_cita: '',
+          		calendario_id: 1,
+          		tipo_id: '',
+          		fecha_inicio: '',
+          		fecha_final: '',
+          		cliente_nombre: '',
+          		cliente_telefono: '',
+          		cliente_email: '',
+          		hora_cita: '',
                 agendarcita_status_neutral : true,
                 agendarcita_status_agendando : false,
                 agendarcita_status_exitoso : false,
                 agendarcita_status_error : false,
                 agendarcita_error_mensaje : [],
-    			      date_selected : '',
+    			date_selected : '',
                 servicios : [],
                 event_selected_id : null,
                 event_selected_cliente_nombre : '',
@@ -311,6 +254,7 @@ ejemplo : this.$store.state.calendario_id
                 event_selected_cliente_telefono  : '',
                 event_selected_servicio : '',
                 event_selected_servicio_id : 0,
+                event_selected_codigo : null,
     			hours:[],
                 reagendar : false,
                 disponibilidad_servicio : [],
@@ -430,14 +374,7 @@ ejemplo : this.$store.state.calendario_id
             }
         },
 
-            closeSesion: function(){
-              var vml = this;
-              vml.$store.commit('logout', {
-                    vm: vml
-              });
-              
-
-            },
+            
             
             formatoFecha: function(d){
                 var ymd = d.getFullYear() +'-';
@@ -696,84 +633,59 @@ ejemplo : this.$store.state.calendario_id
 
     		},
             createCalendar : function(){
-            	var thisObj = this;
-            $('#calendar').fullCalendar({
 
-            dayClick:  function(date, jsEvent, view){
+                        var thisObj = this;
+                        if(this.calendario!=null) {
+                            $('#calendar').fullCalendar('destroy');
+                            this.calendario = null;
+                        }
+                        this.calendario = $('#calendar').fullCalendar({
 
-                thisObj.date_selected = date;
-            	//console.log(thisObj);
+                        dayClick:  function(date, jsEvent, view){
+                                        console.log("Day click! ");
+                                        thisObj.date_selected = date;
+                        	           $('#calendarModal').modal('show');
+                        	        },
+                        //funcion que muestra un evento seleccionado
+                    	eventClick: function(event, jsEvent, view, start, end){
+                            console.log("Event click ! ");
+                            thisObj.event_selected_id = event.id;
+                            thisObj.event_selected_servicio = event.title;
+                            thisObj.event_selected_cliente_nombre = event.cliente_nombre;
+                            thisObj.event_selected_cliente_telefono = event.cliente_telefono;
+                            thisObj.event_selected_cliente_email = event.cliente_email;
+                            thisObj.event_selected_hora_inicio = event.start;
+                            thisObj.event_selected_hora_final = event.end;
+                            thisObj.event_selected_codigo = event.codigo;
+                            thisObj.event_selected_servicio_id = thisObj.buscarPorServicio(event.title);
+                            var tmpDate = new Date(event.start);
+                            thisObj.event_selected_fecha = thisObj.formatoFecha(tmpDate);
+                    		$('#modalTitle').html(event.title);
+                        	$('#idEvento').html(event.id);
+                            $("#segundoModal").modal('show');
+                    		
+                    	},
 
-            	//$('#modalTitle').html(event.title);
-            	//$('#modalBody').html(event.description);
-            	//$('#eventUrl').attr('href',event.url);
-            	$('#calendarModal').modal('show');
-            	$('.modal').on('hidden.bs.modal', function(){ 
-					//$(this).find('form')[0].reset(); //para borrar todos los datos que tenga los input, textareas, select.
-					$("label.error").remove();  //lo utilice para borrar la etiqueta de error del jquery validate
-	});
-        },
-        	//FUNCION PARA MOSTRAR LOS DATOS DE UN EVENTO CREADO
-
-        	eventClick: function(event, jsEvent, view, start, end){
-        		//var formDate = $.fullCalendar.formatDate(event.start, 'MM-dd-yyyy');
-                thisObj.event_selected_id = event.id;
-                thisObj.event_selected_servicio = event.title;
-                thisObj.event_selected_cliente_nombre = event.cliente_nombre;
-                thisObj.event_selected_cliente_telefono = event.cliente_telefono;
-                thisObj.event_selected_cliente_email = event.cliente_email;
-                thisObj.event_selected_hora_inicio = event.start;
-                thisObj.event_selected_hora_final = event.end;
-                thisObj.event_selected_servicio_id = thisObj.buscarPorServicio(event.title);
-                var tmpDate = new Date(event.start);
-                thisObj.event_selected_fecha = thisObj.formatoFecha(tmpDate);
-
-
-        		$('#modalTitle').html(event.title);
-        		//$("#startTime").html(formDate);
-            	//$("#endTime").html(event.end);
-            	$('#idEvento').html(event.id);
-        		//$('modalBody').html(event.id);
-        		//$('#eventLink').attr('href', event.url);
-            	//$("#eventContent").dialog({ modal: true, title: event.title });
-            	$('#segundoModal').modal();
-        		//alert('Event '+calEvent.title);
-        		//console.log(calEvent.title);
-        	},
-
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            
-            navLinks: true, // can click day/week names to navigate views
-            selectable: true,
-            selectHelper: true,
-       /*     select: function(start, end) {
-                var title = prompt('Event Title:');
-                var eventData;
-                if (title) {
-                    eventData = {
-                        title: title,
-                        start: start,
-                        end: end
-                    };
-                    $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-                }
-                $('#calendar').fullCalendar('unselect');
-            }, */
-            dayRender: function (date, cell) {
-                    //    cell.css("background-color", "#FF6961");
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
                         },
-            editable: true,
-            eventLimit: true, // allow "more" link when too many events
-            events: this.citas
+                        
+                        navLinks: true, // can click day/week names to navigate views
+                        selectable: true,
+                        selectHelper: true,
+                  
+                        dayRender: function (date, cell) {
+                                //    cell.css("background-color", "#FF6961");
+                                    },
+                        editable: true,
+                        eventLimit: true, 
+                        events: this.citas
             
-        })
+                    });
 
             },
-            timeFormat: 'H(:mm)',
             buscarPorServicio : function(servicio){
                 var servicio = $.grep(this.servicios, function(e){ return e.nombre == servicio; });
                 if(servicio.length > 0 ) return servicio[0].id;

@@ -58,36 +58,7 @@
 <template>
 	
 <div>
-	<nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand"><img src="../assets/img/logo2.png" class="img-responsive" style="width: 140px; margin-top: -16px;"></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav mr-auto">
-            <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
-            </li>
-            <li class="nav-item active">
-              <router-link to="/settings">Configuración</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/articulos">Artículos</router-link>
-            </li>
-          </ul>          
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-    <br>
+	<br>
     <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;">
     <br>
 
