@@ -22,7 +22,6 @@ Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
 Vue.component('cupones', require('components/Cupones.vue'));
-Vue.component('navbar', require('components/Navbar.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 
 Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';

@@ -270,9 +270,7 @@ Aceddiendo a las variables de VUEX : this.$store.state.nombre_de_tu_variable
 ejemplo : this.$store.state.calendario_id 
 */
     export default {
-
     	name:'dashboard',
-
     	data: function(){
     		return {
 
@@ -428,13 +426,7 @@ ejemplo : this.$store.state.calendario_id
             },
             reagendarCita : function(){
                 var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
-                //console.log(datas);
-                //event_selected_id
-                //event_selected_servicio_id
-                //fecha_inicio
-                //event_selected_fecha
-
-                this.$http.put('cita-r',datas).then(
+                    this.$http.put('cita-r',datas).then(
                     //success
 
                     function(response){
@@ -565,11 +557,8 @@ ejemplo : this.$store.state.calendario_id
 
 
 				} else {
-				  // multiple items found
+				  
 				}
-
-				//console.log(servicio);
-				//return;
 
 
     			this.errorMessage='';
@@ -583,11 +572,9 @@ ejemplo : this.$store.state.calendario_id
                 console.log(fecha_final);
                 
     			var calendarInformation = {
-    				//"id_cita": id_count,
     				"calendario_id": this.calendario_id,
     				"tipo_id": servicio.id,
     				"fecha_inicio": this.fecha_inicio,
-    				//valueHoraInicio + valueHoraServicio
     				"fecha_final": fecha_final,
     				"cliente_nombre": this.cliente_nombre,
     				"cliente_telefono": this.cliente_telefono,
@@ -643,7 +630,6 @@ ejemplo : this.$store.state.calendario_id
                                     console.log("Error "+ response.data.errors[error]);
                                     for(var internal_error in response.data.errors[error])
                                             errores_tpm.push(response.data.errors[error][internal_error]);
-                                    
                                 }
                                 thisObj.agendarcita_error_mensaje = errores_tpm;
 
@@ -670,45 +656,23 @@ ejemplo : this.$store.state.calendario_id
     		},
             createCalendar : function(){
             	var thisObj = this;
-            $('#calendar').fullCalendar({
-                select: function(start, end, allDay) {
-                var check = start._d.toJSON().slice(0,10); 
-                var today = new Date().toJSON().slice(0,10);
-                if(check < today){
-        // Previous Day. show message if you want otherwise do nothing.
-                // So it will be unselectable  
-                $('#calendar').fullCalendar('unselect');                
-                return false;
-                }
-                
-        // Its a right date
-                // Do something
-                else{
-                    $('#calendarModal').modal('show');
-                    $('modal').on('hidden.bs.modal', function(){
-                    $('label.error').remove();
-                });
-                }
-            },
-
+            $('#calendar').fullCalendar({                
             dayClick:  function(date, jsEvent, view){
-
+                var today = moment();
+                console.log(today);
+                if(today > date) return;
                 thisObj.date_selected = date;
-            	//console.log(thisObj);
+                
 
-            	//$('#modalTitle').html(event.title);
-            	//$('#modalBody').html(event.description);
-            	//$('#eventUrl').attr('href',event.url);
             	$('#calendarModal').modal('show');
             	$('.modal').on('hidden.bs.modal', function(){ 
-					//$(this).find('form')[0].reset(); //para borrar todos los datos que tenga los input, textareas, select.
 					$("label.error").remove();  //lo utilice para borrar la etiqueta de error del jquery validate
-	});
+	           });
         },
-        	//FUNCION PARA MOSTRAR LOS DATOS DE UN EVENTO CREADO
+                
 
+        	//FUNCION PARA MOSTRAR LOS DATOS DE UN EVENTO CREADO
         	eventClick: function(event, jsEvent, view, start, end){
-        		//var formDate = $.fullCalendar.formatDate(event.start, 'MM-dd-yyyy');
                 thisObj.event_selected_id = event.id;
                 thisObj.event_selected_servicio = event.title;
                 thisObj.event_selected_cliente_nombre = event.cliente_nombre;
@@ -722,15 +686,8 @@ ejemplo : this.$store.state.calendario_id
 
 
         		$('#modalTitle').html(event.title);
-        		//$("#startTime").html(formDate);
-            	//$("#endTime").html(event.end);
-            	$('#idEvento').html(event.id);
-        		//$('modalBody').html(event.id);
-        		//$('#eventLink').attr('href', event.url);
-            	//$("#eventContent").dialog({ modal: true, title: event.title });
+            	$('#idEvento').html(event.id);        		
             	$('#segundoModal').modal();
-        		//alert('Event '+calEvent.title);
-        		//console.log(calEvent.title);
         	},
 
             header: {
