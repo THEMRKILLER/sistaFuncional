@@ -13,7 +13,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" class="close" data-dismiss="modal" v-on:click="reset_status">&times;</button>
         <h4 class="modal-title">Nuevo cupon de descuento</h4>
       </div>
       <div class="modal-body">
@@ -40,8 +40,30 @@
 
       </div>
       <div class="modal-footer">
+        <div class="status_cupon">
+          <div v-if="cupon_status_creating" class="alert alert-info" align="center">
+            <h4><i class="fa fa-refresh fa-spin fa-fw"></i> Creando cupon, espere ... </h4>
+          </div>
+          <div v-if="cupon_status_error" class="alert alert-danger" align="center">
+            <h4> 
+              <i class="fa fa-times"></i> Ha ocurrido algun error creando el cupón : 
+              <small>
+                <ul v-for="error in error_messages">
+                  <li>
+                    <ul v-for="suberror in error">
+                      <li>{{suberror}}</li>
+                    </ul>
+                    
+                  </li>
+                </ul>
+              </small>
+            </h4>
+          </div>
+
+
+        </div>
       	<button class="btn btn-success" v-on:click="enviarCupon">Crear cupón</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="reset_status">Cerrar</button>
       </div>
     </div>
 
@@ -66,7 +88,11 @@ export default {
       servicio_selected : null,
       fecha_inicial : null,
       fecha_final : null,
-      porcentaje : null
+      porcentaje : null,
+      error_messages : [],
+      cupon_status_error : false,
+      cupon_status_creating : false
+
     }
   },
   mounted(){
@@ -90,33 +116,58 @@ export default {
   },
   methods : {
   	fetchDatas : function(){
-  		    this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}}).
+  		    this.$http.get('cupon',{params : {'calendario_id' : this.$store.state.calendario_id}}).
   		    then(
 
   		    	//success
   		    	function(response){
-  		    		this.servicios = response.data;
+  		    		this.servicios = response.data.servicios;
+              this.cupones = response.data.cupones;
 
   		    	},
   		    	//error
   		    	function(response){
+
   		    		console.error("Ocurrio un error :( codigo de estado : "+ response.status);
   		    	}
   		    	);
   	},
+    reset_status : function(){
+      this.cupon_status_creating  = false;
+      this.cupon_status_error = false;
+      this.error_messages =  [];
+    },
   	enviarCupon : function(){
   		var vm = this;
   		var datas = {'servicio_id' : this.servicio_selected, 'porcentaje' : this.porcentaje, 'fecha_inicial' : this.fecha_inicial, 'fecha_final' : this.fecha_final};
-
+      vm.cupon_status_creating  = true;
+      vm.cupon_status_error = false;
   		this.$http.post('cupon',datas).then(
   			//success
   			function(response){
-  				console.log("Cupon creado correctamente ! ");
   				vm.fetchDatas();
+          vm.cupon_status_creating = false;
+          vm.cupon_status_error = false;
+          vm.reset_status();
+          $('#modalCupon').modal('hide')
+           $.confirm({
+            title: 'Correcto',
+            content: 'El cupón se ha creado correctamente, código del cupón: ' +response.data.codigo ,
+            type: 'green',
+            typeAnimated: true,
+            buttons : {
+              ok : {text : 'Entendido'}
+            }
+          });
+
 
   			},
   			//error
   			function(response){
+          vm.cupon_status_creating = false;
+          vm.cupon_status_error = true;
+          this.error_messages = response.data.errors;
+
   				console.error("Error creando el cupon :( , codigo de estado : " + response.status);
   			}
 

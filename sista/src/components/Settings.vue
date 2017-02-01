@@ -34,63 +34,6 @@
 <template>
 
 <div>
-  <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="../assets/img/logo2.png" class="img-responsive" style="width: 140px; margin-top: -16px;"></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav mr-auto">
-            <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
-            </li>
-            <li class="nav-item active">
-              <router-link to="/settings">Configuración</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/articulos">Artículos</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/dashboard">Citas</router-link>
-            </li>
-            <div style="margin-top: 10px; margin-left: 790px;">
-              <li class="dropdown">
-                <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
-                </a>
-                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
-                  <div class="container">                  
-                    <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:7%; margin-left: 0px; margin-top: 10px;'>
-                    <div style="margin-left: 120px; margin-top: -80px;" id="userName">
-                      <label style="margin-left: -23px;">
-                        Usuario
-                      </label><br>
-                      <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">
-                      usuario@prueba.com
-                      </label>
-                    </div>                    
-                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" href="/profile">Editar perfil</a></label>                    
-                  </div>
-                  <hr style="margin-top:5px;">
-                  <div style="margin-left: 170px;">
-                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button">Cerrar sesión</button>
-                  </div>
-                </ul>
-              </li>
-            </div>
-          </ul>          
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
     <br><br><br>
     
 <ul class="nav nav-tabs nav-justified">

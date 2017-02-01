@@ -659,7 +659,6 @@ ejemplo : this.$store.state.calendario_id
             $('#calendar').fullCalendar({                
             dayClick:  function(date, jsEvent, view){
                 var today = moment();
-                console.log(today);
                 if(today > date) return;
                 thisObj.date_selected = date;
                 

@@ -13,7 +13,8 @@ const state = {
   user_id : null,
   socket : io.connect('http://192.168.0.17:3000'),
   citas_programadas : [],
-  variable_prueba : "hola mundo"
+  variable_prueba : "hola mundo",
+  header : true
 }
 
 
@@ -49,7 +50,12 @@ const mutations = {
   {
     state.user_id = null
   },
-  
+  changeheadermain(state){
+    state.header = false;
+  },
+  changeheader(state){
+    state.header = true;
+  },
   agregarCitaProgramada(state,payload){
 
     var id_cita = payload.cita.id;
