@@ -1048,8 +1048,6 @@ footer
       </div>
 </div>
 </div>
-<button class="btn btn-warning" v-on:click="notificar">Notificar ! </button>
-
 <!-- FIN MODAL -->
 	</div>
 
@@ -1243,7 +1241,7 @@ import 'assets/js/es.js';
 
                         
                         },
-            editable: trFue,
+            editable: true,
             eventLimit: true, // allow "more" link when too many events
             events: this.citas
             

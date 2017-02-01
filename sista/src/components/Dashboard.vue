@@ -21,24 +21,26 @@
    font-size: 12pt;
 }
 
-
-
+.jumbotron{
+    background: url('../assets/img/backgroun.jpg') no-repeat center center;
+    background-position: 0% 25%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+}
 </style>
 <template>	
 	<div class="container">
     <br><br><br>
     <div class="jumbotron container-fluid">
-        <div v-if="laHoraDehoy < laHoraFinal">
-            <label>Atendiendo a: {{nombreActual}}</label>
-            <br>
-            <label>Servicio de: {{servicioActual}}</label>
-            <br>
-            <label>Cita termina a las: {{finalActual}}</label>        
-        </div>
-        <div v-else>
-        <!-- manera variable boleana para esconder y mostrarlo -->
-            <label>El doctor se encuentra disponible</label>
-        </div>
+            <div v-if="muestraCita">
+                <h1 style="margin-left: 150px;">Atendiendo a: {{nombreActual}}</h1>
+                <p>Servicio de: {{servicioActual}}</p>
+                <p>Cita termina a las: {{finalActual}}</p>
+            </div>
+            <div v-else>
+                <p>El doctor se encuentra disponible en estos momentos</p>
+            </div>
     </div>
 
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -240,14 +242,8 @@
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
                             <input type="text" id="datepicker" class="form-control" :value="event_selected_fecha">
-                  
-                      
                     </div>
-                    
-                    
-
                 </div>
-
             </div>
             <div class="modal-footer" v-if="!reagendar">
 
@@ -281,9 +277,7 @@ ejemplo : this.$store.state.calendario_id
     		return {
 
     			citas: [],
-                msCitas: [],
-                laHoraDehoy: '',
-                laHoraFinal: '',
+                muestraCita: false,
                 nombreActual: '',
                 servicioActual: '',
                 finalActual: '',
@@ -313,61 +307,13 @@ ejemplo : this.$store.state.calendario_id
                 event_selected_servicio_id : 0,
     			hours:[],
                 reagendar : false,
-                disponibilidad_servicio : [],
-                citas_fake : [
-                {
-                    id: 10,
-                    title: "Limpieza Dental",
-                    start: "2017-01-26 15:28:00",
-                    end: "2017-01-26 15:29:00",
-                    cliente_nombre: 'Juan Camaney',
-                    cliente_telefono: '9611234550',
-                    cliente_email: 'papuchoSexy@gmail.com',
-                    servicio: "Limpieza Dental"                    
-                },
-                {
-                    id: 11,
-                    title: "Parto",
-                    start: "2017-01-26 15:29:00",
-                    end: "2017-01-26 15:29:30",
-                    cliente_nombre: 'Chaquira',
-                    cliente_telefono: '9611234550',
-                    cliente_email: 'LaWeaSexy@sexyvaguitas.com',
-                    servicio: "Parto"
-                },
-                {
-                    id: 12,
-                    title: "Chequeo de prostata",
-                    start: "2017-01-26 12:52:00",
-                    end: "2017-01-26 12:52:30",
-                    cliente_nombre: 'Ramiro cuay :v',
-                    cliente_telefono: '9611234550',
-                    cliente_email: 'pnxD@gmail.com',
-                    servicio: "Chequeo de prostata"
-                },
-                ]
-
+                disponibilidad_servicio : []
     		}
     	},
     	mounted(){
             var thisObj = this;
             this.fetchDatas(); 
             //alert(this.$store.state.variable_prueba);     
-            //se recorre citas fake
-            for(var i=0 ; i < this.citas_fake.length; i++ )
-            {
-                //se guarda en una variable cita la cita que se està recorriendo 
-                var cita = this.citas_fake[i];
-                // si la cita no està registrada en vuex 
-                if(!this.$store.state.citas_programadas[cita.id])
-                {
-                    this.$store.commit('agregarCitaProgramada', {
-                        cita: cita
-                    });
-                    //settimeout                    
-                    this.calcMs(cita);
-                }
-            }            
     	},
         watch : {
             'tipo_id' : function(){
@@ -385,47 +331,74 @@ ejemplo : this.$store.state.calendario_id
                 var fecha = this.event_selected_fecha;
                 this.servicioHorasDisponibles(tipo_id,fecha);
                 if(this.reagendar) this.servicioDisponibilidadColoreado(tipo_id);
-
             },
-           
         },
     	methods : {
-            calcMs: function(citaFalsa){
+            getMethodCalc: function(){
+                for(var i=0 ; i < this.citas.length; i++ ){
+                //se guarda en una variable cita la cita que se està recorriendo 
+                var cita = this.citas[i];
+                // si la cita no està registrada en vuex 
+                if(!this.$store.state.citas_programadas[cita.id]){
+                    this.$store.commit('agregarCitaProgramada', {
+                        cita: cita
+                    });
+                    //settimeout                    
+                    this.calcMs(cita);
+                    }
+                }
+            },
+
+            calcMs: function(citasArray){
                 var msTotal;
                 var vm = this;
                     var fechaActual =  new Date();
-                    var fechaCita = new Date(citaFalsa.start);
-                    var fechaFinalCita = new Date(citaFalsa.end);
+                    var fechaCita = new Date(citasArray.start);
+                    var fechaFinalCita = new Date(citasArray.end);
                     var msHastaHoy = fechaActual.getTime();
-                    var msCitaInicio = fechaCita.getTime();                 
+                    var msCitaInicio = fechaCita.getTime();
+                    var msFechaFinal =fechaFinalCita.getTime();
+                    var msFechaFinalTotal = msFechaFinal - msHastaHoy;                 
                     //milisegundos que faltan para la cita   
                     msTotal = msCitaInicio - msHastaHoy;
                     //si los milisegundos totales son mayores a cero
-                if(msTotal>0)
-                {                 
-                //proximo cliente                   
-                    //se muestran los datos del cliente en el tiempo que falte para la cita
+                if(msTotal>0){
+                    this.muestraCita = this.muestraCita;
+                //proximo cliente: se programa la proxima cita
                     setTimeout(function() {
-                    vm.nombreActual = citaFalsa.cliente_nombre;
-                    vm.servicioActual = citaFalsa.title;
-                    vm.finalActual = moment(citaFalsa.end).format("HH:mm:ss");
-                }, msTotal);
-                } 
-                //cliente actual: si no se muestra los datos del cliente que su cita aún no haya concluido
+                    vm.nombreActual = citasArray.cliente_nombre;
+                    vm.servicioActual = citasArray.title;
+                    vm.finalActual = moment(citasArray.end).format("HH:mm:ss");
+                    vm.muestraCita = true;
+                    }, msTotal);
+
+                    setTimeout(function(){
+                        vm.muestraCita = false;
+                    }, msFechaFinalTotal);
+                }
+                //cliente actual: se muestran los datos del cliente actual
                 else{
-                    if(fechaActual < fechaFinalCita){
-                        this.laHoraDehoy = fechaActual;
-                        this.laHoraFinal = fechaFinalCita;
+                    console.log("fecha final:" + msFechaFinal);
+                    console.log("msHoy: "+ msHastaHoy);
+                    if(msHastaHoy < msFechaFinal){                           
+                        //this.laHoraDehoy = fechaActual;
+                        //this.laHoraFinal = fechaFinalCita;
+                        /*En caso de que exista una cita ya ejecutandose que se muestre directamente*/
                         setTimeout(function() {
-                        vm.nombreActual = citaFalsa.cliente_nombre;
-                        vm.servicioActual = citaFalsa.title;
-                        vm.finalActual = moment(citaFalsa.end).format("HH:mm:ss");
-                    }, 0);                        
+                        vm.nombreActual = citasArray.cliente_nombre;
+                        vm.servicioActual = citasArray.title;
+                        vm.finalActual = moment(citasArray.end).format("HH:mm:ss");
+                        vm.muestraCita = true;            
+                    }, 0);
+
+                    console.log("ms: "+msFechaFinal);
                         setTimeout(function() {
                         vm.nombreActual = '';
                         vm.servicioActual = '';
                         vm.finalActual = '';
-                    }, 1000);
+                        vm.muestraCita = false;
+                    }, msFechaFinalTotal);
+                    
                 }
             }
         },
@@ -455,7 +428,7 @@ ejemplo : this.$store.state.calendario_id
             },
             reagendarCita : function(){
                 var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
-                console.log(datas);
+                //console.log(datas);
                 //event_selected_id
                 //event_selected_servicio_id
                 //fecha_inicio
@@ -698,6 +671,25 @@ ejemplo : this.$store.state.calendario_id
             createCalendar : function(){
             	var thisObj = this;
             $('#calendar').fullCalendar({
+                select: function(start, end, allDay) {
+                var check = start._d.toJSON().slice(0,10); 
+                var today = new Date().toJSON().slice(0,10);
+                if(check < today){
+        // Previous Day. show message if you want otherwise do nothing.
+                // So it will be unselectable  
+                $('#calendar').fullCalendar('unselect');                
+                return false;
+                }
+                
+        // Its a right date
+                // Do something
+                else{
+                    $('#calendarModal').modal('show');
+                    $('modal').on('hidden.bs.modal', function(){
+                    $('label.error').remove();
+                });
+                }
+            },
 
             dayClick:  function(date, jsEvent, view){
 
@@ -789,6 +781,7 @@ ejemplo : this.$store.state.calendario_id
               console.log(this.citas);
                       this.servicios = response.data.servicios;
                         thisObj.createCalendar();
+                        thisObj.getMethodCalc();
                     },
     				//error
     				function(response){
