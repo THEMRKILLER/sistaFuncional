@@ -153,6 +153,8 @@
             <div id="modalBody" class="modal-body">
                 Cliente : {{event_selected_cliente_nombre}}
                 <br>
+                Codigo de Cita : {{event_selected_codigo}}
+                <br>
                 Telefono : {{event_selected_cliente_telefono}}
                 <br>
                 Correo Electrónico : {{event_selected_cliente_email}}
@@ -160,6 +162,8 @@
                 Hora de Inicio : {{event_selected_hora_inicio}}
                 <br>
                 Hora de Finalización : {{event_selected_hora_final}}
+
+
                 <div v-if="reagendar">
                         <div class="form-group">             
                             <label for="message-text" class="form-control-label">Servicio</label>

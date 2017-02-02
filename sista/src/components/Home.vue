@@ -891,7 +891,10 @@ footer
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
   					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.
 				</div>
+							<div class="form-group">
+								<button class="btn btn-danger" v-on:click="cancelarDialog">Cancelar una cita</button>
 
+							</div>		
 							 <div class="form-group">
               					<label for="message-text" class="form-control-label">Servicio:</label>
               					<select class="form-control" v-model="tipo_id">
@@ -1078,7 +1081,8 @@ import 'assets/js/es.js';
     			fecha_final: '',
     			servicios: [],
     			hours:[],
-    			disponibilidad_servicio : []
+    			disponibilidad_servicio : [],
+    			flag : false,
     		}
     	},
 
@@ -1138,6 +1142,96 @@ import 'assets/js/es.js';
 
     				);
     		},
+
+            cancelarDialog : function(){
+            			var vm = this;
+                		$.confirm({
+                            title: 'Código',
+                            content: '' +
+                            
+                            '<div class="form-group">' +
+                            '<label>Ingresa el código de la cita que quieres cancelar</label>' +
+                            '<input type="text" placeholder="Código de la cita" class="codigo form-control" required />' +
+                            '</div>'+
+                            '<div class="form-group">' +
+                            '<label>Ingresa el número telefónico o correo electronico con el que '+'registraste en la cita</label>' +
+                            '<input type="text" placeholder="Número de telefono o correo'+'electrónico" class="numeromail form-control" required />' +
+                            '</div>'
+
+                            ,
+                            buttons: {
+                                formSubmit: {
+                                    text: 'Cancelar cita',
+                                    btnClass: 'btn-blue',
+                                    action: function () {
+                                        var codigo = this.$content.find('.codigo').val();
+                                        var numeromail = this.$content.find('.numeromail').val();
+
+                                        if(! (codigo || numeromail)){
+                                            $.alert('Todos los campos son obligatorios');
+                                            return false;
+                                        }
+
+                                        vm.$http.delete('cita',{params : {'codigo' : codigo , 'numeromail' : numeromail}}).then(
+                                        	//success
+                                        	function(response){
+                                        		$.confirm({
+													    title: 'Cita cancelada exitosamente',
+													    content: 'La cita '+response.data.codigo+ ' ha sido cancelada',
+													    type: 'green',
+													    typeAnimated: true,
+													    buttons: {
+													        ok: {
+													            text: 'Hecho',
+													            btnClass: 'btn-blue'
+													        }
+													    }
+													});
+                                        	},
+                                        	//error
+                                        	function(response){
+                                        		var data_errors = response.data.errors;
+                                        		var data_errors_parse = '';
+                                        		for (var i = 0; i < data_errors.length; i++)data_errors_parse+= '<br>- '+data_errors[i]; 
+                                        		
+
+                                        		$.confirm({
+													    title: 'Error',
+													    content: 'La cita no pudo cancelarse por el siguiente motivo : '+data_errors_parse,
+													    type: 'red',
+													    typeAnimated: true,
+													    buttons: {
+													        ok: {
+													            text: 'Hecho',
+													            btnClass: 'btn-blue'
+													        }
+													    }
+													});	
+
+
+                                        	}
+                                        		
+                                        	);
+
+
+                                    }
+                                },
+                                cancel : {
+                                	text : 'Salir'
+                                },
+                            },
+                            onContentReady: function () {
+                                // bind to events
+                                var jc = this;
+                                this.$content.find('form').on('submit', function (e) {
+                                    // if the user submits the form by pressing enter in the field.
+                                    e.preventDefault();
+                                    jc.$$formSubmit.trigger('click'); // reference the button and click it
+                                });
+                            }
+                        });
+			
+            },
     		servicioDisponibilidadColoreado : function(){
 	                var thisObj = this;
 	                this.$http.get('disponibilidad',{params : {'tipo_id' : thisObj.tipo_id,'calendario_id' : this.$store.state.calendario_id}}).then(
