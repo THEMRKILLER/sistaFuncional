@@ -127,16 +127,13 @@ export default {
       error_messages : [],
       cupon_status_error : false,
       cupon_status_creating : false,
-<<<<<<< HEAD
       word_key : null,
       codigo : null,
       error : false,
-      generando_codigo : false
-
-=======
+      generando_codigo : false,
       deleteNameCupon: '',
       ArregloID: []
->>>>>>> 0b17d688bf8a0fd678e4bd61a4d1d73501f37187
+
     }
   },
   mounted(){
@@ -174,7 +171,6 @@ export default {
   		    	}
   		    	);
   	},
-<<<<<<< HEAD
     generar_key : function(){
 
       var vm = this;
@@ -197,7 +193,6 @@ export default {
         }
         );
     },
-=======
 
     confirmDialog: function(idCupon){
                 var idCupon = idCupon;
@@ -246,7 +241,6 @@ export default {
                     );
             },
 
->>>>>>> 0b17d688bf8a0fd678e4bd61a4d1d73501f37187
     reset_status : function(){
       this.cupon_status_creating  = false;
       this.cupon_status_error = false;
