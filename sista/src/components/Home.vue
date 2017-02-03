@@ -1053,6 +1053,69 @@ footer
 </div>
 </div>
 <!-- FIN MODAL -->
+
+
+
+<!-- Modal para reagendar cita -->
+<div id="reagendar_cita" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cita : {{cita_codigo_seleccionado}}</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+        	<label>Nombre : {{cita_cliente_nombre}}</label>
+        </div>
+       
+        <div class="form-group">
+        	<label> Fecha y hora : {{cita_cliente_fecha_display}}</label>
+        </div>
+        <!--Lista de Servicios-->
+        <div class="form-group">
+        	<label for="servicio">Servicio</label>
+        	<select id="servicio" class="form-control" v-model="cita_cliente_servicioid">
+        		<option v-for="servicio in servicios" :value="servicio.id">{{servicio.nombre}}</option>
+        	</select>
+        </div>
+        <!--Fecha-->
+        <div class="form-group">             
+            <label for="datepicker" class="form-control-label">Fecha</label>
+            <input type="text" id="datepicker" class="form-control" :value="cita_cliente_fecha">
+        </div>
+          <!-- Hora -->
+        <div class="form-group">
+            <label for="message-text" class="form-control-label">Hora:</label>
+            <select class="form-control" v-model="nueva_fecha" name="fecha_inicio" v-if="hours != []">
+                <option v-for="hour in hours" :value="hour.value">
+                        {{ hour.text }}
+                </option>
+            </select>
+            <select v-else class="form-control" name="fecha_inicio" disabled></select>
+
+        </div> 
+
+
+
+
+
+
+        </div>
+        <!--Fin modal body-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
 	</div>
 
 </template>
@@ -1080,6 +1143,13 @@ footer
     			hours:[],
     			disponibilidad_servicio : [],
     			flag : false,
+    			cita_codigo_seleccionado : null, 
+		      	cita_cliente_nombre : null,
+		      	cita_cliente_servicioid : null,
+		      	cita_cliente_fecha : null,
+		      	cita_cliente_fecha_display : null,
+		      	nueva_fecha : '',
+		      	no_laborales : []
     		}
     	},
 
@@ -1113,8 +1183,23 @@ footer
 
     		watch:{
     			'tipo_id': function(){
-    				this.servicioDisponibilidadColoreado();
-    			}
+    				this.servicioDisponibilidadColoreado(true,null);
+    			},
+    			'nueva_fecha' : function(){
+    				console.log("La hora de la cita cambia ! ");
+    				//this.crearCalendarioPicker();
+	    		},
+	    		'cita_cliente_fecha' : function(){
+	    			console.log("La fecha de la cita cambia ! ");
+	    		},
+	    		'cita_cliente_servicioid' : function(){
+	    			var vm = this;
+	    			var datas = {'tipo_id' : vm.cita_cliente_servicioid,'calendario_id' : vm.$store.state.calendario_id};
+	    			this.crearCalendarioPicker();
+
+
+	    			this.servicioDisponibilidadColoreado(false,datas);
+	    		}
     		},
     	methods:{
     		notificar : function(){
@@ -1124,13 +1209,13 @@ footer
 
     		},
     		fetchDatas : function(){
-    			var thisObj = this;
-    			this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}}).then(
+    			var vm = this;
+    			vm.$http.get('tipo',{params : {'calendario_id' : vm.$store.state.calendario_id}}).then(
     				//success
     				function(response){
-    					thisObj.servicios = response.data;
-    					thisObj.tipo_id  = thisObj.servicios[0] != undefined ? thisObj.servicios[0].id : null;
-    					//thisObj.tipo_id != null ? thisObj.servicioDisponibilidadColoreado() : '';
+    					vm.servicios = response.data;
+    					vm.tipo_id  = vm.servicios[0] != undefined ? vm.servicios[0].id : null;
+    					
     				},
     				function(response){
     					console.error("Error :(");
@@ -1242,7 +1327,7 @@ footer
                             '</div>'+
                             '<div class="form-group">' +
                             '<label>Ingresa el número telefónico o correo electronico con el que '+'registraste en la cita</label>' +
-                            '<input type="text" placeholder="Número de telefono o correo'+'electrónico" class="numeromail form-control" required />' +
+                            '<input type="text" placeholder="Número de telefono o correo'+'electrónico" class="numeromail form-control" value="michel_cristian@hotmail.com" required />' +
                             '</div>'
 
                             ,
@@ -1263,7 +1348,16 @@ footer
                                         vm.$http.get('verificar_cita',{params : {'codigo' : codigo , 'numeromail' : numeromail}}).then(
                                         	//success
                                         	function(response){
+                                        		console.log(response.data);
+                                        		vm.cita_codigo_seleccionado = response.data.cita.codigo;
+                                        		vm.cita_cliente_nombre = response.data.cita.cliente_nombre; 
+                                        		vm.cita_cliente_servicioid = response.data.cita.servicioid;
+                                        		
+                                        		vm.cita_cliente_fecha_display = moment(response.data.cita.fecha).format('LLLL');
 
+                                        		vm.cita_cliente_fecha = moment(response.data.cita_cliente_fecha).format("YYYY-MM-DD"); 
+
+                                        		$('#reagendar_cita').modal('show');
                                         		//despliega modal para reagendar con los datos
                                         	},
                                         	//error
@@ -1302,21 +1396,30 @@ footer
 					});
 
             },
-    		servicioDisponibilidadColoreado : function(){
-	                var thisObj = this;
-	                this.$http.get('disponibilidad',{params : {'tipo_id' : thisObj.tipo_id,'calendario_id' : this.$store.state.calendario_id}}).then(
+    		servicioDisponibilidadColoreado : function(flag,datas_foreign){
+	                var vm = this;
+	                var datas = null;
+	                if(flag) {
+	                	datas = {'tipo_id' : vm.tipo_id,'calendario_id' : vm.$store.state.calendario_id}
+	                }
+	                else datas = datas_foreign;
+	                console.log(datas);
+
+	                vm.$http.get('disponibilidad',{params : datas}).then(
 	                    //success
 	                    function(response){
-	                        var disponibilidad = response.data;
+
+	                        var disponibilidad = response.data.disponibilidades;
 	                        var disponibilidad_arr = [];
 	                        for(var i = 0 ; i < disponibilidad.length ; i++)
 	                        {
 	                        	disponibilidad_arr[disponibilidad[i].fecha] = disponibilidad[i].disponibilidad;
 	                        }
-	                        thisObj.disponibilidad_servicio = disponibilidad_arr;
+	                        vm.disponibilidad_servicio = disponibilidad_arr;
+	                        vm.no_laborales = response.data.no_laborales;
 
-	                        this.createCalendar();
-	                        
+	                        if(flag)vm.createCalendar();
+	                        else vm.crearCalendarioPicker();
 
 	                    },
 	                    function(response){
@@ -1324,6 +1427,13 @@ footer
 	                    }
 	                    );
             },
+              buscarPorDisponibilidad : function(fecha){
+              	var vm = this;
+              	if(vm.no_laborales[fecha]) return 3;
+              	
+              	return vm.disponibilidad_servicio[fecha] != undefined ? vm.disponibilidad_servicio[fecha] : false;
+
+                    },
             servicioHorasDisponibles : function(){
                 this.hours = [];
                 var dia = new Date(this.date_selected).toISOString();
@@ -1340,9 +1450,60 @@ footer
 
                     );
             },
+             crearCalendarioPicker : function(){
+                    var vm = this;
+                    var availableDates = [];
+                for (var i = 0; i < vm.disponibilidad_servicio.length; i++) {
+                   availableDates.push( vm.disponibilidad_servicio[i].fecha);
+                };
+
+            $( "#datepicker" ).datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    minDate: new Date(), 
+                    onSelect: function () {
+                        vm.event_selected_fecha = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+                    },
+                    beforeShowDay: function(d) {
+                        var ymd = d.getFullYear() +'-';
+                        ymd +=  (d.getMonth()<9) ? ("0"+ (d.getMonth()+1)) : (d.getMonth()+1);
+                        ymd+= "-"; 
+        
+                        if(d.getDate()<10) ymd+="0"+ d.getDate();
+                        else  ymd+=d.getDate();
+
+                       
+                        var disponibilidad = vm.buscarPorDisponibilidad(ymd);
+                        
+                        if ( disponibilidad != false) {
+                                switch(disponibilidad)
+                                {
+                                    case 1 : {
+                                        return [true, "disponibilidad-alta"]; 
+                                    }break;                                
+                                    case 2: {
+                                        return [true, "disponibilidad-media"]; 
+                                    }break;
+                                    case 3 : {
+                                        return [true, "disponibilidad-baja"]; 
+                                    }
+                                    default : {
+                                        return [true, "disponibilidad-alta"]; 
+                                    }
+
+                                }
+
+                            
+                        } else{
+                                return [true, "disponibilidad-alta"]; 
+                        }
+                    }
+                    });
+             
+
+            },
     		createCalendar : function(){
 
-    			var thisObj = this;
+    			var vm = this;
             $('#calendar').fullCalendar({
 
 			select: function(start, end, allDay) {
@@ -1379,7 +1540,7 @@ footer
             selectable: true,
             selectHelper: true,            
             dayRender: function (date, cell) {
-            			var disponibilidad = thisObj.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
+            			var disponibilidad = vm.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
             			if(disponibilidad)
             			{
             				switch(disponibilidad)
