@@ -32,7 +32,6 @@ window.jQuery = $;
 window.$ = $;
 
 
-import 'fullcalendar'
 import 'jquery-ui/ui/widgets/datepicker.js'
 import 'jquery-confirm'
 import 'moment';

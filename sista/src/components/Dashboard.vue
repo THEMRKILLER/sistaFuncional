@@ -33,6 +33,7 @@
     font-family: Arial Black;
 }
 </style>
+
 <template>	
 	<div class="container">
     <br><br><br>
@@ -47,65 +48,6 @@
                 <p class="anounce" align="center">El doctor se encuentra disponible en estos momentos</p>
             </div>
     </div>
-
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img src="../assets/img/logo2.png" class="img-responsive" style="width: 140px; margin-top: -16px;"></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/settings">Configuración</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/articulos">Artículos</router-link>
-            </li>
-            <li class="nav-item active">
-              <router-link to="/dashboard">Citas</router-link>
-            </li>
-            <div style="margin-top: 10px; margin-left: 790px;">
-              <li class="dropdown">
-                <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
-                </a>
-                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
-                  <div class="container">                  
-                    <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:7%; margin-left: 0px; margin-top: 10px;'>
-                    <div style="margin-left: 120px; margin-top: -80px;" id="userName">
-                      <label style="margin-left: -23px;">
-                        Usuario
-                      </label><br>
-                      <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">
-                      usuario@prueba.com
-                      </label>
-                    </div>                    
-                    <label style="margin-top: 20px;"><a style="font-size: 12px; margin-left: 8px;" href="/profile">Editar perfil</a></label>                    
-                  </div>
-                  <hr style="margin-top:5px;">
-                  <div style="margin-left: 170px;">
-                    <button class="btn btn-default" style="margin-top: -10px; font-size:10px;height:30px;" role="button" v-on:click="closeSesion">Cerrar sesión</button>
-                  </div>
-                </ul>
-              </li>
-            </div>
-
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
     <br>
 <div class="panel panel-default">
   <div class="panel-heading">Calendario
@@ -273,6 +215,7 @@
 </template>	
 
 <script>
+import 'fullcalendar';
 
 /*
 Aceddiendo a las variables de VUEX : this.$store.state.nombre_de_tu_variable
@@ -288,20 +231,20 @@ ejemplo : this.$store.state.calendario_id
                 nombreActual: '',
                 servicioActual: '',
                 finalActual: '',
-          			calendario_id: 1,
-          			tipo_id: '',
-          			fecha_inicio: '',
-          			fecha_final: '',
-          			cliente_nombre: '',
-          			cliente_telefono: '',
-          			cliente_email: '',
-          			hora_cita: '',
+          		calendario_id: 1,
+          		tipo_id: '',
+          		fecha_inicio: '',
+          		fecha_final: '',
+          		cliente_nombre: '',
+          		cliente_telefono: '',
+          		cliente_email: '',
+          		hora_cita: '',
                 agendarcita_status_neutral : true,
                 agendarcita_status_agendando : false,
                 agendarcita_status_exitoso : false,
                 agendarcita_status_error : false,
                 agendarcita_error_mensaje : [],
-    			      date_selected : '',
+    			date_selected : '',
                 servicios : [],
                 event_selected_id : null,
                 event_selected_cliente_nombre : '',
@@ -312,6 +255,7 @@ ejemplo : this.$store.state.calendario_id
                 event_selected_cliente_telefono  : '',
                 event_selected_servicio : '',
                 event_selected_servicio_id : 0,
+                event_selected_codigo : null,
     			hours:[],
                 reagendar : false,
                 disponibilidad_servicio : []
@@ -442,7 +386,7 @@ ejemplo : this.$store.state.calendario_id
             },
 
             reagendarCita : function(){
-                var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'fecha_inicio' : this.fecha_inicio};
+                var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'calendario_id' : this.$store.state.calendario_id,'fecha_inicio' : this.fecha_inicio};
                     this.$http.put('cita-r',datas).then(
                     //success
 
@@ -681,8 +625,6 @@ ejemplo : this.$store.state.calendario_id
                 //moment(fecha_final).format("YYYY-MM-DD HH:mm:ss");
                 if(!(date2 >= today)) return;
                 thisObj.date_selected = date;
-                
-
             	$('#calendarModal').modal('show');
             	$('.modal').on('hidden.bs.modal', function(){ 
 					$("label.error").remove();  //lo utilice para borrar la etiqueta de error del jquery validate
@@ -699,6 +641,7 @@ ejemplo : this.$store.state.calendario_id
                 thisObj.event_selected_cliente_email = event.cliente_email;
                 thisObj.event_selected_hora_inicio = event.start;
                 thisObj.event_selected_hora_final = event.end;
+                thisObj.event_selected_codigo = event.codigo;
                 thisObj.event_selected_servicio_id = thisObj.buscarPorServicio(event.title);
                 var tmpDate = new Date(event.start);
                 thisObj.event_selected_fecha = thisObj.formatoFecha(tmpDate);
@@ -718,22 +661,10 @@ ejemplo : this.$store.state.calendario_id
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectHelper: true,
+
             eventStartEditable: false,
-       /*     select: function(start, end) {
-                var title = prompt('Event Title:');
-                var eventData;
-                if (title) {
-                    eventData = {
-                        title: title,
-                        start: start,
-                        end: end
-                    };
-                    $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-                }
-                $('#calendar').fullCalendar('unselect');
-            }, */
+     
             dayRender: function (date, cell) {
-                    //    cell.css("background-color", "#FF6961");
                         },
             editable: false,
             eventLimit: true, // allow "more" link when too many events

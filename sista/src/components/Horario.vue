@@ -1,6 +1,5 @@
 <style scoped>
-@import url(https://fonts.googleapis.com/css?family=Oswald);
-@import url(https://fonts.googleapis.com/css?family=PT+Sans);
+
   h3, h4, option{
   font-family: 'Oswald', sans-serif;
   }

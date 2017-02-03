@@ -165,7 +165,6 @@
 </template>
 
 
-<script src="http://t4t5.github.io/sweetalert/dist/sweetalert-dev.js"></script>
 <script>
 import '../assets/css/croppie.css';
 import '../assets/js/croppie.js';
