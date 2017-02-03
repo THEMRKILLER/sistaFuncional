@@ -1,8 +1,5 @@
 <template>
-
 <div id="cupones_root">
-
-
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCupon">Agregar cupón</button>
 <hr>
@@ -29,18 +26,16 @@
     </tr>
     </tbody>
   </table>
- 
 </div>
 
 <!-- Modal -->
 <div id="modalCupon" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" v-on:click="reset_status">&times;</button>
-        <h4 class="modal-title">Nuevo cupon de descuento</h4>
+        <h4 class="modal-title">Nuevo cupón de descuento</h4>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -63,7 +58,6 @@
                 <label for="fecha_final" class="form-control-label">Hasta el:</label>
                 <input type="text" id="fecha_final" class="form-control" :value="fecha_final">
         </div>
-
       </div>
       <div class="modal-footer">
         <div class="status_cupon">
@@ -79,25 +73,19 @@
                     <ul v-for="suberror in error">
                       <li>{{suberror}}</li>
                     </ul>
-                    
                   </li>
                 </ul>
               </small>
             </h4>
           </div>
-
-
         </div>
       	<button class="btn btn-success" v-on:click="enviarCupon">Crear cupón</button>
         <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="reset_status">Cerrar</button>
       </div>
     </div>
-
   </div>
 </div>
 </div>
-
-
 </template>
 
 
@@ -135,14 +123,11 @@ export default {
         					thisobj.fecha_final = date;
       					}
      });
-
-
   },
   methods : {
   	fetchDatas : function(){
   		    this.$http.get('cupon',{params : {'calendario_id' : this.$store.state.calendario_id}}).
   		    then(
-
   		    	//success
   		    	function(response){
   		    		this.servicios = response.data.servicios;
@@ -231,8 +216,6 @@ export default {
               ok : {text : 'Entendido'}
             }
           });
-
-
   			},
   			//error
   			function(response){
