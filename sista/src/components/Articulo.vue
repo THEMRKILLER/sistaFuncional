@@ -168,10 +168,13 @@ nav ul li a .tercero {
                 <!-- End Post -->
             
                             <!-- Prev/Next Post -->
-                            <div class="clearfix mt-40">
-                                <a href="#" class="blog-item-more left"><i class="fa fa-angle-left"></i>&nbsp;Prev post</a>
-                                <a href="#" class="blog-item-more right">Next post&nbsp;<i class="fa fa-angle-right"></i></a>
-                            </div>
+                <div class="clearfix mt-40">
+                  <a class="blog-item-more left" v-if="mostrarBotonAnt" v-on:click="irArticulo(articulo_id_ant)">
+                    <i class="fa fa-angle-left"></i>&nbsp;Anterior
+                  </a>
+                  <a class="blog-item-more right" v-if="mostrarBotonNxt" v-on:click="irArticulo(articulo_id_nxt)"> Siguiente&nbsp;<i class="fa fa-angle-right"></i>
+                  </a>
+                </div>
                             <!-- End Prev/Next Post -->
                             
                         </div>
@@ -225,6 +228,11 @@ export default {
     return {
       articulo : [],
       autor : [],
+      articulo_id_nxt: '',
+      articulosID: [],
+      articulo_id_ant: '',
+      mostrarBotonAnt: true,
+      mostrarBotonNxt: true,
       articulonotfound : false
     }
   },
@@ -242,7 +250,9 @@ export default {
   			//success
   			function(response){
   				this.articulo = response.data.articulo;
+          this.articulosID = response.data.articulos;
   				this.autor = response.data.autor;
+          this.nextPrev();
   			},
   			//error
   			function(response){
@@ -254,7 +264,29 @@ export default {
 
   					}
   			});
-  	}
-  }
-}
+  	},
+    irArticulo: function(id){
+      this.$router.push('./'+id);
+    },
+
+    nextPrev: function(){
+                //ID DEL ARTICULO ACTUAL
+                var idArticulo = this.articulo.id;
+                //posición de ese articulo en el arreglo de articulos
+                //articulo 1 se encuentra en posicion 0
+                var posicion_arrayID = this.articulosID.indexOf(idArticulo, 0);
+                //posicion anterior y siguiente
+                this.articulo_id_nxt = this.articulosID[posicion_arrayID] + 1;
+                this.articulo_id_ant = this.articulosID[posicion_arrayID] -1;
+
+                if(this.articulo_id_ant < 0){
+                  //deshabilito boton
+                  this.mostrarBotonAnt =false;
+                }
+                if(this.articulo_id_nxt > this.articulosID.length){
+                  this.mostrarBotonNxt = false;
+                }                
+              }
+            }
+          }
 </script>

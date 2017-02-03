@@ -13,6 +13,7 @@ const state = {
   user_id : null,
   socket : io.connect('http://192.168.0.17:3000'),
   citas_programadas : [],
+  articulos: [],
   variable_prueba : "hola mundo",
   header : true
 }
@@ -56,6 +57,8 @@ const mutations = {
   changeheader(state){
     state.header = true;
   },
+  //state acceder a las constantes
+  //payload contiene los parametros que le pase en cualquier componente
   agregarCitaProgramada(state,payload){
 
     var id_cita = payload.cita.id;
