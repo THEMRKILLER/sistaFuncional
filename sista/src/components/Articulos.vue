@@ -78,7 +78,8 @@ export default {
   		this.$http.get('articulos').then(
   			//success
   			function(response){
-  				this.articulos = response.data;          
+  				this.articulos = response.data;
+          this.$store.articulos = response.data.articulos;    
   			},
   			//error
   			function(response){

@@ -25,7 +25,7 @@ Vue.component('cupones', require('components/Cupones.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 Vue.component('superheader', require('components/Superheader.vue'));
 
-Vue.http.options.root = 'http://192.168.0.20/Sista/public/api/v1';
+Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';
 
 var $ = require('jquery');
 window.jQuery = $;
