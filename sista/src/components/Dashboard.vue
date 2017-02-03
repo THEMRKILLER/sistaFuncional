@@ -28,6 +28,10 @@
     background-repeat: no-repeat;
     color: white;
 }
+
+.anounce{
+    font-family: Arial Black;
+}
 </style>
 
 <template>	
@@ -35,12 +39,13 @@
     <br><br><br>
     <div class="jumbotron container-fluid">
             <div v-if="muestraCita">
-                <h1 style="margin-left: 150px;">Atendiendo a: {{nombreActual}}</h1>
-                <p>Servicio de: {{servicioActual}}</p>
-                <p>Cita termina a las: {{finalActual}}</p>
+                <h1 align="center">Atendiendo a: {{nombreActual}}</h1>
+                <p align="left">Servicio de: {{servicioActual}}</p>
+                <p align="left">Cita termina a las: {{finalActual}}</p>
             </div>
             <div v-else>
-                <p>El doctor se encuentra disponible en estos momentos</p>
+            <br>
+                <p class="anounce" align="center">El doctor se encuentra disponible en estos momentos</p>
             </div>
     </div>
     <br>
@@ -372,17 +377,26 @@ ejemplo : this.$store.state.calendario_id
                 var thisObj  = this;
                 thisObj.servicioDisponibilidadColoreado(this.event_selected_servicio_id);
             },
+
+            AlertDisplay: function(){
+                $.alert({
+                title: '¡Éxito!',
+                content: 'Los cambios han sido aplicados'
+                });                
+            },
+
             reagendarCita : function(){
                 var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'calendario_id' : this.$store.state.calendario_id,'fecha_inicio' : this.fecha_inicio};
                     this.$http.put('cita-r',datas).then(
                     //success
 
                     function(response){
-
+                        this.AlertDisplay();
                     },
 
                     function(response){
-                      console.log("Success");
+                        
+                        console.log("Success");
 
                     },
                     //error
@@ -606,8 +620,10 @@ ejemplo : this.$store.state.calendario_id
             	var thisObj = this;
             $('#calendar').fullCalendar({                
             dayClick:  function(date, jsEvent, view){
-                var today = moment();
-                if(today > date) return;
+                var date2 = moment(date).format("YYYY-MM-DD");
+                var today = moment().format("YYYY-MM-DD");
+                //moment(fecha_final).format("YYYY-MM-DD HH:mm:ss");
+                if(!(date2 >= today)) return;
                 thisObj.date_selected = date;
             	$('#calendarModal').modal('show');
             	$('.modal').on('hidden.bs.modal', function(){ 
@@ -645,9 +661,12 @@ ejemplo : this.$store.state.calendario_id
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectHelper: true,
+
+            eventStartEditable: false,
+     
             dayRender: function (date, cell) {
                         },
-            editable: true,
+            editable: false,
             eventLimit: true, // allow "more" link when too many events
             events: this.citas
             

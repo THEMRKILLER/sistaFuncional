@@ -4,7 +4,33 @@
 
 
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCupon">Agregar cupon</button>
+<button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCupon">Agregar cupón</button>
+<hr>
+<div class="well">
+  <table class="table">
+    <thead>      
+      <tr>
+        <th>Servicio</th>
+        <th>Código</th>
+        <th>Descuento</th>
+        <th>Fecha de vencimiento</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr v-for="cupon in cupones">
+      <td>{{cupon.servicio_id}}</td>
+      <td>{{cupon.codigo}}</td>
+      <td>{{cupon.porcentaje}}%</td>
+      <td>{{cupon.fecha_final}}</td>
+      <td>
+        <button v-on:click="confirmDialog(cupon.id)" type="button" class="btn btn-danger">X</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+ 
+</div>
 
 <!-- Modal -->
 <div id="modalCupon" class="modal fade" role="dialog">
@@ -93,9 +119,6 @@
 
   </div>
 </div>
-
-
-{{cupones}}
 </div>
 
 
@@ -116,11 +139,16 @@ export default {
       error_messages : [],
       cupon_status_error : false,
       cupon_status_creating : false,
+<<<<<<< HEAD
       word_key : null,
       codigo : null,
       error : false,
       generando_codigo : false
 
+=======
+      deleteNameCupon: '',
+      ArregloID: []
+>>>>>>> 0b17d688bf8a0fd678e4bd61a4d1d73501f37187
     }
   },
   mounted(){
@@ -161,6 +189,7 @@ export default {
   		    	}
   		    	);
   	},
+<<<<<<< HEAD
     generar_key : function(){
 
       var vm = this;
@@ -183,6 +212,56 @@ export default {
         }
         );
     },
+=======
+
+    confirmDialog: function(idCupon){
+                var idCupon = idCupon;
+          $.confirm({
+            title: '¿Está seguro de eliminar el cupón?',
+            content: '',
+            buttons: {              
+              Sí: {
+              text: 'Sí',
+              btnClass: 'btn-warning',
+              action: function () {
+                /*this.$content*/
+                this.ArregloID = idCupon;
+                this.deleteNameCupon = this.servicios[this.ArregloID -1].nombre;
+                deleteServicio();
+                // reference to the content
+                $.alert('¡Eliminado!');
+              }
+            },
+              Cancelar: function () {
+                
+              }              
+          }
+      });
+    },
+
+    deleteServicio : function(event){
+                  $(event.target).attr('disabled',true);
+                var datas = {'id' : this.ArregloID};
+
+                this.$http.delete('tipo',{params : {'id' : this.ArregloID}}).then(
+                    //success
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                        this.updateSuccess = true;
+                        var thisObj = this;
+                        setTimeout(function() {
+                            thisObj.updateSuccess = false;
+                        }, 5000);
+                        this.fetchDatas();
+                    },
+                    //error
+                    function(response){
+                        $(event.target).attr('disabled',false);
+                    }
+                    );
+            },
+
+>>>>>>> 0b17d688bf8a0fd678e4bd61a4d1d73501f37187
     reset_status : function(){
       this.cupon_status_creating  = false;
       this.cupon_status_error = false;
