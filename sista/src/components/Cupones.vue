@@ -29,6 +29,29 @@
   			<label for="porcentaje">Porcentaje de descuento</label>
   			<input type="number" class="form-control" id="porcentaje" v-model="porcentaje" min="1">
   		</div>
+      <div class="form-group">
+        <div class="alert alert-warning">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Instrucciones: </strong>
+          <h5>Inserte una palabra clave para que el sistema genere una propuesta de código de cupón . <i>Ejemplo : ingrese : Santa y el sistema generará : Santa123 u otro disponible</i> , puede dejar este espacio en blanco y el sistema generará un cupón aleatorio
+          </h5>
+        </div>
+      </div>
+        
+        <label for="propuesta_codigo">Palabra clave</label>
+        <div v-if="error" class="alert alert-danger"> 
+          Ocurrió un error generado el código :(
+        </div>
+      <div class="form-inline">
+      <div class="form-group">
+          <input type="text" class="form-control" id="propuesta_codigo" v-model="word_key" placeholder="Ingresa una palabra clave para generar código">
+          <input type="text" class="form-control" v-model="codigo" placeholder="Código" readonly>
+          <button class="btn btn-info" v-on:click="generar_key" v-if="!generando_codigo">Generar código</button>
+          <button v-else class="btn btn-info" disabled><i class="fa fa-spinner fa-pulse fa-fw"></i> Generando código</button>
+        </div>
+      </div>
+
+
   		<div class="form-group">             
                 <label for="fecha_inicial" class="form-control-label">A partir de:</label>
                 <input type="text" id="fecha_inicial" class="form-control" :value="fecha_inicial">
@@ -50,6 +73,7 @@
               <small>
                 <ul v-for="error in error_messages">
                   <li>
+                    {{error_messages}}
                     <ul v-for="suberror in error">
                       <li>{{suberror}}</li>
                     </ul>
@@ -91,7 +115,11 @@ export default {
       porcentaje : null,
       error_messages : [],
       cupon_status_error : false,
-      cupon_status_creating : false
+      cupon_status_creating : false,
+      word_key : null,
+      codigo : null,
+      error : false,
+      generando_codigo : false
 
     }
   },
@@ -121,6 +149,7 @@ export default {
 
   		    	//success
   		    	function(response){
+
   		    		this.servicios = response.data.servicios;
               this.cupones = response.data.cupones;
 
@@ -132,6 +161,28 @@ export default {
   		    	}
   		    	);
   	},
+    generar_key : function(){
+
+      var vm = this;
+      if(vm.word_key == '' || vm.word_key == null || vm.word_key == ' ') vm.word_key = undefined;
+      
+      vm.generando_codigo =  true;
+      vm.$http.get('codigo_cupon/'+vm.word_key).then(
+
+        //success
+        function(response){
+          vm.generando_codigo = false;
+          vm.error  = false;
+          vm.codigo = response.data;
+
+        },
+        //error
+        function(response){
+          vm.generando_codigo = false;
+          vm.error = true;
+        }
+        );
+    },
     reset_status : function(){
       this.cupon_status_creating  = false;
       this.cupon_status_error = false;
@@ -139,7 +190,7 @@ export default {
     },
   	enviarCupon : function(){
   		var vm = this;
-  		var datas = {'servicio_id' : this.servicio_selected, 'porcentaje' : this.porcentaje, 'fecha_inicial' : this.fecha_inicial, 'fecha_final' : this.fecha_final};
+  		var datas = {'servicio_id' : this.servicio_selected, 'porcentaje' : this.porcentaje, 'fecha_inicial' : this.fecha_inicial, 'fecha_final' : this.fecha_final, 'word_key' : vm.codigo};
       vm.cupon_status_creating  = true;
       vm.cupon_status_error = false;
   		this.$http.post('cupon',datas).then(
@@ -166,8 +217,9 @@ export default {
   			function(response){
           vm.cupon_status_creating = false;
           vm.cupon_status_error = true;
-          this.error_messages = response.data.errors;
-
+          vm.error_messages = response.data.errors;
+          console.log(vm.error_messages);
+          console.log(response.data);
   				console.error("Error creando el cupon :( , codigo de estado : " + response.status);
   			}
 

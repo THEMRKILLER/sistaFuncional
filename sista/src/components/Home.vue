@@ -893,6 +893,7 @@ footer
 				</div>
 							<div class="form-group">
 								<button class="btn btn-danger" v-on:click="cancelarDialog">Cancelar una cita</button>
+								<button class="btn btn-info" v-on:click="reagendarPaso1">Reagendar una cita</button>
 
 							</div>		
 							 <div class="form-group">
@@ -1055,12 +1056,8 @@ footer
 	</div>
 
 </template>
-	<script src="assets/js/jquery.min.js"></script>
 
 <script>
-import 'assets/js/es.js';
-//import '../assets/js/loginjs.js';
-
 
     export default {
     	name:'home',    	
@@ -1231,6 +1228,79 @@ import 'assets/js/es.js';
                             }
                         });
 			
+            },
+            reagendarPaso1: function()
+            {
+            	var vm = this;
+                		$.confirm({
+                            title: 'Código',
+                            content: '' +
+                            
+                            '<div class="form-group">' +
+                            '<label>Ingresa el código de la cita que quieres reagendar</label>' +
+                            '<input type="text" placeholder="Código de la cita" class="codigo form-control" required />' +
+                            '</div>'+
+                            '<div class="form-group">' +
+                            '<label>Ingresa el número telefónico o correo electronico con el que '+'registraste en la cita</label>' +
+                            '<input type="text" placeholder="Número de telefono o correo'+'electrónico" class="numeromail form-control" required />' +
+                            '</div>'
+
+                            ,
+                            buttons: {
+
+                                verificar: {
+                                    text: 'Verificar codigo',
+                                    btnClass: 'btn-blue',
+                                    action: function () {
+                                        var codigo = this.$content.find('.codigo').val();
+                                        var numeromail = this.$content.find('.numeromail').val();
+
+                                        if(! (codigo || numeromail)){
+                                            $.alert('Todos los campos son obligatorios');
+                                            return false;
+                                        }
+
+                                        vm.$http.get('verificar_cita',{params : {'codigo' : codigo , 'numeromail' : numeromail}}).then(
+                                        	//success
+                                        	function(response){
+
+                                        		//despliega modal para reagendar con los datos
+                                        	},
+                                        	//error
+                                        	function(response){
+
+                                        		var data_errors = response.data.errors;
+                                        		var data_errors_parse = '';
+                                        		for (var i = 0; i < data_errors.length; i++)data_errors_parse+= '<br>- '+data_errors[i]; 
+                                        		
+
+                                        		$.confirm({
+													    title: 'Error',
+													    content: 'Fallo en la verificación de la cita : '+data_errors_parse,
+													    type: 'red',
+													    typeAnimated: true,
+													    buttons: {
+													        ok: {
+													            text: 'Hecho',
+													            btnClass: 'btn-blue'
+													        }
+													    }
+													});	
+
+
+                                        	}
+
+                                        		
+                                        	);
+							}
+						},
+						cancel : {
+                                	text : 'Salir'
+                                },
+					}
+
+					});
+
             },
     		servicioDisponibilidadColoreado : function(){
 	                var thisObj = this;

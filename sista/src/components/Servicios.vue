@@ -96,24 +96,7 @@
                     </div>
                 </div>
         </div>
-<!-- modal to show -->
 
-<!-- MODAL DELETE
-
-    <div id="confirmOverlay" class="modal fade">
-    <div id="confirmBox" class="modal-content">
-
-        <h1>¿Está seguro que desea eliminar el servicio {{deleteNameEvent}}?</h1>
-        <p>El servicio será eliminado permanentemente de la tabla</p>
-
-        <div id="confirmButtons">
-            <button class="btn btn-danger" v-on:click="deleteServicio" >SI</button>
-            <button class="btn btn-default" data-dismiss="modal">No</button>
-        </div>
-    </div>
-</div>
-    
-MODAL DELETE -->
 
 			<!--Modal para agregar servicio -->
 			<div id="servicio_modal" class="modal fade" role="dialog">
