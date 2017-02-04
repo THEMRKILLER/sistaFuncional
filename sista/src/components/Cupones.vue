@@ -133,7 +133,6 @@ export default {
       generando_codigo : false,
       deleteNameCupon: '',
       ArregloID: []
-
     }
   },
   mounted(){
@@ -240,7 +239,6 @@ export default {
                     }
                     );
             },
-
     reset_status : function(){
       this.cupon_status_creating  = false;
       this.cupon_status_error = false;
