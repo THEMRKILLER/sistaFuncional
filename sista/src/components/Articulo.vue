@@ -158,8 +158,7 @@ export default {
                 this.articulo_id_nxt = this.articulosID[posicion_arrayID] + 1;
                 this.articulo_id_ant = this.articulosID[posicion_arrayID] -1;
 
-                if(this.articulo_id_ant < 0){
-                  //deshabilito boton
+                if(this.articulo_id_ant < 1){
                   this.mostrarBotonAnt =false;
                 }
                 if(this.articulo_id_nxt > this.articulosID.length){
