@@ -62,7 +62,7 @@
 </div>		
 
 <!-- INICIO MODAL -->
-{{citas}}
+<!-- {{citas}}-->
 <div id="calendarModal" class="modal fade">
 <div class="modal-dialog">
     <div class="modal-content">
