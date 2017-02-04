@@ -8,8 +8,9 @@
     <div v-else><h1>NONONO</h1></div>
 
 	<div>
-
-	<router-view></router-view>
+<transition name="fade" mode="out-in">
+     <router-view></router-view>
+</transition>
 
 
     </div>
