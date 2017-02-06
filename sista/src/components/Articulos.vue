@@ -8,9 +8,7 @@
                 <div class="container relative">
                     
                     <h2 class="section-title font-alt align-left mb-70 mb-sm-40">
-                        Latest News
-                        
-                        <a href="blog-classic-sidebar-right.html" class="section-more right">All News in our blog <i class="fa fa-angle-right"></i></a>
+                        Artículos publicados
                         
                     </h2>
                     
@@ -75,7 +73,15 @@ export default {
   },
   methods:{
   	fetchDatas : function(){
-  		this.$http.get('articulos').then(
+      var vm = this;
+  		this.$http.get('articulos', {progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            vm.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
   			//success
   			function(response){
   				this.articulos = response.data;

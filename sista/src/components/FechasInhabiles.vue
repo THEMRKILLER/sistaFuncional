@@ -253,7 +253,15 @@ export default {
     },
 
   	fetchDatas : function(){
-  		this.$http.get('fecha_inhabil',{params : {'calendario_id' : this.$store.state.calendario_id }}).then(
+      var vm = this;
+  		this.$http.get('fecha_inhabil',{params : {'calendario_id' : this.$store.state.calendario_id }, progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            vm.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
 
   			//success
 

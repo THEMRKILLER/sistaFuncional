@@ -13,8 +13,11 @@ const state = {
   user_id : null,
   socket : io.connect('http://192.168.0.17:3000'),
   citas_programadas : [],
-  articulos: [],
+  //articulos: [],
   variable_prueba : "hola mundo",
+  progress: 0,
+  error: false,
+  direction: 'right',
   header : true
 }
 
@@ -56,6 +59,10 @@ const mutations = {
   },
   changeheader(state){
     state.header = true;
+  },
+  aumentarPorcentaje(state, payload){
+    state.progress = payload.porcentaje;
+    console.log("state progress: " + state.progress);
   },
   //state acceder a las constantes
   //payload contiene los parametros que le pase en cualquier componente

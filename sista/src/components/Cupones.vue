@@ -10,7 +10,7 @@
         <th>Servicio</th>
         <th>Código</th>
         <th>Descuento</th>
-        <th>Fecha de vencimiento</th>
+        <th>Inicio - Vencimiento</th>
         <th>Eliminar</th>
       </tr>
     </thead>
@@ -19,7 +19,7 @@
       <td>{{cupon.servicio_id}}</td>
       <td>{{cupon.codigo}}</td>
       <td>{{cupon.porcentaje}}%</td>
-      <td>{{cupon.fecha_final}}</td>
+      <td>{{cupon.fecha_inicial}} - {{cupon.fecha_final}}</td>
       <td>
         <button v-on:click="confirmDialog(cupon.id)" type="button" class="btn btn-danger">X</button>
       </td>
@@ -154,7 +154,15 @@ export default {
   },
   methods : {
   	fetchDatas : function(){
-  		    this.$http.get('cupon',{params : {'calendario_id' : this.$store.state.calendario_id}}).
+      var vm = this;
+  		    this.$http.get('cupon',{params : {'calendario_id' : this.$store.state.calendario_id}, progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            vm.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).
   		    then(
   		    	//success
   		    	function(response){
