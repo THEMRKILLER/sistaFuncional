@@ -54,11 +54,6 @@ const config = {
 
 
 Vue.use(VeeValidate, config);
-const art_router = {
-path: '/articulo/:id',
-  component: require('components/Articulo.vue'),
-  
-}
 
 
 const routes = [
@@ -68,7 +63,7 @@ const routes = [
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
   { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
   { path: '/redactar', component: require('components/Redactador.vue'),name: 'auth-required' },
-   art_router,
+  { path: '/articulo/:id',component: require('components/Articulo.vue')},
   { path: '/articulos', component: require('components/Articulos.vue')},
   { path: '/profile', component: require('components/Profile.vue')},
   { path: '*', component: require('components/NotFound.vue') }
