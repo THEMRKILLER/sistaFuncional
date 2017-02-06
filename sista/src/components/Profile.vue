@@ -289,7 +289,14 @@ import '../assets/js/jquery.min.js';
             },
                 fetchDatas : function(){
                     var thisObj = this;
-                    this.$http.get('user_info',{params : {'user_id' : this.$store.state.calendario_id}}).then(
+                    this.$http.get('user_info',{params : {'user_id' : this.$store.state.calendario_id}, progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            thisObj.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
                         //success
                         function(response){
                             thisObj.user = response.data;

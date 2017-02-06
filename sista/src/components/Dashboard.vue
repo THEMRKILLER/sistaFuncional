@@ -347,8 +347,6 @@ ejemplo : this.$store.state.calendario_id
                 }
                 //cliente actual: se muestran los datos del cliente actual
                 else{
-                    console.log("fecha final:" + msFechaFinal);
-                    console.log("msHoy: "+ msHastaHoy);
                     if(msHastaHoy < msFechaFinal){                           
                         //this.laHoraDehoy = fechaActual;
                         //this.laHoraFinal = fechaFinalCita;
@@ -698,9 +696,21 @@ ejemplo : this.$store.state.calendario_id
                 else return 0;
             },
     		fetchDatas : function(){
+                /*
+                this.$store.commit('agregarCitaProgramada', {
+                        cita: cita
+                    });
+                */
     		
           var thisObj = this;
-    			this.$http.get('dashboard').then(
+    			this.$http.get('dashboard', { progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            thisObj.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
     				//success
     				function(response){
     					this.citas = response.data.citas;

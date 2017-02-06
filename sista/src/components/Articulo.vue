@@ -123,8 +123,15 @@ export default {
   },
   methods : {
   	fetchDatas: function(){
-
-  		this.$http.get('articulo/'+this.$route.params.id).then(
+      var vm = this;
+  		this.$http.get('articulo/'+this.$route.params.id, {progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            vm.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
   			//success
   			function(response){
   				this.articulo = response.data.articulo;
@@ -157,13 +164,15 @@ export default {
                 //posicion anterior y siguiente
                 this.articulo_id_nxt = this.articulosID[posicion_arrayID] + 1;
                 this.articulo_id_ant = this.articulosID[posicion_arrayID] -1;
-
-                if(this.articulo_id_ant < 0){
-                  //deshabilito boton
+                this.mostrarBotonNxt = true;
+                this.mostrarBotonAnt = true;
+                if(this.articulo_id_ant < 1){
                   this.mostrarBotonAnt =false;
+                  this.mostrarBotonNxt = true;
                 }
                 if(this.articulo_id_nxt > this.articulosID.length){
                   this.mostrarBotonNxt = false;
+                  this.mostrarBotonAnt = true;
                 }                
               }
             }

@@ -252,7 +252,14 @@ export default {
   		var objThis = this;
   		this.updateHorasRange();
 
-  		this.$http.get('dias_habiles',{params: {'calendario' : this.$store.state.calendario_id }}).then(
+  		this.$http.get('dias_habiles',{params: {'calendario' : this.$store.state.calendario_id }, progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            objThis.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
   			//success
   			function(response){
   				var dias_disponibles = response.data.horario;

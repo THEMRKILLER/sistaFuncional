@@ -4,7 +4,8 @@ Vue.use(require('vue-resource'))
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 import VeeValidate, { Validator } from 'vee-validate';
-
+import LoadingBar from 'vue2-loading-bar';
+import 'vue2-loading-bar/build/vue2-loading-bar.min.js'
 
 import store from './store'
 
@@ -12,18 +13,23 @@ import store from './store'
 //Vue.use(VueLocalStorage)
 
 //import './assets/css/style.css';
+import './assets/css/barra/loading-bar.css';
+
 import './assets/js/jquery.easing.min.js';
 import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
+
 //import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css';
 import 'jquery-ui/themes/base/all.css'
+
 Vue.component('servicios', require('components/Servicios.vue'));
 Vue.component('horario', require('components/Horario.vue'));
 Vue.component('fechaInhabil', require('components/FechasInhabiles.vue'));
 Vue.component('cupones', require('components/Cupones.vue'));
 Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 Vue.component('superheader', require('components/Superheader.vue'));
+Vue.component('loading-bar', require('vue2-loading-bar'));
 
 Vue.http.options.root = 'http://192.168.0.17/Sista/public/api/v1';
 
@@ -144,7 +150,7 @@ Vue.http.interceptors.push((request, next)  => {
 const app = new Vue({
     store,
     router,
-    components : {App}
+    components : {App,LoadingBar}
 }).$mount('#app')
 
 
