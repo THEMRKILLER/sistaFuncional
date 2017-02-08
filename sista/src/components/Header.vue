@@ -10,7 +10,7 @@
 
 
 
-    <div v-if="$store.state.header" style="position: relative; z-index: 1;">
+    <div v-if="$store.state.header" style="z-index: 1;">
     <loading-bar
       :on-error-done="errorDone"
       :on-progress-done="progressDone"

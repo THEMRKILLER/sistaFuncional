@@ -32,6 +32,13 @@
 .anounce{
     font-family: Arial Black;
 }
+
+body.modal-open {
+    overflow: visible;
+}
+/*
+ .modal-open{ position: relative}
+*/
 </style>
 
 <template>	
