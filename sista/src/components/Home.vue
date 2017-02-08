@@ -1493,6 +1493,7 @@ footer
 					});
 
             },
+            
     		servicioDisponibilidadColoreado : function(flag,datas_foreign){
 	                var vm = this;
 	                var datas = null;
