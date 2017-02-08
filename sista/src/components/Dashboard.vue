@@ -69,7 +69,7 @@ body.modal-open {
 </div>		
 
 <!-- INICIO MODAL -->
-<!-- {{citas}}-->
+
 <div id="calendarModal" class="modal fade">
 <div class="modal-dialog">
     <div class="modal-content">
@@ -80,7 +80,6 @@ body.modal-open {
           <h4 class="modal-title" id="exampleModalLabel">Nueva Cita</h4>
         </div>
         <div class="modal-body">
-          <form>
 <!-- Nombre -->
             <div class="form-group">
               <label for="recipient-name" class="form-control-label">Nombre:</label>
@@ -97,19 +96,20 @@ body.modal-open {
               <input type="text" name="cliente_email" class="form-control" id="recipient-email" v-model="cliente_email">
             </div>
 <!-- SERVICIOS -->
-            <div class="form-group">             
-            <label for="message-text" class="form-control-label">Servicio</label>
+            <div class="form-group">  
+
+                <label for="message-text" class="form-control-label">Servicio</label>
             	<select class="form-control" v-model="tipo_id">
-            	<option v-for="servicio in servicios" :value="servicio.id">
-            		{{ servicio.nombre }}
-            	</option>
-  					
+                	<option v-for="servicio in servicios" :value="servicio.id">
+                		{{ servicio.nombre }}
+                	</option>
 				</select>
+                
             </div>
 <!-- Hora -->
             <div class="form-group">
               <label for="message-text" class="form-control-label">Hora:</label>
-				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
+				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours.length != 0">
 				<option v-for="hour in hours" :value="hour.value">
 					{{ hour.text }}
 				</option>
@@ -117,7 +117,6 @@ body.modal-open {
 				</select>
                 <select v-else class="form-control" name="fecha_inicio" disabled></select>
             </div>            
-          </form>
         </div>
         <div class="modal-footer">
             <div v-if="!agendarcita_status_neutral" align="center">
@@ -269,12 +268,14 @@ ejemplo : this.$store.state.calendario_id
     		}
     	},
     	mounted(){
-            var thisObj = this;
+            //var vm = this;
             this.fetchDatas(); 
+            this.resetModal();
             //alert(this.$store.state.variable_prueba);     
     	},
         watch : {
             'tipo_id' : function(){
+                if(this.tipo_id == null) return;
                 var tipo_id = this.tipo_id;
                 var fecha = this.date_selected;
                 this.servicioHorasDisponibles(tipo_id,fecha);
@@ -285,6 +286,7 @@ ejemplo : this.$store.state.calendario_id
                 if(tipo_id != "")this.servicioHorasDisponibles(tipo_id,fecha);
             },
             'event_selected_servicio_id' : function(){
+                if(this.event_selected_servicio_id == null) return;
                 var tipo_id = this.event_selected_servicio_id;
                 var fecha = this.event_selected_fecha;
                 this.servicioHorasDisponibles(tipo_id,fecha);
@@ -292,6 +294,22 @@ ejemplo : this.$store.state.calendario_id
             },
         },
     	methods : {
+            resetModal : function(){
+                var vm = this;
+
+                $('#calendarModal').on('hidden.bs.modal', function (e) {
+                    vm.event_selected_servicio_id = null;
+                    vm.fecha_inicio = null;
+                    vm.hours = [];
+                    vm.cliente_nombre  = null;
+                    vm.cliente_telefono = null;
+                    vm.cliente_email = null;
+                    vm.tipo_id = null;
+                    console.log("Ok " + vm.cliente_nombre);
+
+                    });
+
+            },
             getMethodCalc: function(){
                 for(var i=0 ; i < this.citas.length; i++ ){
                 //se guarda en una variable cita la cita que se està recorriendo 

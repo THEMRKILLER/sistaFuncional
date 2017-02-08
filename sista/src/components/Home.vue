@@ -979,7 +979,6 @@ footer
           <h4 class="modal-title" id="exampleModalLabel">Agendar una cita</h4>
         </div>
         <div class="modal-body">
-          <form>
 <!-- Nombre -->
             <div class="form-group">
               <label for="recipient-name" class="form-control-label">Nombre:</label>
@@ -1016,7 +1015,8 @@ footer
 				</select>
                 <select v-else class="form-control" name="fecha_inicio" disabled></select>
             </div>
-          </form>
+
+
         </div>
 <!--  ALERTAS DE CREACION CITA -->
 		<div></div>
@@ -1090,7 +1090,8 @@ footer
           <!-- Hora -->
         <div class="form-group">
             <label for="message-text" class="form-control-label">Hora:</label>
-            <select class="form-control" v-model="nueva_fecha" name="fecha_inicio" v-if="hours != []">
+            <select class="form-control" v-model="nueva_fecha" name="fecha_inicio" v-if="hours.length > 0">
+            	<option value=""  disabled>Selecciona una hora</option>
                 <option v-for="hour in hours" :value="hour.value">
                         {{ hour.text }}
                 </option>
@@ -1107,7 +1108,8 @@ footer
         </div>
         <!--Fin modal body-->
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      	<button type="button" class="btn btn-info">Reagendar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
       </div>
     </div>
 
@@ -1190,15 +1192,15 @@ footer
     				//this.crearCalendarioPicker();
 	    		},
 	    		'cita_cliente_fecha' : function(){
-	    			console.log("La fecha de la cita cambia ! ");
+	    			this.servicioHorasDisponibles(this.cita_cliente_fecha);
 	    		},
 	    		'cita_cliente_servicioid' : function(){
 	    			var vm = this;
 	    			var datas = {'tipo_id' : vm.cita_cliente_servicioid,'calendario_id' : vm.$store.state.calendario_id};
 	    			this.crearCalendarioPicker();
-
-
 	    			this.servicioDisponibilidadColoreado(false,datas);
+	    			console.log(this.cita_cliente_fecha);
+	    			this.servicioHorasDisponibles(this.cita_cliente_fecha);
 	    		}
     		},
     	methods:{
@@ -1403,7 +1405,6 @@ footer
 	                	datas = {'tipo_id' : vm.tipo_id,'calendario_id' : vm.$store.state.calendario_id}
 	                }
 	                else datas = datas_foreign;
-	                console.log(datas);
 
 	                vm.$http.get('disponibilidad',{params : datas}).then(
 	                    //success
@@ -1417,8 +1418,11 @@ footer
 	                        }
 	                        vm.disponibilidad_servicio = disponibilidad_arr;
 	                        vm.no_laborales = response.data.no_laborales;
+	                        console.log(response.data.disponibilidades);
 
-	                        if(flag)vm.createCalendar();
+	                        if(flag){
+	                        	vm.createCalendar();
+	                        }
 	                        else vm.crearCalendarioPicker();
 
 	                    },
@@ -1434,14 +1438,17 @@ footer
               	return vm.disponibilidad_servicio[fecha] != undefined ? vm.disponibilidad_servicio[fecha] : false;
 
                     },
-            servicioHorasDisponibles : function(){
+            servicioHorasDisponibles : function(fecha){
                 this.hours = [];
-                var dia = new Date(this.date_selected).toISOString();
-                
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia }}).then(
+                var dia;
+                if(fecha)  dia = new Date(fecha).toISOString();
+                else dia = new Date(this.date_selected).toISOString();
+                console.log("Dia "+ dia)
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia , 'calendario_id' : this.$store.state.calendario_id}}).then(
                     //success
                     function(response){
                         this.hours = response.data;
+                        console.log(response.data);
                     },
                     //error
                     function(response){
@@ -1461,7 +1468,7 @@ footer
                     dateFormat: 'yy-mm-dd',
                     minDate: new Date(), 
                     onSelect: function () {
-                        vm.event_selected_fecha = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+                        vm.cita_cliente_fecha = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
                     },
                     beforeShowDay: function(d) {
                         var ymd = d.getFullYear() +'-';
@@ -1540,6 +1547,7 @@ footer
             selectable: true,
             selectHelper: true,            
             dayRender: function (date, cell) {
+            		console.log(vm.disponibilidad_servicio);
             			var disponibilidad = vm.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
             			if(disponibilidad)
             			{
