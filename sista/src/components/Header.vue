@@ -53,6 +53,9 @@
                 vm.$store.state.socket.on('nueva_cita', function(data) {
                     alert("Nueva cita! ");
                 });
+                vm.$store.state.socket.on('reagendar_cita', function(data) {
+                    alert("Una cita se ha reagendado");
+              });
            
 
             }

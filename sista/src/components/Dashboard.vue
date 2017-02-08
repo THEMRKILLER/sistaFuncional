@@ -28,6 +28,15 @@
     background-repeat: no-repeat;
     color: white;
 }
+.IndicadorRojo{
+    color: #FF6961;
+}
+.IndicadorVerde{
+    color: #779ECB;
+}
+.IndicadorAmarillo{
+    color: #FFB347;
+}
 
 .anounce{
     font-family: Arial Black;
@@ -45,8 +54,15 @@ body.modal-open {
   margin-top: 20px;
   margin-right: auto;
 }
-        
+       
+.vertical-align{
+    display:table-cell;
+    vertical-align:middle;
+} 
 
+.grid *{
+    display: inline-block;
+}
 </style>
 
 <template>	
@@ -82,8 +98,20 @@ body.modal-open {
         </div>
  
   </div>
-<div class="panel panel-default">
-  <div class="panel-heading">Calendario
+  <div v-if="actualizando_coloreado" align="center">
+        <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i> Actualizando calendario ...
+   </div>
+
+
+   
+    <div class="panel panel-default">
+  <div class="panel-heading">
+     <div v-if="servicio_consulta" class="grid" align="center">
+    <div><span class="glyphicon glyphicon-stop IndicadorVerde"></span><span class="LabelIndicador">Alta disponibilidad</span></div>
+    <div><span class="glyphicon glyphicon-stop IndicadorAmarillo"></span> <span class="LabelIndicador">Poca disponibilidad</span></div>
+    <div><span class="glyphicon glyphicon-stop IndicadorRojo"></span> <span class="LabelIndicador">Sin disponibilidad</span></div>
+
+    </div>
     <div v-if="!agendarcita_status_neutral" align="center">
         <div v-if="agendarcita_status_exitoso" class="alert alert-success">
             <i class="fa fa-check"></i>
@@ -93,7 +121,11 @@ body.modal-open {
   </div>
   
   <div id="calendar"></div>
-</div>		
+</div>      
+
+
+
+
 
 <!-- INICIO MODAL -->
 
@@ -301,6 +333,7 @@ ejemplo : this.$store.state.calendario_id
             //var vm = this;
             this.fetchDatas(); 
             this.resetModal();
+            this.sockets();
             //alert(this.$store.state.variable_prueba);     
     	},
         watch : {
@@ -324,6 +357,13 @@ ejemplo : this.$store.state.calendario_id
             },
         },
     	methods : {
+            sockets : function(){
+                var vm = this;
+                 vm.$store.state.socket.on('reagendar_cita', function(data) {
+                //alert("Nueva cita! ");
+                vm.fetchDatas();
+              });
+            },
             resetModal : function(){
                 var vm = this;
 
@@ -760,6 +800,7 @@ ejemplo : this.$store.state.calendario_id
             eventStartEditable: false,
      
             dayRender: function (date, cell) {
+                    if(vm.servicio_consulta == '') return;
                     console.log(vm.disponibilidad_servicio);
                         var disponibilidad = vm.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
                         if(disponibilidad)
