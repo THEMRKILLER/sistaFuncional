@@ -373,6 +373,7 @@
                     }
                     );
             },
+            //Bug en este metodo --- verificar
             getElementID: function(id){
                 this.ArregloID = id;
                 //imprimo los ids seleccionados

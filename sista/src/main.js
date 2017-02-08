@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 import VeeValidate, { Validator } from 'vee-validate';
 import LoadingBar from 'vue2-loading-bar';
-import 'vue2-loading-bar/build/vue2-loading-bar.min.js'
+import 'vue2-loading-bar'
 
 import store from './store'
 

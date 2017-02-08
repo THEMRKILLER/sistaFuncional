@@ -4,10 +4,10 @@
 body {
 	font-family: 'Open Sans', sans-serif;
 	line-height: 20px;
-	color: #999999;
 	font-size: 300;
 	font-size: 16px;
 }
+
 td.fc-day.fc-past {
     background-color: #EEEEEE;
 }
@@ -45,7 +45,6 @@ h1, h2, h3, h4, h5, h6
 {
 	font-family: 'Raleway', sans-serif;
 	font-weight: 600;
-	color: #222222;
 }
 a, a:hover, a:focus, a:active{
     outline: none;
@@ -535,8 +534,11 @@ footer
     .banner-text h1{
         font-size: 24px;
     }
+    
 }
-
+.actualizando {
+    	opacity: 0.8;
+    }
 </style>
 <template>	
 	<div>
@@ -902,6 +904,9 @@ footer
 									<option v-for="servicio in servicios" :value="servicio.id">{{servicio.nombre}}</option>
 								</select>
             				</div>
+            				<div v-if="actualizando_coloreado" align="center">
+            					<i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i> Actualizando calendario ...
+            				</div>
   							<div id="calendar"></div>	
         					<div></div>
         					<div><span class="glyphicon glyphicon-stop IndicadorVerde"></span> <span class="LabelIndicador">Alta disponibilidad</span></div>
@@ -1006,7 +1011,7 @@ footer
             </div>
 <!-- Hora -->
             <div class="form-group">
-              <label for="message-text" class="form-control-label">Hora:</label>
+              <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
 				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
 				<option v-for="hour in hours" :value="hour.value">
 					{{ hour.text }}
@@ -1089,14 +1094,20 @@ footer
         </div>
           <!-- Hora -->
         <div class="form-group">
-            <label for="message-text" class="form-control-label">Hora:</label>
-            <select class="form-control" v-model="nueva_fecha" name="fecha_inicio" v-if="hours.length > 0">
+            <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i> Hora:</label>
+            <select class="form-control" v-model="nueva_fecha" name="fecha_inicio" v-if="(hours.length > 0) && (hours_no_disponibilidad == false)">
             	<option value=""  disabled>Selecciona una hora</option>
                 <option v-for="hour in hours" :value="hour.value">
                         {{ hour.text }}
                 </option>
             </select>
-            <select v-else class="form-control" name="fecha_inicio" disabled></select>
+            <select v-if="(hours.length == 0) && (hours_no_disponibilidad == false)" class="form-control" name="fecha_inicio" disabled>
+            </select>
+            <select v-if="hours_no_disponibilidad" class="form-control" name="fecha_inicio" disabled>
+            	<option><i class="fa fa-calendar-times-o" aria-hidden="true"></i> Sin disponibilidad de horario</option>
+            </select>
+
+
 
         </div> 
 
@@ -1108,7 +1119,28 @@ footer
         </div>
         <!--Fin modal body-->
       <div class="modal-footer">
-      	<button type="button" class="btn btn-info">Reagendar</button>
+			      	<div v-if="reagendarCita_estado_encurso" class="alert alert-info" align="center">
+			      		<h4>
+			      			Reagendando cita 
+			      			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+						</h4>
+			      	</div>
+			      	<div v-if="reagendarCita_estado_error" class="alert alert-danger" align="center">
+			      		<h4>
+			      			No se ha podido reagendar la cita <i class="fa fa-times"></i>
+			      			<ul>
+			      				<li v-for="error_ag in error_reagendarCita">
+			      					<p v-for="suberror in error_ag">
+			      						- {{suberror}}
+			      					</p>
+
+			      				</li>
+			      			</ul>	
+						</h4>
+			      	</div>
+			      	
+			    
+      	<button type="button" class="btn btn-info" v-on:click="reagendarCita">Reagendar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
       </div>
     </div>
@@ -1133,7 +1165,12 @@ footer
     			agendarCita_estado_encurso : false,
     			agendarCita_estado_exitoso : false,
     			agendarCita_estado_error : false,
-    			error_agendarCita: '',
+    			reagendarCita_estado_encurso : false,
+    			reagendarCita_estado_exitoso : false,
+    			reagendarCita_estado_error : false,
+    			error_reagendarCita : [],
+    			horas_disponibilidad_cargando : false,
+    			error_agendarCita: [],
     			tipo_id: null,
     			cliente_nombre: '',
     			cliente_email: '',
@@ -1150,8 +1187,11 @@ footer
 		      	cita_cliente_servicioid : null,
 		      	cita_cliente_fecha : null,
 		      	cita_cliente_fecha_display : null,
+		      	cita_reagendar_id : null,
 		      	nueva_fecha : '',
-		      	no_laborales : []
+		      	no_laborales : [],
+		      	hours_no_disponibilidad : false,
+		      	actualizando_coloreado : false,
     		}
     	},
 
@@ -1185,6 +1225,7 @@ footer
 
     		watch:{
     			'tipo_id': function(){
+    				console.log("Coloreando main calendar !!! ");
     				this.servicioDisponibilidadColoreado(true,null);
     			},
     			'nueva_fecha' : function(){
@@ -1210,6 +1251,7 @@ footer
     			vm.$store.state.socket.emit('notificar_cita',{'id_user' : vm.$store.state.calendario_id});
 
     		},
+
     		fetchDatas : function(){
     			var vm = this;
     			vm.$http.get('tipo',{params : {'calendario_id' : vm.$store.state.calendario_id}}).then(
@@ -1226,7 +1268,58 @@ footer
 
     				);
     		},
+    		reagendarCita : function(){
+    			var vm = this;
+    			vm.reagendarCita_estado_error = false;
+    			vm.reagendarCita_estado_encurso = true;
+    			vm.error_reagendarCita = [];
 
+    			var datas  = {'id_cita' : this.cita_reagendar_id,'tipo_id' : this.cita_cliente_servicioid,'calendario_id' : this.$store.state.calendario_id,'fecha_inicio' : this.nueva_fecha};
+
+    			 this.$http.put('cita-r',datas).then(
+    			 	//success
+    			 	function(response){
+    					vm.reagendarCita_estado_encurso = false;
+
+    			 		$('#reagendar_cita').modal('hide');
+
+
+    			 	  $.confirm({
+						    title: '¡Cita reagendada!',
+						    content: 'La cita se ha reagendado para el día : '+ moment(vm.nueva_fecha).format('LLLL'),
+						    type: 'green',
+						    typeAnimated: true,
+						    buttons: {
+						        entendido: {
+						            text: 'Entendido',
+						            btnClass: 'btn-blue',
+						            action: function(){
+						            }
+						        }
+						    }
+						});
+    			 	},
+    			 	//error
+    			 	function(response){
+    			 		vm.reagendarCita_estado_encurso = false;
+    			 		vm.reagendarCita_estado_error = true;
+    			 		if(response.status == 500) {
+    			 			vm.error_reagendarCita = ['Ha ocurrido un error en el servidor, intente más tarde o contacte al administrador del sistema'];
+    			 		}
+
+    			 		else 
+    			 			vm.error_reagendarCita = response.data.errors;
+    			 		
+
+
+    			 		console.log("ERROR " );
+
+    			 	}
+
+    			 	);
+
+
+    		},
             cancelarDialog : function(){
             			var vm = this;
                 		$.confirm({
@@ -1357,7 +1450,9 @@ footer
                                         		
                                         		vm.cita_cliente_fecha_display = moment(response.data.cita.fecha).format('LLLL');
 
-                                        		vm.cita_cliente_fecha = moment(response.data.cita_cliente_fecha).format("YYYY-MM-DD"); 
+                                        		vm.cita_cliente_fecha = moment(response.data.cita.fecha).format("YYYY-MM-DD"); 
+
+                                        		vm.cita_reagendar_id = response.data.cita.id;
 
                                         		$('#reagendar_cita').modal('show');
                                         		//despliega modal para reagendar con los datos
@@ -1401,14 +1496,17 @@ footer
     		servicioDisponibilidadColoreado : function(flag,datas_foreign){
 	                var vm = this;
 	                var datas = null;
+	                vm.actualizando_coloreado = false;
 	                if(flag) {
 	                	datas = {'tipo_id' : vm.tipo_id,'calendario_id' : vm.$store.state.calendario_id}
+	                	vm.actualizando_coloreado = true;
 	                }
 	                else datas = datas_foreign;
 
 	                vm.$http.get('disponibilidad',{params : datas}).then(
 	                    //success
 	                    function(response){
+	                    	vm.actualizando_coloreado = false;
 
 	                        var disponibilidad = response.data.disponibilidades;
 	                        var disponibilidad_arr = [];
@@ -1421,12 +1519,14 @@ footer
 	                        console.log(response.data.disponibilidades);
 
 	                        if(flag){
+	                        	console.log("Crea calendario BUILDER !");
 	                        	vm.createCalendar();
 	                        }
 	                        else vm.crearCalendarioPicker();
 
 	                    },
 	                    function(response){
+	                    	vm.actualizando_coloreado = false;
 	                        console.error(response.status);
 	                    }
 	                    );
@@ -1435,24 +1535,31 @@ footer
               	var vm = this;
               	if(vm.no_laborales[fecha]) return 3;
               	
+
               	return vm.disponibilidad_servicio[fecha] != undefined ? vm.disponibilidad_servicio[fecha] : false;
 
                     },
             servicioHorasDisponibles : function(fecha){
-                this.hours = [];
+            	var vm = this;
+            	vm.hours_no_disponibilidad = false;
+            	vm.horas_disponibilidad_cargando = true;
+                vm.hours = [];
                 var dia;
                 if(fecha)  dia = new Date(fecha).toISOString();
-                else dia = new Date(this.date_selected).toISOString();
+                else dia = new Date(vm.date_selected).toISOString();
                 console.log("Dia "+ dia)
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : this.tipo_id, 'dia' : dia , 'calendario_id' : this.$store.state.calendario_id}}).then(
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : vm.tipo_id, 'dia' : dia , 'calendario_id' : vm.$store.state.calendario_id}}).then(
                     //success
                     function(response){
-                        this.hours = response.data;
+                    	if(response.data.length == 0) vm.hours_no_disponibilidad  = true;
+                        vm.hours = response.data;
                         console.log(response.data);
+                        vm.horas_disponibilidad_cargando = false;
                     },
                     //error
                     function(response){
-                        this.hours = []
+                        vm.hours = [];
+                        vm.horas_disponibilidad_cargando = false;
                     }
 
                     );
@@ -1509,8 +1616,13 @@ footer
 
             },
     		createCalendar : function(){
-
-    			var vm = this;
+    		 var vm  = this;
+    		try{
+    			$('#calendar').fullCalendar('destroy');
+    		}
+    		catch(err){
+    			console.log("No había calendario que destruir");
+    		}
             $('#calendar').fullCalendar({
 
 			select: function(start, end, allDay) {

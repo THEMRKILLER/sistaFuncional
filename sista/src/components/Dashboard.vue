@@ -103,12 +103,15 @@
             <div class="form-group">
               <label for="message-text" class="form-control-label">Hora:</label>
 				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours.length != 0">
+                <option disabled>Escoja una hora</option>
 				<option v-for="hour in hours" :value="hour.value">
 					{{ hour.text }}
 				</option>
   					
 				</select>
                 <select v-else class="form-control" name="fecha_inicio" disabled></select>
+                si
+                        {{fecha_inicio}} 
             </div>            
         </div>
         <div class="modal-footer">
@@ -187,7 +190,10 @@
                                 </select>
                             <select v-else class="form-control" name="fecha_inicio" disabled></select>
 
-                        </div> 
+
+
+                        </div>
+
                     
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
@@ -634,6 +640,12 @@ ejemplo : this.$store.state.calendario_id
     		},
             createCalendar : function(){
             	var thisObj = this;
+                try{
+                    $('#calendar').fullcalendar('destroy');
+                }
+                catch(err){
+
+                }
             $('#calendar').fullCalendar({                
             dayClick:  function(date, jsEvent, view){
                 var date2 = moment(date).format("YYYY-MM-DD");
