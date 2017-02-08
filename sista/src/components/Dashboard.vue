@@ -222,7 +222,7 @@ body.modal-open {
 
 <script>
 import 'fullcalendar';
-
+import 'fullcalendar/dist/locale/es.js';
 /*
 Aceddiendo a las variables de VUEX : this.$store.state.nombre_de_tu_variable
 ejemplo : this.$store.state.calendario_id 
@@ -641,7 +641,7 @@ ejemplo : this.$store.state.calendario_id
     		},
             createCalendar : function(){
             	var thisObj = this;
-            $('#calendar').fullCalendar({                
+            $('#calendar').fullCalendar({
             dayClick:  function(date, jsEvent, view){
                 var date2 = moment(date).format("YYYY-MM-DD");
                 var today = moment().format("YYYY-MM-DD");
@@ -684,7 +684,6 @@ ejemplo : this.$store.state.calendario_id
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectHelper: true,
-
             eventStartEditable: false,
      
             dayRender: function (date, cell) {

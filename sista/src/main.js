@@ -6,7 +6,6 @@ Vue.use(VueRouter)
 import VeeValidate, { Validator } from 'vee-validate';
 import LoadingBar from 'vue2-loading-bar';
 import 'vue2-loading-bar/build/vue2-loading-bar.min.js'
-
 import store from './store'
 
 //import VueLocalStorage from 'vue-localstorage';
@@ -14,7 +13,6 @@ import store from './store'
 
 //import './assets/css/style.css';
 import './assets/css/barra/loading-bar.css';
-
 import './assets/js/jquery.easing.min.js';
 import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
