@@ -67,6 +67,7 @@ const routes = [
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
   { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
   { path: '/redactar', component: require('components/Redactador.vue'),name: 'auth-required' },
+  { path: '/articuloedit/:id', component: require('components/EditarArticulo.vue'),name: 'auth-required' },
   { path: '/articulo/:id',component: require('components/Articulo.vue')},
   { path: '/articulos', component: require('components/Articulos.vue')},
   { path: '/profile', component: require('components/Profile.vue')},
@@ -150,5 +151,4 @@ const app = new Vue({
     router,
     components : {App,LoadingBar}
 }).$mount('#app')
-
 

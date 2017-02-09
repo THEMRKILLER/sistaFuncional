@@ -167,14 +167,20 @@ body.modal-open {
             </div>
 <!-- Hora -->
             <div class="form-group">
-              <label for="message-text" class="form-control-label">Hora:</label>
-				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours.length != 0">
-				<option v-for="hour in hours" :value="hour.value">
-					{{ hour.text }}
-				</option>
-  					
-				</select>
-                <select v-else class="form-control" name="fecha_inicio" disabled></select>
+                <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
+
+                <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="(hours.length > 0) && (hours_no_disponibilidad == false)">
+                <option value=""  disabled>Selecciona una hora</option>
+                <option v-for="hour in hours" :value="hour.value">
+                        {{ hour.text }}
+                </option>
+            </select>
+            <select v-if="(hours.length == 0) && (hours_no_disponibilidad == false)" class="form-control" name="fecha_inicio" disabled>
+            </select>
+            <select v-if="hours_no_disponibilidad" class="form-control" name="fecha_inicio" disabled>
+                <option><i class="fa fa-calendar-times-o" aria-hidden="true"></i> Sin disponibilidad de horario</option>
+            </select>
+
             </div>            
         </div>
         <div class="modal-footer">
@@ -322,11 +328,13 @@ ejemplo : this.$store.state.calendario_id
                 event_selected_servicio_id : 0,
                 event_selected_codigo : null,
     			hours:[],
+                hours_no_disponibilidad : false,
                 reagendar : false,
                 disponibilidad_servicio : [],
                 servicio_consulta : '',
                 no_laborales : [],
                 actualizando_coloreado : false,
+                horas_disponibilidad_cargando : false,
     		}
     	},
     	mounted(){
@@ -593,7 +601,6 @@ ejemplo : this.$store.state.calendario_id
                             }
                             vm.disponibilidad_servicio = disponibilidad_arr;
                             vm.no_laborales = response.data.no_laborales;
-                            console.log(response.data.disponibilidades);
 
                             if(flag){
                                 vm.createCalendar();
@@ -609,18 +616,25 @@ ejemplo : this.$store.state.calendario_id
                         );
             },
             servicioHorasDisponibles : function(servicio_id,fecha){
-                this.hours = [];
-                var dia = new Date(fecha).toISOString();
-               // console.log(dia);
+                var vm = this;
+                vm.hours_no_disponibilidad = false;
+                vm.horas_disponibilidad_cargando = true;
+                vm.hours = [];
+                var dia;
+                if(fecha)  dia = new Date(fecha).toISOString();
                 
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : servicio_id, 'dia' : dia, 'calendario_id' : this.$store.state.calendario_id }}).then(
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : servicio_id, 'dia' : dia , 'calendario_id' : vm.$store.state.calendario_id}}).then(
                     //success
                     function(response){
-                        this.hours = response.data;
+                        if(response.data.length == 0) vm.hours_no_disponibilidad  = true;
+                        vm.hours = response.data;
+                        console.log(response.data);
+                        vm.horas_disponibilidad_cargando = false;
                     },
                     //error
                     function(response){
-                        this.hours = []
+                        vm.hours = [];
+                        vm.horas_disponibilidad_cargando = false;
                     }
 
                     );
@@ -801,7 +815,6 @@ ejemplo : this.$store.state.calendario_id
      
             dayRender: function (date, cell) {
                     if(vm.servicio_consulta == '') return;
-                    console.log(vm.disponibilidad_servicio);
                         var disponibilidad = vm.disponibilidad_servicio[moment(date).format("YYYY-MM-DD")];
                         if(disponibilidad)
                         {
@@ -842,12 +855,7 @@ ejemplo : this.$store.state.calendario_id
                 else return 0;
             },
     		fetchDatas : function(){
-                /*
-                this.$store.commit('agregarCitaProgramada', {
-                        cita: cita
-                    });
-                */
-    		
+             
           var thisObj = this;
     			this.$http.get('dashboard', { progress(e) {
         if (e.lengthComputable) {
