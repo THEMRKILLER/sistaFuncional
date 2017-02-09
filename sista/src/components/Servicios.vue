@@ -136,7 +136,7 @@
 
 			      </div>
 			      <div></div>
-			      <div v-show="registro_estado_neutro == false">
+			      <div v-show="registro_estado_neutro == false" align="center">
 
 			      	<div v-if="registro_estado_encurso" class="alert alert-info">
 			      		<h4>
@@ -152,12 +152,12 @@
 						</h4>
 			      	</div>
 
-			      	<div v-if="registro_estado_error" class="alert alert-danger">
+			      	<div v-if="registro_estado_error" class="alert alert-danger" align="center">
 			      		<h4>
 			      			Error creando el servicio <i class="fa fa-times"></i>
 			      			<ul>
 			      				<li v-for="error_s in error_servicio">
-			      					{{error_s}}
+			      					<p v-for="suberror in error_s">{{suberror}}</p>
 			      				</li>
 			      			</ul>
 				        	
@@ -316,7 +316,7 @@
         	 	function(response){
         	 		this.registro_estado_error = true;
         	 		this.registro_estado_encurso = false;
-        	 		this.error_servicio = response.data.error;
+        	 		this.error_servicio = response.data.errors;
         	 		$(event.target).attr('disabled',false);
         	 	}
         	 	);

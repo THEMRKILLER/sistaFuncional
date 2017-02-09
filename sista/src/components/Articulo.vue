@@ -122,6 +122,7 @@ export default {
     '$route': 'fetchDatas'
   },
   methods : {
+    
   	fetchDatas: function(){
       var vm = this;
   		this.$http.get('articulo/'+this.$route.params.id, {progress(e) {

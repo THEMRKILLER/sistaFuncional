@@ -536,9 +536,6 @@ footer
     }
     
 }
-.actualizando {
-    	opacity: 0.8;
-    }
 </style>
 <template>	
 	<div>
@@ -1282,7 +1279,24 @@ footer
     					vm.reagendarCita_estado_encurso = false;
 
     			 		$('#reagendar_cita').modal('hide');
+    			 		/*
+							 {'codigo' : data.codigo , 
+            'cliente_nombre' : data.cliente_nombre,
+            'fecha':data.fecha,
+            'servicio' : data.servicio
+        }
+    			 		*/
 
+    			 vm.$store.state.socket.emit('notificar_reagendar', 
+    			 {'id_user' : vm.$store.state.calendario_id,
+    			 'codigo' : response.data.codigo,
+    			 'cliente_nombre' : response.data.cliente_nombre,
+    			 'fecha' : moment(vm.nueva_fecha).format('LLLL'),
+    			 'servicio' : response.data.servicio
+    			}
+    			 );
+    			 
+		
 
     			 	  $.confirm({
 						    title: '¡Cita reagendada!',
@@ -1493,6 +1507,7 @@ footer
 					});
 
             },
+
     		servicioDisponibilidadColoreado : function(flag,datas_foreign){
 	                var vm = this;
 	                var datas = null;

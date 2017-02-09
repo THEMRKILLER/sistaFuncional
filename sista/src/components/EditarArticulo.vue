@@ -51,19 +51,19 @@ img {
 <div v-if="!articulo_status_neutral">
 	<div v-if="articulo_status_creando" class="alert alert-info">
 		<h4>
-			Creando articulo ... 
+			Guardando cambios ... 
 			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
 		</h4>
 	</div>
 	<div v-if="articulo_status_success" class="alert alert-success">
 		<h4>
-			      			El articulo se ha creado de manera exitosa, lo estamos redireccionando al articulo ...
+			      			Los cambios se ha guardado de manera exitosa, lo estamos redireccionando al articulo ...
 				        	<i class="fa fa-check"></i>
 		</h4>
 	</div>
 	<div v-if="articulo_status_error" class="alert alert-danger">
 		<h4>
-			      			Error creando el alrticulo <i class="fa fa-times"></i>
+			      			Error guardando los cambios <i class="fa fa-times"></i>
 			      			<ul>
 			      				<li v-for="error_articulo in articulo_error_message">
 			      					<ul v-for="sub_error in error_articulo">
@@ -78,7 +78,7 @@ img {
 <div></div>
 <br>
   <div align="center" class="panel container">
-    <button class="btn btn-success subir-articulo" v-on:click="storeArticulo">Crear y subir Articulo 
+    <button class="btn btn-success subir-articulo" v-on:click="enviarCambios">Guardar cambios 
     <i class="fa fa-cloud-upload" aria-hidden="true"></i>
     </button>
     </div>
@@ -94,14 +94,20 @@ export default {
   	 this.editor  = CKEDITOR.replace( 'editor');
   	 var client_sizew = $( window ).height();
 	this.editor.config.height = client_sizew * 0.5;
+  var vm = this;
+    this.editor.on( 'instanceReady', function( evt ) {
+      vm.fetchDatas();
+    } );
   },
   data () {
     return {
-    	titulo : '',
-    	resumen : '',
+    	 titulo : '',
+    	 resumen : '',
     	 image: '',
     	 caratula : null,
     	 editor : null,
+       id : null,
+       caratula_url : '',
     	 articulo_status_neutral : true,
     	 articulo_status_success : false,
     	 articulo_status_error : false,
@@ -111,6 +117,37 @@ export default {
     }
   },
   methods: {
+    fetchDatas: function(){
+      var vm = this;
+      this.$http.get('articulo/'+this.$route.params.id, {progress(e) {
+        if (e.lengthComputable) {
+            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
+            vm.$store.commit('aumentarPorcentaje', {
+                        porcentaje: (e.loaded / e.total * 100)
+                    });            
+        }
+            }}).then(
+        //success
+        function(response){
+          this.titulo = response.data.articulo.titulo;
+          this.resumen = response.data.articulo.resumen;
+          this.image = response.data.articulo.caratula;
+          this.id = response.data.articulo.id;
+          CKEDITOR.instances.editor.setData(response.data.articulo.contenido);
+
+
+
+        },
+        //error
+        function(response){
+            switch(response.status)
+            {
+              case 404: this.articulonotfound = true;
+              break;
+
+            }
+        });
+    },
   	onFileChange : function (e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length)
@@ -134,36 +171,43 @@ export default {
     removeImage: function (e) {
       this.image = '';
     },
-    storeArticulo : function(){
+    enviarCambios : function(){
     	this.articulo_status_error = false;
     	this.articulo_status_success = false;
     	this.articulo_status_neutral = false;
     	this.articulo_status_creando = true;
 
+
     	var datas_send = new FormData();
+      var c_url = this.caratula == null ? this.image : null;
+      datas_send.append('_method','PUT');
     	datas_send.append('titulo',this.titulo);
     	datas_send.append('resumen',this.resumen);
-    	datas_send.append('caratula',this.caratula);
+      if(this.caratula)datas_send.append('caratula',this.caratula);
     	datas_send.append('contenido',CKEDITOR.instances.editor.getData());
+      datas_send.append('id',this.id);
+      datas_send.append('caratula_url',c_url);
 
-      
-
-    	//console.log(this.caratula);
-    	//return;
-
-    	this.$http.post('articulo',datas_send).then(
+  //let data = { _method : 'PATCH' , form : form}
+    	this.$http.post('articulo',datas_send,{
+            headers: {
+                'Content-Disposition': 'x-www-form-urlencoded'
+              },
+              emulateJSON: true
+        }).then(
     		//success
     		function(response){
           
     			this.articulo_status_creando = false;
     			this.articulo_status_success = true;
-          var thisObj = this;
+          var vm = this;
+
           setTimeout(function() {
-            thisObj.$router.push('articulo/'+response.data.id);
+            vm.$router.push('../articulo/'+response.data.id);
           }, 2000);
 
 
-    			console.log(response.status);
+    		//	console.log(response.status);
 
     		},
     		//error
