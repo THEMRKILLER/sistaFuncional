@@ -22,11 +22,12 @@
 }
 
 .jumbotron{
-    background: url('../assets/img/backgroun.jpg') no-repeat center center;
+    /*background: url('../assets/img/backgroun.jpg') no-repeat center center;*/
     background-position: 0% 25%;
     background-size: cover;
     background-repeat: no-repeat;
-    color: white;
+    color: gray;
+    background-color: #F5DA81;
 }
 
 .anounce{
@@ -44,15 +45,17 @@ body.modal-open {
 <template>	
 	<div class="container">
     <br><br><br>
-    <div class="jumbotron container-fluid">
-            <div v-if="muestraCita">
-                <h1 align="center">Atendiendo a: {{nombreActual}}</h1>
-                <p align="left">Servicio de: {{servicioActual}}</p>
-                <p align="left">Cita termina a las: {{finalActual}}</p>
+    <div style="position: fixed; width: 300px; margin-left:942px; margin-top: 470px;  z-index: 19999;" class="img-responsive">
+            <div v-if="muestraCita" style="background-color: #FE2E2E; border-radius:15px; color: White;" class="img-responsive">
+                <label style="margin-left:30px;" align="center">Atendiendo a: {{nombreActual}}</label>
+                <br>
+                <label style="margin-left:30px;" align="left">Servicio de: {{servicioActual}}</label>
+                <br>
+                <label style="margin-left:30px;" align="left">Cita termina a las: {{finalActual}}</label>
             </div>
-            <div v-else>
+            <div v-else style="background-color: #0040FF; width: 350px; height: 50px; border-radius:15px; margin-top: 32px; margin-left: -48px;" class="img-responsive">
             <br>
-                <p class="anounce" align="center">El doctor se encuentra disponible en estos momentos</p>
+                <label class="anounce" style="margin-left:30px; color: White; margin-top: -20px;">El doctor se encuentra disponible en estos momentos</label>
             </div>
     </div>
     <br>
