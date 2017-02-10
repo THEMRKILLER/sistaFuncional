@@ -35,7 +35,7 @@ var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
 
-
+import 'bootstrap-notify-ci-dev';
 import 'jquery-ui/ui/widgets/datepicker.js'
 import 'jquery-confirm'
 import 'moment/locale/es.js'

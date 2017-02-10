@@ -69,6 +69,7 @@ body.modal-open {
 <template>	
 	<div class="container">
     <br><br><br>
+    <!--
     <div style="position: fixed; width: 300px; margin-left:942px; margin-top: 470px;  z-index: 19999;" class="img-responsive">
             <div v-if="muestraCita" style="background-color: #FE2E2E; border-radius:15px; color: White;" class="img-responsive">
                 <label style="margin-left:30px;" align="center">Atendiendo a: {{nombreActual}}</label>
@@ -81,7 +82,7 @@ body.modal-open {
             <br>
                 <label class="anounce" style="margin-left:30px; color: White; margin-top: -20px;">El doctor se encuentra disponible en estos momentos</label>
             </div>
-    </div>
+    </div> -->
     <br>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
@@ -344,6 +345,7 @@ ejemplo : this.$store.state.calendario_id
             //var vm = this;
             this.fetchDatas(); 
             this.resetModal();
+            this.noti();
             this.sockets();
             //alert(this.$store.state.variable_prueba);     
     	},
@@ -368,6 +370,13 @@ ejemplo : this.$store.state.calendario_id
             },
         },
     	methods : {
+            noti: function(){
+                $.notifyDefaults({
+                    type: 'success',
+                    allow_dismiss: false
+                });
+                $.notify("Hello World");
+            },
             sockets : function(){
                 var vm = this;
                  vm.$store.state.socket.on('reagendar_cita', function(data) {
