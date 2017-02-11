@@ -71,16 +71,10 @@
             </div>                
             </a>
         </div>
-            
-        <div class="container" style="margin-left: 300px; margin-top: -230px; width:500px;">
-            <label>{{editName}}</label>
 
-    <div class="card">
-        <a type="button" data-toggle="modal" href="#photoEdition">
-            <img id="profile-img" class="profile-img-card" :src="user.avatar" style="margin-left:1px; width: 250px;">
-        </a>
+    <div>
         <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
-            <label>Usuario</label>
+            <label>{{editName}}</label>
             <br>            
             <label style="color: #A4A4A4">{{editEmail}}</label>
             <br>
@@ -237,7 +231,7 @@ import '../assets/js/jquery.min.js';
             });
 
             this.croppie_obj.bind({
-                url: 'http://foliotek.github.io/Croppie/demo/cat.jpg',
+                url: this.profileImage,
                 orientation: 1
             });
        
