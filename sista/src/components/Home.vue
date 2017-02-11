@@ -1821,7 +1821,6 @@ footer
     				"calendario_id": vm.$store.state.calendario_id,
     				"tipo_id": servicio.id,
     				"fecha_inicio": vm.fecha_inicio,
-    				"fecha_final": fecha_final,
     				"cliente_nombre": vm.cliente_nombre,
     				"cliente_telefono": vm.cliente_telefono,
     				"cliente_email": vm.cliente_email,
@@ -1853,7 +1852,7 @@ footer
                           setTimeout(function() {
                             vm.agendarcita_status_exitoso = false;
                             vm.agendarcita_status_neutral = true;
-                            
+
                           }, 4000);
 						},
 						//error

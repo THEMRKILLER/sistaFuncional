@@ -53,6 +53,10 @@ import '../assets/css/loginCSS.css'
     					errorMessage  : ''
     			}
     	},
+    	
+    	mounted(){
+ 			this.verificar();
+    	},
     	methods: {
     		socket : function(){
               var vm = this;
@@ -65,6 +69,15 @@ import '../assets/css/loginCSS.css'
 
 
            
+
+            },
+            verificar : function(){
+            	if(localStorage.getItem('token') != null)
+            	{	
+            		this.$router.push('dashboard');
+            		
+            	}
+            	
 
             },
     		sendDatos: function(){
