@@ -64,26 +64,55 @@ body.modal-open {
 .grid *{
     display: inline-block;
 }
+
+.alert-info {
+    border-radius: 3px;
+    padding: 10px;
+    height: 90px;
+    width: 300px;
+}
+.alert-info > [data-notify="message"] {
+    font-size: 90%;
+    /*font-family: arial;*/
+}
+.alert-info > [data-notify="title"] {
+    color: rgb(51, 51, 51);
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.alert-info > [data-notify="icon"] {
+    height: 60px;
+    width: 60px;
+    margin-right: 12px;
+}
+
+.alert-minimalist {
+    background-color: rgb(241, 242, 240);
+    border-color: rgba(149, 149, 149, 0.3);
+    border-radius: 3px;
+    color: rgb(149, 149, 149);
+    padding: 10px;
+}
+.alert-minimalist > [data-notify="icon"] {
+    height: 60px;
+    width: 60px;
+    margin-right: 12px;
+}
+.alert-minimalist > [data-notify="title"] {
+    color: rgb(51, 51, 51);
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.alert-minimalist > [data-notify="message"] {
+    font-size: 80%;
+}
 </style>
 
 <template>	
 	<div class="container">
     <br><br><br>
-    <!--
-    <div style="position: fixed; width: 300px; margin-left:942px; margin-top: 470px;  z-index: 19999;" class="img-responsive">
-            <div v-if="muestraCita" style="background-color: #FE2E2E; border-radius:15px; color: White;" class="img-responsive">
-                <label style="margin-left:30px;" align="center">Atendiendo a: {{nombreActual}}</label>
-                <br>
-                <label style="margin-left:30px;" align="left">Servicio de: {{servicioActual}}</label>
-                <br>
-                <label style="margin-left:30px;" align="left">Cita termina a las: {{finalActual}}</label>
-            </div>
-            <div v-else style="background-color: #0040FF; width: 350px; height: 50px; border-radius:15px; margin-top: 32px; margin-left: -48px;" class="img-responsive">
-            <br>
-                <label class="anounce" style="margin-left:30px; color: White; margin-top: -20px;">El doctor se encuentra disponible en estos momentos</label>
-            </div>
-    </div> -->
-    <br>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
         <div class="row form-group">
@@ -126,10 +155,6 @@ body.modal-open {
   
   <div id="calendar"></div>
 </div>      
-
-
-
-
 
 <!-- INICIO MODAL -->
 
@@ -345,7 +370,7 @@ ejemplo : this.$store.state.calendario_id
             //var vm = this;
             this.fetchDatas(); 
             this.resetModal();
-            this.noti();
+            //this.notiFalse();
             this.sockets();
             //alert(this.$store.state.variable_prueba);     
     	},
@@ -368,14 +393,60 @@ ejemplo : this.$store.state.calendario_id
                 this.servicioHorasDisponibles(tipo_id,fecha);
                 if(this.reagendar) this.servicioDisponibilidadColoreado(false,tipo_id);
             },
+            'muestraCita': function(){
+                if(this.muestraCita == true){
+                    this.notiTrue(this.nombreActual, this.servicioActual, this.finalActual);
+                }
+                else{
+                    this.notiFalse();
+                }
+            },
         },
     	methods : {
-            noti: function(){
+            notiTrue: function(paciente, servicio, actual){
                 $.notifyDefaults({
-                    type: 'success',
-                    allow_dismiss: false
+                    type: 'minimalist',
+                    icon_type: 'image',
+                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                        '<img data-notify="icon" class="img-circle pull-left">' +
+                        '<span data-notify="title">{1}</span>' +
+                        '<span data-notify="message">{2}</span>' +
+                    '</div>',
+                    allow_dismiss: false,
+                    delay: 0,
+                    placement: {
+                        from: 'bottom',
+                        align: 'right'
+                    }
                 });
-                $.notify("Hello World");
+                $.notify({
+                    icon: 'http://icon-icons.com/icons2/567/PNG/512/clock_icon-icons.com_54407.png',
+                    title: '',
+                    message: '<label>Atendiendo a: '+paciente+'</label><br> <label>Servicio de: '+servicio+'</label><br> <label>Cita termina a las: '+actual+'</label>'
+                });
+            },
+            notiFalse: function(){
+                $.notifyDefaults({
+                    type: 'info',
+                    icon_type: 'image',
+                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                        '<img data-notify="icon" class="img-circle pull-left">' +
+                        '<span data-notify="title">{1}</span>' +
+                        '<span data-notify="message">{2}</span>' +
+                    '</div>',
+                    allow_dismiss: false,
+                    delay: 0,
+                    placement: {
+                        from: 'bottom',
+                        align: 'right',
+                    }
+                });
+                /**/
+                $.notify({
+                    icon: 'https://cdn0.iconfinder.com/data/icons/customicondesign-office6-shadow/256/doctor.png',
+                    title: '',
+                    message: 'El doctor se encuentra disponible en estos momentos'
+                });
             },
             sockets : function(){
                 var vm = this;
