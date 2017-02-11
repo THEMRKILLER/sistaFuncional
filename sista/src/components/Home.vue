@@ -970,94 +970,113 @@ footer
 		</div>
 	</footer>
 	<!--/ footer-->
-<!-- MODAL -->
-<div id="registrarCitaModal" class="modal fade">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="exampleModalLabel">Agendar una cita</h4>
-        </div>
-        <div class="modal-body">
-<!-- Nombre -->
-            <div class="form-group">
-              <label for="recipient-name" class="form-control-label">Nombre:</label>
-              <input type="text" name="cliente_nombre" class="form-control" id="recipient-name" v-model="cliente_nombre">
-            </div>
-<!-- TELEFONO -->
-            <div class="form-group">
-              <label for="message-text" class="form-control-label">Telefono:</label>
-              <input type="text" name="cliente_telefono" class="form-control" id="recipient-phone" v-model="cliente_telefono">
-            </div>
-<!-- EMAIL -->
-            <div class="form-group">
-              <label for="message-text" class="form-control-label">Correo electrónico:</label>
-              <input type="text" name="cliente_email" class="form-control" id="recipient-email" v-model="cliente_email">
-            </div>
-<!-- SERVICIOS -->
-            <div class="form-group">             
-            <label for="message-text" class="form-control-label">Escoja un servicio</label>
-            	<select class="form-control" v-model="tipo_id">
-            	<option v-for="servicio in servicios" :value="servicio.id">
-            		{{ servicio.nombre }}
-            	</option>
-  					
-				</select>
-            </div>
-<!-- Hora -->
-            <div class="form-group">
-              <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
-				<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
-				<option v-for="hour in hours" :value="hour.value">
-					{{ hour.text }}
-				</option>
-  					
-				</select>
-                <select v-else class="form-control" name="fecha_inicio" disabled></select>
-            </div>
 
 
-        </div>
-<!--  ALERTAS DE CREACION CITA -->
-		<div></div>
-			      <div v-show="agendarCita_estado_neutro == false">
-			      	<div v-if="agendarCita_estado_encurso" class="alert alert-info">
-			      		<h4>
-			      			Registrando servicio 
-			      			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
-						</h4>
-			      	</div>
-			      	<div v-if="agendarCita_estado_exitoso" class="alert alert-success">
-			      		<h4>
-			      			La cita se ha creado correctamente.
-				        	<i class="fa fa-check"></i>
-						</h4>
-			      	</div>
-			      	<div v-if="agendarCita_estado_error" class="alert alert-danger">
-			      		<h4>
-			      			No se ha podido crear la cita <i class="fa fa-times"></i>
-			      			<ul>
-			      				<li v-for="error_ag in error_agendarCita">
-			      					{{error_ag}}
-			      				</li>
-			      			</ul>	
-						</h4>
-			      	</div>
+			<!-- MODAL PARA AGENDAR -->
+			<div id="registrarCitaModal" class="modal fade">
+			<div class="modal-dialog">
+			    <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			            <span aria-hidden="true">&times;</span>
+			          </button>
+			          <h4 class="modal-title" id="exampleModalLabel">Agendar una cita</h4>
+			        </div>
+			        <div class="modal-body">
+			<!-- Nombre -->
+			            <div class="form-group">
+			              <label for="recipient-name" class="form-control-label">Nombre:</label>
+			              <input type="text" name="cliente_nombre" class="form-control" id="recipient-name" v-model="cliente_nombre">
+			            </div>
+
+			<!-- TELEFONO -->
+			            <div class="form-group">
+			              <label for="message-text" class="form-control-label">Telefono:</label>
+			              <input type="text" name="cliente_telefono" class="form-control" id="recipient-phone" v-model="cliente_telefono">
+			            </div>
+			<!-- EMAIL -->
+			            <div class="form-group">
+			              <label for="message-text" class="form-control-label">Correo electrónico:</label>
+			              <input type="text" name="cliente_email" class="form-control" id="recipient-email" v-model="cliente_email">
+			            </div>
+			<!-- SERVICIOS -->
+			            <div class="form-group">             
+			            <label class="form-control-label">Escoja un servicio</label>
+			            	<select class="form-control" v-model="tipo_id_agendar">
+			            	<option v-for="servicio in servicios" :value="servicio.id">
+			            		{{ servicio.nombre }}
+			            	</option>
+			  					
+							</select>
+			            </div>
+			<!-- Hora -->
+			            <div class="form-group">
+			              <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
+							<select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
+							<option v-for="hour in hours" :value="hour.value">
+								{{ hour.text }}
+							</option>
+			  					
+							</select>
+			                <select v-else class="form-control" name="fecha_inicio" disabled></select>
+			            </div>
+			            <div class="form-group">
+			            	<label>Cuento con un cupón de descuento</label>
+			            	<input type="checkbox" v-model="cupon_select">
+			            </div>
+			            <div class="form-group-inline" v-if="cupon_select">
+			            	<div v-if="cupon_validando" class="alert alert-info"><h6><i class="fa fa-circle-o-notch fa-spin fa-fw"></i> validando cupón...</h6></div>
+			            	<div v-if="cupon_validado" class="alert alert-success"><h6><i class="fa fa-check"></i> descuento aplicado</h6></div>
+			            	<div v-if="cupon_error" class="alert alert-danger"><h6> <i class="fa fa-times"></i> Ha ocurrido un error : {{cupon_error_mensaje}}</h6></div>
+			            	<div v-if="cupon_error_server" class="alert alert-danger"><h6> <i class="fa fa-times"></i> Ha ocurrido un error, intente más tarde</h6></div>
+			            	<div class="form-inline">
+			            		<label for="cupon">Cupon de descuento : </label>
+			            	<input type="text" placeholder="Ingresa el código del cupón" class="form-control" v-model="codigo_cupon">
+			            	<button class="btn btn-info" v-on:click="validarCupon">Aplicar cupón</button>
+			            	</div>
+			            </div>
+
+			        </div>
+			<!--  ALERTAS DE CREACION CITA -->
+					<div align="center">
+						<h4>Costo : ${{cita_costo_total}} {{cita_costo_denominacion}}</h4>
+					</div>
+						      <div v-show="agendarcita_status_neutral == false">
+						      	<div v-if="agendarcita_status_agendando" class="alert alert-info">
+						      		<h4>
+						      			Registrando cita
+						      			<i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+									</h4>
+						      	</div>
+						      	<div v-if="agendarcita_status_exitoso" class="alert alert-success">
+						      		<h4>
+						      			La cita se ha creado correctamente.
+							        	<i class="fa fa-check"></i>
+									</h4>
+						      	</div>
+						      	<div v-if="agendarcita_status_error" class="alert alert-danger">
+						      		<h4>
+						      			No se ha podido crear la cita <i class="fa fa-times"></i>
+						      			<ul>
+						      				<li v-for="error_ag in agendarcita_error_mensaje">
+						      					{{error_ag}}
+						      				</li>
+						      			</ul>	
+									</h4>
+						      	</div>
+						      </div>
+
+			        <div class="modal-footer">
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			          <button type="button" class="btn btn-primary" v-on:click="agendarCita">Agendar Cita</button>
+			        </div>
 			      </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" v-on:click="">Agendar Cita</button>
-        </div>
-      </div>
-</div>
-</div>
-<!-- FIN MODAL -->
+			</div>
+			</div>
+			<!-- FIN MODAL -->
 
 
-
+ 
 <!-- Modal para reagendar cita -->
 <div id="reagendar_cita" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -1158,10 +1177,11 @@ footer
     	data(){
     		return {
     			msg: 'ok',
-    			agendarCita_estado_neutro : true,
-    			agendarCita_estado_encurso : false,
-    			agendarCita_estado_exitoso : false,
-    			agendarCita_estado_error : false,
+    			agendarcita_status_neutral : false,
+                agendarcita_status_agendando : false,
+                agendarcita_status_exitoso : false, 
+                agendarcita_status_error : false,
+                agendarcita_error_mensaje : [],
     			reagendarCita_estado_encurso : false,
     			reagendarCita_estado_exitoso : false,
     			reagendarCita_estado_error : false,
@@ -1189,6 +1209,18 @@ footer
 		      	no_laborales : [],
 		      	hours_no_disponibilidad : false,
 		      	actualizando_coloreado : false,
+		      	cita_costo_total : 0, 
+		      	cita_porcentaje_descuento : 0,
+		      	cita_costo_denominacion : '',
+		      	tipo_id_agendar : null,
+		      	fecha_seleccionada : null,
+		      	cupon_select : false,
+		      	cupon_validando : false,
+		      	cupon_validado : false,
+		      	cupon_error : false,
+		      	cupon_error_mensaje : '',
+		      	cupon_error_server :false,
+		      	codigo_cupon : '',
     		}
     	},
 
@@ -1222,8 +1254,14 @@ footer
 
     		watch:{
     			'tipo_id': function(){
-    				console.log("Coloreando main calendar !!! ");
     				this.servicioDisponibilidadColoreado(true,null);
+
+    			},
+    			'tipo_id_agendar' : function(){
+    				var vm  = this;
+    				vm.servicioHorasDisponibles(vm.fecha_seleccionada);
+    				vm.ajustarCosto();
+    				vm.validarCupon();
     			},
     			'nueva_fecha' : function(){
     				console.log("La hora de la cita cambia ! ");
@@ -1240,6 +1278,7 @@ footer
 	    			console.log(this.cita_cliente_fecha);
 	    			this.servicioHorasDisponibles(this.cita_cliente_fecha);
 	    		}
+	    		
     		},
     	methods:{
     		notificar : function(){
@@ -1247,6 +1286,17 @@ footer
     			console.log("Se va a notificar! ");
     			vm.$store.state.socket.emit('notificar_cita',{'id_user' : vm.$store.state.calendario_id});
 
+    		},
+
+    		ajustarCosto : function(){
+    			var vm = this;
+    			var servicio = $.grep(vm.servicios, function (element, index) {return element.id == vm.tipo_id_agendar;});
+    				if(servicio.length > 0 ) 
+    				{
+    					vm.cita_costo_total = servicio[0].costo - (servicio[0].costo * (vm.cita_porcentaje_descuento/100) );
+    					vm.cita_costo_denominacion = servicio[0].denominacion;
+
+    				}
     		},
 
     		fetchDatas : function(){
@@ -1262,6 +1312,41 @@ footer
     					console.error("Error :(");
     				}
     				//error
+
+    				);
+    		},
+    		validarCupon : function(){
+
+    			var vm = this;
+    			vm.cita_porcentaje_descuento = 0;
+    			vm.ajustarCosto();
+    			if(vm.codigo_cupon == '' || vm.codigo_cupon == ' ' || vm.codigo_cupon == ' ' || vm.codigo_cupon == null) return;
+    			var datas = {'codigo' : vm.codigo_cupon , 'id_calendario' : vm.$store.state.calendario_id, 'servicio_id' : vm.tipo_id_agendar};
+    			vm.cupon_validando = true;
+    			vm.cupon_error = false;
+    			vm.cupon_validado = false;
+    			vm.cupon_error_server = false;
+    			vm.$http.get('verificarcupon',{params : datas}).then(
+    				//success
+    				function(response){
+    					vm.cupon_validando = false;
+    					vm.cupon_validado = true;
+    					vm.cita_porcentaje_descuento = response.data.descuento;
+    					vm.ajustarCosto();
+    				},
+    				//error
+    				function(response){
+    					   vm.cita_porcentaje_descuento = 0;
+    					   vm.ajustarCosto();
+    					   vm.cupon_validando = false; 
+    					if(response.error == 500) vm.cupon_error_server = true;
+    					else {
+    						vm.cupon_error = true;	
+    						vm.cupon_error_mensaje = response.data.error;
+    					}
+
+    				
+    				}
 
     				);
     		},
@@ -1660,7 +1745,7 @@ footer
     			}
   			},
   			dayClick: function(date, jsEvent, view){
-  				
+  					vm.fecha_seleccionada = date;
   				
   			},
 
@@ -1708,6 +1793,110 @@ footer
         })
 
             },
+
+        agendarCita: function(event){
+        			 var vm = this;
+    				var id_selected = vm.tipo_id;
+    				
+    				var service = $.grep(vm.servicios, function(e){ return e.id == id_selected; });
+    				var servicio = null;
+    				if(service.length > 0 ) servicio = service[0];
+    				else {
+    					alert('No se ha seleccionado un servicio');
+    					return;
+    				}
+
+
+    			vm.errorMessage=''; 
+               
+    			var dia_seleccionado = vm.fecha_seleccionada;
+
+    			var dateformat = new Date(vm.fecha_inicio);       			
+    			var fecha_final = this.addMinutes(dateformat,servicio.duracion);
+                
+                var fecha_final = moment(fecha_final).format("YYYY-MM-DD HH:mm:ss");
+                console.log(fecha_final);
+                
+    			var calendarInformation = {
+    				"calendario_id": vm.$store.state.calendario_id,
+    				"tipo_id": servicio.id,
+    				"fecha_inicio": vm.fecha_inicio,
+    				"fecha_final": fecha_final,
+    				"cliente_nombre": vm.cliente_nombre,
+    				"cliente_telefono": vm.cliente_telefono,
+    				"cliente_email": vm.cliente_email,
+    				"costo_total" : vm.cita_costo_total,
+    				"cupon_descuento" : vm.codigo_cupon
+    			};    			
+    		
+                $(event.target).attr('disabled',true);
+
+                vm.agendarcita_status_neutral = false; 
+                vm.agendarcita_status_agendando = true;
+                vm.agendarcita_status_exitoso = false; 
+                vm.agendarcita_status_error = false;
+                vm.agendarcita_error_mensaje = [];
+
+    			vm.$http.post('cita', calendarInformation).then(
+						//success
+						function(response){
+
+                        vm.agendarcita_status_agendando = false;
+                        vm.agendarcita_status_exitoso = true;
+
+                        $(event.target).attr('disabled',false);
+                        vm.cliente_nombre = "";
+                        vm.cliente_telefono = "";
+                        vm.cliente_email = "";
+                        $("#registrarCitaModal").modal('hide');
+						  vm.fetchDatas();
+                          setTimeout(function() {
+                            vm.agendarcita_status_exitoso = false;
+                            vm.agendarcita_status_neutral = true;
+                            
+                          }, 4000);
+						},
+						//error
+						function(response){		
+							console.log(response.data);
+                        $(event.target).attr('disabled',false);	
+                        vm.agendarcita_status_agendando = false;	
+                        vm.agendarcita_status_error = true;
+
+						  
+                          switch(response.status)
+                          {
+                            case 500 : 
+                            {
+                                vm.agendarcita_error_mensaje = ["Ocurrió un error en el servidor, intente más tarde o contacte al administrador del sistema"];
+                            }break;
+
+                            case 400 : 
+                            {
+                                
+                                vm.agendarcita_error_mensaje = response.data.errors;
+
+
+                            }break;
+                            case 404 : 
+                            {
+                                vm.agendarcita_error_mensaje = ["Ya existe una cita para esta hora y fecha, elija otra hora o fecha"];
+
+                            }break;
+
+                            
+                            default : {
+                                vm.agendarcita_error_mensaje = ["Ha ocurrido un error inesperado, intente más tarde"];
+                            }
+                          }	
+						 
+						});
+    		},
+    		addMinutes : function(date,minutes){
+
+    			return new Date(date.getTime() + minutes*60000);
+
+    		},    
         
 	  },
     	}

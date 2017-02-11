@@ -11,7 +11,7 @@ window.io = io;
 const state = {
   calendario_id: 1,
   user_id : null,
-  socket : io.connect('http://192.168.0.17:3000'),
+  socket : io.connect('http://localhost:3000'),
   citas_programadas : [],
   //articulos: [],
   variable_prueba : "hola mundo",
