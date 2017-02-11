@@ -2,7 +2,9 @@
 .articulo_botones{
   float: right;
 }
-
+#mouse{
+  cursor: pointer; cursor: hand;
+}
 </style>
 <template>
 
@@ -25,7 +27,7 @@
                         <div class="panel panel-default">
                           <div class="panel-body">
 
-                            <div v-on:click="goArticulo(articulo.id)">
+                            <div v-on:click="goArticulo(articulo.id)" id="mouse">
                                <div class="post-prev-img">
                                <img :src="articulo.caratula" alt="" />
                             </div>
@@ -43,7 +45,7 @@
                             </div>
                             
                             <div class="post-prev-more">
-                                <a  class="btn btn-mod btn-gray btn-round">Leer màs<i class="fa fa-angle-right"></i></a>
+                                <a id="mouse" class="btn btn-mod btn-gray btn-round">Leer màs<i class="fa fa-angle-right"></i></a>
                             </div>
                            
                             </div>
@@ -201,7 +203,7 @@ export default {
     },
     convertirFecha: function(fecha){
       moment.lang('es');
-      return moment(fecha, "YYYYMMDD").fromNow();
+      return moment(fecha, "YYYY/MM/DD").fromNow();
     },
 
     goArticulo : function(id){
