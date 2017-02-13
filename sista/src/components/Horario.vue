@@ -210,6 +210,12 @@ export default {
       			  ]
     }
   },
+    watch :{
+            '$store.state.calendario_id': function()
+            {
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            }
+        },
   methods : {
     muestraBoton: function(){
       this.btnCancelar = !this.btnCancelar;
@@ -248,6 +254,7 @@ export default {
   	},
   	
   	fetchDatas : function(){
+      if(this.$store.state.calendario_id === null)return; 
 
   		var objThis = this;
   		this.updateHorasRange();

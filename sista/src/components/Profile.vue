@@ -1,5 +1,4 @@
 <style>
-    @import url('http://t4t5.github.io/sweetalert/dist/sweetalert.css');
 /*
     background: rgba(78,144,254,.7);
     bottom: 0;
@@ -59,12 +58,12 @@
 	
 <div>
 	<br>
-    <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;">
+    <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;" v-if="$store.state.user">
     <br>
 
     <div class="card" style="height:370px;">
         <div class="profile-img-container">
-            <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="profileImage" style="width:250px;">
+            <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="$store.state.user.avatar" style="width:250px;">
             <a type="button" data-toggle="modal" href="#photoEdition">
             <div id="changeIt" class="btn-lg">
                 <i class="fa fa-camera fa-6" aria-hidden="true"></i>
@@ -74,13 +73,13 @@
 
     <div>
         <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
-            <label>{{editName}}</label>
+            <label>{{$store.state.user.name}}</label>
             <br>            
-            <label style="color: #A4A4A4">{{editEmail}}</label>
+            <label style="color: #A4A4A4">{{$store.state.user.email}}</label>
             <br>
             <label>Cédula profesional</label>
             <br>
-            <label style="color: #A4A4A4">{{editCedula}}</label>
+            <label style="color: #A4A4A4">{{$store.state.user.cedula_profesional}}</label>
             <br>            
             <button class="btn btn-default" style="margin-left: 0px; margin-top: 50px;" data-toggle="modal" href="#profileEdition">Editar perfil</button>
         </div>            
@@ -125,30 +124,87 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <label class="modal-title">Edita tu perfil</label>
+                    <label class="modal-title" align="center">Editar Información</label>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="profileCard">
-                        <div class="" style="margin-left: 90px; margin-top: -10px; width:350px;">
-                            <label>Nombre</label>
-                            <input class="form-control" type="text" id="newName" v-model="editName">
-                            <label>Correo elecrónico</label>
-                            <input class="form-control" type="text" id="newEmail" v-model="editEmail">
-                            <label>Contraseña</label>
-                            <input class="form-control" type="text" id="newPass">
-                            <label>Escribe otra vez tu contraseña</label>
-                            <input class="form-control" type="text" id="newPassValidation">
-                            <label>Cédula profesional</label>
-                            <input class="form-control" type="text" id="newCedula" v-model="editCedula">
-                        </div>                        
-                    </div>                    
+                    <ul class="nav nav-tabs">
+                        <li class="active" v-on:click="tabCambioOpcion(1)"><a data-toggle="tab" href="#basica">Información Básica</a></li>
+                        <li v-on:click="tabCambioOpcion(2)"><a data-toggle="tab" href="#password">Contraseña</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!--Información básica como nombre,email, etc-->
+                        <div id="basica" class="tab-pane fade in active profileCard">
+                            <div style="margin-left: 90px; margin-top: -10px; width:350px;">
+                                <label>Nombre</label>
+                                <input class="form-control" type="text" id="newName" v-model="$store.state.user.name">
+                                <label>Correo elecrónico</label>
+                                <input class="form-control" type="text" id="newEmail" v-model="$store.state.user.email">
+                                
+                                <label>Cédula profesional</label>
+                                <input class="form-control" type="text" id="newCedula" v-model="$store.state.user.cedula_profesional">
+                            </div>                        
+                        </div >
+
+                        <div id="password" class="tab-pane fade profileCard">
+                            <div style="margin-left: 90px; margin-top: -10px; width:350px;">
+                                <label>Contraseña Actual</label>
+                                <input class="form-control" type="password" v-model="oldPass" :disabled="password_disabled ? true : false">
+                                <label>Nueva Contraseña</label>
+                                <input class="form-control" type="password" v-model="newPass1" :disabled="password_disabled ? true : false">
+                                <label>Repetir Nueva Contraseña</label>
+                                <input class="form-control" type="password" v-model="newPass2" :disabled="password_disabled ? true : false">
+
+                            </div>                        
+                        </div >
+
+
+
+                    </div>
+                                      
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                    <div v-if="taboptions == 1">
+                        <button type="button" class="btn btn-primary" v-if="taboptions == 1" v-on:click="actualizarInformacion">Guardar cambios</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                    <div v-if="taboptions == 2">
+                        <div v-if="password_actualizando" class="alert alert-info">
+                        <h4>
+                            Cambio en curso ... 
+                            <i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>
+                        </h4>
+                    </div>
+
+                    <div v-if="password_success" class="alert alert-success">
+                        <h4>
+                            Contraseña correctamente cambiada
+                            <i class="fa fa-check"></i>
+                        </h4>
+                    </div>
+
+                    <div v-if="password_error" class="alert alert-danger" align="center">
+                        <h4>
+                            Ocurrio uno o más errores creando la contraseña <i class="fa fa-times"></i>
+                            <ul>
+                                <li v-for="error_s in password_error_message">
+                                    <p v-for="suberror in error_s">{{suberror}}</p>
+                                </li>
+                            </ul>
+                            
+                        </h4>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" v-if="taboptions == 2" v-on:click="actualizarPassword">Actualizar Contraseña</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  </div>
+
+                    </div>
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -170,18 +226,32 @@ import '../assets/js/jquery.min.js';
                     user : [],
                     img_selected : '',
                     croppie_obj : null,
-                    editName: '',
-                    editPassword: '',
-                    editPassword2: '',
-                    editCedula: '',
-                    editEmail: '',
-                    profileImage: '//ssl.gstatic.com/accounts/ui/avatar_2x.png'
+                    oldPass : '',
+                    newPass1: '',
+                    newPass2: '',
+                    password_disabled : false,
+                    taboptions : 1,
+                    password_actualizando : false, 
+                    password_success : false,
+                    password_error : false,
+                    password_error_message : []
+                   
     			}         
     	   },
            mounted(){
-            this.fetchDatas();            
-            this.demoVanilla();
+            if(this.$store.state.calendario_id != null) this.demoVanilla();
            },
+            watch : {
+                '$store.state.calendario_id': function()
+            {
+                var vm = this;
+                if(this.$store.state.calendario_id != null) {
+                    setTimeout(function() {
+                        vm.demoVanilla();
+                    }, 10);
+                }
+            }
+            },
            methods: {
 
             onFileChange : function (e) {
@@ -192,6 +262,9 @@ import '../assets/js/jquery.min.js';
 
               this.createImage(files[0]);
 
+            },
+            tabCambioOpcion : function(opcion){
+                this.taboptions = opcion;
             },
             createImage : function(file) {
               
@@ -213,14 +286,15 @@ import '../assets/js/jquery.min.js';
     },
          
             demoVanilla: function() {
-                var thisObj = this;
+                 if(this.$store.state.calendario_id === null)return; 
+                var vm = this;
 
                 var vanillaResult = document.querySelector('.vanilla-result');
                 var vanillaSend = document.querySelector('.sendDta');
-                this.croppie_obj = new Croppie(document.getElementById('vanilla-demo'), {
+                vm.croppie_obj = new Croppie(document.getElementById('vanilla-demo'), {
                 viewport: {
-                width: 100,
-                height: 100,
+                width: 200,
+                height: 200,
                 type: 'circle'
             },
                 boundary: {
@@ -230,13 +304,45 @@ import '../assets/js/jquery.min.js';
                 enableOrientation: true
             });
 
-            this.croppie_obj.bind({
-                url: this.profileImage,
+            vm.croppie_obj.bind({
                 orientation: 1
             });
        
 
           
+        },
+        actualizarInformacion : function(){},
+        actualizarPassword : function(){
+            var vm = this;
+            vm.password_disabled = true;
+            vm.password_actualizando = true;
+            vm.password_success = false;
+            vm.password_error = false;
+            vm.password_error_message = [];
+            var datas  = {'current-password' : vm.oldPass , 'password' : vm.newPass2 , 'password_confirmation' : vm.newPass2};
+
+            vm.$http.put('password',datas).then(
+                //success
+                function(response){
+                    vm.password_actualizando = false;
+                    vm.password_success = true;
+                    vm.password_disabled = false;
+
+
+                },
+                //success
+                function(response){
+                    console.log(response.data);
+                    vm.password_actualizando = false;
+                    vm.password_error = true;
+                    if(response.status == 400)vm.password_error_message = response.data.errors;
+                    vm.password_disabled = false;
+
+                }
+
+                );
+
+
         },
 
             resultVanilla: function(result) {
@@ -280,54 +386,9 @@ import '../assets/js/jquery.min.js';
                         );
                 });
                  
-            },
-                fetchDatas : function(){
-                    var thisObj = this;
-                    this.$http.get('user_info',{params : {'user_id' : this.$store.state.calendario_id}, progress(e) {
-        if (e.lengthComputable) {
-            //console.log("porcentaje: "+ (e.loaded / e.total * 100) );
-            thisObj.$store.commit('aumentarPorcentaje', {
-                        porcentaje: (e.loaded / e.total * 100)
-                    });            
-        }
-            }}).then(
-                        //success
-                        function(response){
-                            thisObj.user = response.data;
+            }
 
-                            //console.log("Success ! ");
-                            console.log(thisObj.user);
-                            this.editName = thisObj.user.nombre;
-                            this.editCedula = thisObj.user.cedula_profesional;
-                            this.editEmail = thisObj.user.correo_electronico;
-                            if(thisObj.user.avatar == null){
-                                this.profileImage = "//ssl.gstatic.com/accounts/ui/avatar_2x.png";
-                            }
-                            else{
-                                this.profileImage = thisObj.user.avatar;
-                            }
 
-                        },
-                        //error
-                        function(response){
-
-                            switch(response.status)
-                            {
-                                case 404 : {
-                                    //este error se produce cuando el usuario que se está 
-                                    //solicitando no existe
-                                }break;
-                                case 500 : {
-                                    //esto se produce cuando se produjo un error de servidor
-                                }break;
-                                default : {
-                                    //otro error inesperado
-                                } break;
-                            }
-
-                        }
-                        );
-                }
             }
     }
 </script>

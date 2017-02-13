@@ -112,7 +112,11 @@ body.modal-open {
 
 <template>	
 	<div class="container">
+
     <br><br><br>
+     <div class="alert alert-info" >
+        <h6>Para agendar una cita presione en el recuadro de la fecha que usted elija, para ver las citas del día presione en el número del día marcado como un link</h6>
+    </div>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
         <div class="row form-group">
@@ -139,12 +143,14 @@ body.modal-open {
    
     <div class="panel panel-default">
   <div class="panel-heading">
+    
      <div v-if="servicio_consulta" class="grid" align="center">
     <div><span class="glyphicon glyphicon-stop IndicadorVerde"></span><span class="LabelIndicador">Alta disponibilidad</span></div>
     <div><span class="glyphicon glyphicon-stop IndicadorAmarillo"></span> <span class="LabelIndicador">Poca disponibilidad</span></div>
     <div><span class="glyphicon glyphicon-stop IndicadorRojo"></span> <span class="LabelIndicador">Sin disponibilidad</span></div>
 
     </div>
+
     <div v-if="!agendarcita_status_neutral" align="center">
         <div v-if="agendarcita_status_exitoso" class="alert alert-success">
             <i class="fa fa-check"></i>
@@ -375,6 +381,10 @@ ejemplo : this.$store.state.calendario_id
             //alert(this.$store.state.variable_prueba);     
     	},
         watch : {
+            '$store.state.calendario_id': function()
+            {
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            },
             'tipo_id' : function(){
                 if(this.tipo_id == null) return;
                 var tipo_id = this.tipo_id;
@@ -938,6 +948,9 @@ ejemplo : this.$store.state.calendario_id
                 else return 0;
             },
     		fetchDatas : function(){
+
+            if(this.$store.state.calendario_id === null)return; 
+
              
           var thisObj = this;
     			this.$http.get('dashboard', { progress(e) {

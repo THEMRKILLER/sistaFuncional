@@ -87,8 +87,16 @@ export default {
   mounted(){
   	this.fetchDatas();
   },
+  watch : {
+            '$store.state.calendario_id': function()
+            {
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            }
+        },
   methods:{
   	fetchDatas : function(){
+     if(this.$store.state.calendario_id === null)return; 
+
       var vm = this;
   		this.$http.get('articulos', {progress(e) {
         if (e.lengthComputable) {

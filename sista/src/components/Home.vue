@@ -1272,7 +1272,7 @@ footer
 	    		},
 	    		'cita_cliente_servicioid' : function(){
 	    			var vm = this;
-	    			var datas = {'tipo_id' : vm.cita_cliente_servicioid,'calendario_id' : vm.$store.state.calendario_id};
+	    			var datas = {'tipo_id' : vm.cita_cliente_servicioid,'calendario_id' : vm.$store.state.calendario_id2};
 	    			this.crearCalendarioPicker();
 	    			this.servicioDisponibilidadColoreado(false,datas);
 	    			console.log(this.cita_cliente_fecha);
@@ -1284,7 +1284,7 @@ footer
     		notificar : function(){
     			var vm = this;
     			console.log("Se va a notificar! ");
-    			vm.$store.state.socket.emit('notificar_cita',{'id_user' : vm.$store.state.calendario_id});
+    			vm.$store.state.socket.emit('notificar_cita',{'id_user' : vm.$store.state.calendario_id2});
 
     		},
 
@@ -1301,7 +1301,7 @@ footer
 
     		fetchDatas : function(){
     			var vm = this;
-    			vm.$http.get('tipo',{params : {'calendario_id' : vm.$store.state.calendario_id}}).then(
+    			vm.$http.get('tipo',{params : {'calendario_id' : vm.$store.state.calendario_id2}}).then(
     				//success
     				function(response){
     					vm.servicios = response.data;
@@ -1321,7 +1321,7 @@ footer
     			vm.cita_porcentaje_descuento = 0;
     			vm.ajustarCosto();
     			if(vm.codigo_cupon == '' || vm.codigo_cupon == ' ' || vm.codigo_cupon == ' ' || vm.codigo_cupon == null) return;
-    			var datas = {'codigo' : vm.codigo_cupon , 'id_calendario' : vm.$store.state.calendario_id, 'servicio_id' : vm.tipo_id_agendar};
+    			var datas = {'codigo' : vm.codigo_cupon , 'id_calendario' : vm.$store.state.calendario_id2, 'servicio_id' : vm.tipo_id_agendar};
     			vm.cupon_validando = true;
     			vm.cupon_error = false;
     			vm.cupon_validado = false;
@@ -1356,7 +1356,9 @@ footer
     			vm.reagendarCita_estado_encurso = true;
     			vm.error_reagendarCita = [];
 
-    			var datas  = {'id_cita' : this.cita_reagendar_id,'tipo_id' : this.cita_cliente_servicioid,'calendario_id' : this.$store.state.calendario_id,'fecha_inicio' : this.nueva_fecha};
+    			var datas  = {'id_cita' : this.cita_reagendar_id,'tipo_id' : this.cita_cliente_servicioid,'calendario_id' : this.$store.state.calendario_id2,'fecha_inicio' : this.nueva_fecha};
+
+    			
 
     			 this.$http.put('cita-r',datas).then(
     			 	//success
@@ -1373,7 +1375,7 @@ footer
     			 		*/
 
     			 vm.$store.state.socket.emit('notificar_reagendar', 
-    			 {'id_user' : vm.$store.state.calendario_id,
+    			 {'id_user' : vm.$store.state.calendario_id2,
     			 'codigo' : response.data.codigo,
     			 'cliente_nombre' : response.data.cliente_nombre,
     			 'fecha' : moment(vm.nueva_fecha).format('LLLL'),
@@ -1598,7 +1600,7 @@ footer
 	                var datas = null;
 	                vm.actualizando_coloreado = false;
 	                if(flag) {
-	                	datas = {'tipo_id' : vm.tipo_id,'calendario_id' : vm.$store.state.calendario_id}
+	                	datas = {'tipo_id' : vm.tipo_id,'calendario_id' : vm.$store.state.calendario_id2}
 	                	vm.actualizando_coloreado = true;
 	                }
 	                else datas = datas_foreign;
@@ -1648,7 +1650,7 @@ footer
                 if(fecha)  dia = new Date(fecha).toISOString();
                 else dia = new Date(vm.date_selected).toISOString();
                 console.log("Dia "+ dia)
-                this.$http.get('servicio-disponible',{params : {'tipo_id' : vm.tipo_id, 'dia' : dia , 'calendario_id' : vm.$store.state.calendario_id}}).then(
+                this.$http.get('servicio-disponible',{params : {'tipo_id' : vm.tipo_id, 'dia' : dia , 'calendario_id' : vm.$store.state.calendario_id2}}).then(
                     //success
                     function(response){
                     	if(response.data.length == 0) vm.hours_no_disponibilidad  = true;
@@ -1818,7 +1820,7 @@ footer
                 console.log(fecha_final);
                 
     			var calendarInformation = {
-    				"calendario_id": vm.$store.state.calendario_id,
+    				"calendario_id": vm.$store.state.calendario_id2,
     				"tipo_id": servicio.id,
     				"fecha_inicio": vm.fecha_inicio,
     				"cliente_nombre": vm.cliente_nombre,

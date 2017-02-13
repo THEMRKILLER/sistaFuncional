@@ -152,8 +152,15 @@ export default {
       					}
      });
   },
+  watch :{
+            '$store.state.calendario_id': function()
+            {
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            }
+        },
   methods : {
   	fetchDatas : function(){
+      if(this.$store.state.calendario_id === null)return; 
       var vm = this;
   		    this.$http.get('cupon',{params : {'calendario_id' : this.$store.state.calendario_id}, progress(e) {
         if (e.lengthComputable) {

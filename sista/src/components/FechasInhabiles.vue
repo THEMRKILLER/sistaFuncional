@@ -134,6 +134,12 @@ export default {
 
   	 this.fetchDatas();
   },
+  watch :{
+            '$store.state.calendario_id': function()
+            {
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            }
+        },
   methods: {
     mostrarModal : function(){
       this.fecha_inhabil =  moment(new Date()).format("YYYY-MM-DD");
@@ -253,6 +259,7 @@ export default {
     },
 
   	fetchDatas : function(){
+       if(this.$store.state.calendario_id === null)return; 
       var vm = this;
   		this.$http.get('fecha_inhabil',{params : {'calendario_id' : this.$store.state.calendario_id }, progress(e) {
         if (e.lengthComputable) {
