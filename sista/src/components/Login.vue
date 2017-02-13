@@ -53,18 +53,32 @@ import '../assets/css/loginCSS.css'
     					errorMessage  : ''
     			}
     	},
+    	
+    	mounted(){
+ 			this.verificar();
+    	},
     	methods: {
     		socket : function(){
               var vm = this;
 
               vm.$store.state.socket.emit('join', {'id_user' : vm.$store.state.calendario_id});
-             
-              vm.$store.state.socket.on('reagendar_cita', function(data) {
+              vm.$store.state.socket.on('nueva_cita', function(data) {
+                    alert("Nueva cita! ");
+                  });
+               vm.$store.state.socket.on('reagendar_cita', function(data) {
                     alert("Una cita se ha reagendado");
-              });
-
+                  });
 
            
+
+            },
+            verificar : function(){
+            	if(localStorage.getItem('token') != null)
+            	{	
+            		this.$router.push('dashboard');
+            		
+            	}
+            	
 
             },
     		sendDatos: function(){
@@ -79,11 +93,17 @@ import '../assets/css/loginCSS.css'
 						//success
 						function(response){
 							//se recibe el token de manera exitosa
+							console.log(response.data);
 							localStorage.setItem('token', response.data.token.token);
 							localStorage.setItem('user_remember',true);
-							this.$store.commit('setid', {
-								  id: response.data.user_id
+
+							this.$store.commit('setuser', {
+								  user: response.data.user
 								});
+							this.$store.commit('setidcalendario', {
+                      			calendario_id: response.data.calendario_id
+                  			});
+
 							this.socket();
 							objThis.$router.push('/dashboard');
 

@@ -47,17 +47,16 @@ export default {
         localStorage.removeItem('token');
         this.authenticated = false;
         vm.state.socket.emit('leave', {'id_user' : vm.state.calendario_id});
+        
         router.push('/admin');
     },
     logout: function(vm) {
-        console.log("Logout in ");
-        var _vm = this;
+        var vmauth = this;
         vm.$http.post('logout').then(
             //success
             function(response){
-                console.log("Logout success !");
-                vm.$store.state.commit('resetid');
-                _vm.clearToken(vm.$store);
+                vm.$store.commit('resetuser');
+                vmauth.clearToken(vm.$store);
             },
             //error
             function(response){

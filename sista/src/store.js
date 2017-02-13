@@ -9,16 +9,18 @@ window.io = io;
 // root state object.
 // each Vuex instance is just a single state tree.
 const state = {
-  calendario_id: 1,
-  user_id : null,
-  socket : io.connect('http://192.168.0.15:3000'),
+  calendario_id2: 1,
+  calendario_id : null,
+  user : null,
+  socket : io.connect('http://localhost:3000'),
   citas_programadas : [],
   //articulos: [],
   variable_prueba : "hola mundo",
   progress: 0,
   error: false,
   direction: 'right',
-  header : true
+  header : true,
+  height_header : 0,
 }
 
 
@@ -44,15 +46,21 @@ else
 // mutations must be synchronous and can be recorded by plugins
 // for debugging purposes.
 const mutations = {
+  setidcalendario (state,payload){
+    state.calendario_id = payload.calendario_id;
+  },
   logout (state,payload) { 
     Auth.logout(payload.vm);
   },
-  setid (state, payload) {
-    state.user_id = payload.id
+  setuser (state, payload) {
+    state.user = payload.user
+
   },
-  resetid (state)
+  resetuser (state)
   {
-    state.user_id = null
+    state.user = null;
+    state.calendario_id = null;
+
   },
   changeheadermain(state){
     state.header = false;
@@ -77,6 +85,12 @@ const mutations = {
     }
 
     
+  },
+  onresize(state)
+  {
+    console.log("Llamado a on resize");
+    state.height_header = $('#header-nav').height()-55;
+    $('#viewer').css('margin-top',state.height_header+'px');
   }
   /**
   increment (state) {

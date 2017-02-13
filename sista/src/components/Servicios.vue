@@ -181,6 +181,11 @@
     	mounted(){
     		this.fetchDatas();
     	},
+        watch : {
+            '$store.state.calendario_id': function(){
+                if(this.$store.state.calendario_id != null) this.fetchDatas();
+            }
+        },
 
     	data(){            
     		return{   
@@ -207,6 +212,7 @@
     	},
         methods : {
         	fetchDatas : function(){
+                if(this.$store.state.calendario_id === null)return; 
                 var vm = this;
         	this.$http.get('tipo',{params : {'calendario_id' : this.$store.state.calendario_id}, progress(e) {
         if (e.lengthComputable) {

@@ -96,6 +96,8 @@ export default {
     
     },
     mounted(){
+      this.$store.commit('onresize');
+
     },
 
     methods: {

@@ -1,6 +1,7 @@
 <template>
-<div style="position: relative;">
- <nav class="navbar navbar-default navbar-fixed-top">
+<div style="position: relative;" id="superheader_root">
+
+ <nav class="navbar navbar-default navbar-fixed-top" id="header-nav" v-if="$store.state.user">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -31,17 +32,17 @@
             <div style="margin-top: 10px; margin-left: 790px;">
               <li class="dropdown">
                 <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:15%;'>
+                  <img id="profile-img" class="profile-img-card img-responsive" :src="$store.state.user.avatar" style='width:15%;'>
                 </a>
                 <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
                   <div class="container">                  
-                    <img id="profile-img" class="profile-img-card img-responsive" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" style='width:7%; margin-left: 0px; margin-top: 10px;'>
+                    <img id="profile-img" class="profile-img-card img-responsive"  style='width:7%; margin-left: 0px; margin-top: 10px;'>
                     <div style="margin-left: 120px; margin-top: -80px;" id="userName">
                       <label style="margin-left: -23px;">
-                        Usuario
+                        {{$store.state.user.name}}
                       </label><br>
                       <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">
-                      usuario@prueba.com
+                      {{$store.state.user.email}}
                       </label>
                     </div>                    
                     <label style="margin-top: 20px;"> <router-link to="/profile">Editar Perfil</router-link></label>                    
@@ -66,18 +67,36 @@ export default {
   name: 'superheader',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   },
+  watch: {
+    // call again the method if the route changes
+    '$store.state.user' : function(){
+      var vm = this;
+      setTimeout(function() {
+        vm.$store.commit('onresize');
+      }, 30);
+    }
+
+  },
+  mounted()
+  {
+
+
+
+  },
+
   methods : {
-  	closeSesion: function(){
-              var vml = this;
-              vml.$store.commit('logout', {
-                    vm: vml
+    
+  
+  	closeSesion: function()
+    {
+              var vm = this;
+              vm.$store.commit('logout', {
+                    vm: vm
               });
               
-
-            }
+    }
   }
 }
 </script>

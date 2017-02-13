@@ -119,7 +119,8 @@ export default {
     	},
       watch: {
     // call again the method if the route changes
-    '$route': 'fetchDatas'
+    '$route': 'fetchDatas',
+    
   },
   methods : {
     

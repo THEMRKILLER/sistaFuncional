@@ -13,6 +13,7 @@
     "unit": "karma start test/unit/karma.conf.js --single-run"
   },
   "dependencies": {
+    "bootstrap-notify-ci-dev": "^3.1.4",
     "ckeditor": "^4.6.1",
     "croppie": "^2.4.0",
     "express": "^4.14.0",
