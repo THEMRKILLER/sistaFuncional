@@ -501,7 +501,7 @@ ejemplo : this.$store.state.calendario_id
                     var msHastaHoy = fechaActual.getTime();
                     var msCitaInicio = fechaCita.getTime();
                     var msFechaFinal =fechaFinalCita.getTime();
-                    var msFechaFinalTotal = msFechaFinal - msHastaHoy;                 
+                    var msFechaFinalTotal = msFechaFinal - msHastaHoy;
                     //milisegundos que faltan para la cita   
                     msTotal = msCitaInicio - msHastaHoy;
                     //si los milisegundos totales son mayores a cero
@@ -517,7 +517,7 @@ ejemplo : this.$store.state.calendario_id
 
                     setTimeout(function(){
                         vm.muestraCita = false;
-                        this.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msFechaFinalTotal);
+                        vm.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msFechaFinalTotal);
                     }, msFechaFinalTotal);
                 }
                 //cliente actual: se muestran los datos del cliente actual
@@ -539,6 +539,7 @@ ejemplo : this.$store.state.calendario_id
                         vm.servicioActual = '';
                         vm.finalActual = '';
                         vm.muestraCita = false;
+                        this.notiFalse();
                     }, msFechaFinalTotal);
                     
                 }

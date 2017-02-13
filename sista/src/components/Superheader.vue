@@ -32,7 +32,7 @@
             <div style="margin-top: 10px; margin-left: 790px;">
               <li class="dropdown">
                 <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" :src="$store.state.user.avatar" style='width:15%;'>
+                  <img id="profile-img" class="profile-img-card img-responsive" :src="$store.state.user.avatar" style='width:15%; margin-left: 320px; margin-top: -50px;'>
                 </a>
                 <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
                   <div class="container">                  
