@@ -65,47 +65,47 @@ body.modal-open {
     display: inline-block;
 }
 
-.alert-info {
+#normal{
     border-radius: 3px;
     padding: 10px;
     height: 90px;
     width: 300px;
 }
-.alert-info > [data-notify="message"] {
+#info-message{
     font-size: 90%;
-    /*font-family: arial;*/
+    
 }
-.alert-info > [data-notify="title"] {
+#info-title{
     color: rgb(51, 51, 51);
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
-.alert-info > [data-notify="icon"] {
+#info-icon{
     height: 60px;
     width: 60px;
     margin-right: 12px;
 }
 
-.alert-minimalist {
+#normal-minimalist{
     background-color: rgb(241, 242, 240);
     border-color: rgba(149, 149, 149, 0.3);
     border-radius: 3px;
     color: rgb(149, 149, 149);
     padding: 10px;
 }
-.alert-minimalist > [data-notify="icon"] {
+#minimalist-icon{
     height: 60px;
     width: 60px;
     margin-right: 12px;
 }
-.alert-minimalist > [data-notify="title"] {
+#minimalist-title{
     color: rgb(51, 51, 51);
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
-.alert-minimalist > [data-notify="message"] {
+#minimalist-message{
     font-size: 80%;
 }
 </style>
@@ -113,6 +113,7 @@ body.modal-open {
 <template>	
 	<div class="container">
     <br><br><br>
+    <button v-on:click="cambiaEstado">Cambiar</button>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
         <div class="row form-group">
@@ -155,7 +156,6 @@ body.modal-open {
   
   <div id="calendar"></div>
 </div>      
-
 <!-- INICIO MODAL -->
 
 <div id="calendarModal" class="modal fade">
@@ -165,7 +165,7 @@ body.modal-open {
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="exampleModalLabel">Nueva Cita</h4>
+          <h4 class="modal-title" id="exampleModalLabel">{{diaClickeado}}</h4>
         </div>
         <div class="modal-body">
 <!-- Nombre -->
@@ -327,6 +327,7 @@ ejemplo : this.$store.state.calendario_id
     		return {
 
     			citas: [],
+                diaClickeado: '',
                 muestraCita: false,
                 nombreActual: '',
                 servicioActual: '',
@@ -370,7 +371,6 @@ ejemplo : this.$store.state.calendario_id
             //var vm = this;
             this.fetchDatas(); 
             this.resetModal();
-            //this.notiFalse();
             this.sockets();
             //alert(this.$store.state.variable_prueba);     
     	},
@@ -392,28 +392,33 @@ ejemplo : this.$store.state.calendario_id
                 var fecha = this.event_selected_fecha;
                 this.servicioHorasDisponibles(tipo_id,fecha);
                 if(this.reagendar) this.servicioDisponibilidadColoreado(false,tipo_id);
-            },
-            'muestraCita': function(){
-                if(this.muestraCita == true){
-                    this.notiTrue(this.nombreActual, this.servicioActual, this.finalActual);
-                }
-                else{
-                    this.notiFalse();
-                }
-            },
+            },            
         },
     	methods : {
-            notiTrue: function(paciente, servicio, actual){
+            cambiaEstado: function(){
+                console.log("entrando");
+                if(this.muestraCita == true){
+                    this.muestraCita = false;
+                }
+                else{
+                    this.muestraCita = true;
+                }
+            },
+            notiTrue: function(paciente, servicio, actual, msFinalizacion){
+                console.log("Paciente: "+paciente);
+                console.log("Servicio: "+servicio);
+                console.log("Final: "+actual);
                 $.notifyDefaults({
                     type: 'minimalist',
                     icon_type: 'image',
-                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                        '<img data-notify="icon" class="img-circle pull-left">' +
-                        '<span data-notify="title">{1}</span>' +
-                        '<span data-notify="message">{2}</span>' +
+                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" id="normal-minimalist">' +
+                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                        '<img data-notify="icon" class="img-circle pull-left" id="minimalist-icon">' +
+                        '<span data-notify="title" id="#minimalist-title">{1}</span>' +
+                        '<span data-notify="message" id="minimalist-message">{2}</span>' +
                     '</div>',
-                    allow_dismiss: false,
-                    delay: 0,
+                    allow_dismiss: true,
+                    delay: msFinalizacion,
                     placement: {
                         from: 'bottom',
                         align: 'right'
@@ -429,12 +434,13 @@ ejemplo : this.$store.state.calendario_id
                 $.notifyDefaults({
                     type: 'info',
                     icon_type: 'image',
-                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                        '<img data-notify="icon" class="img-circle pull-left">' +
-                        '<span data-notify="title">{1}</span>' +
-                        '<span data-notify="message">{2}</span>' +
+                    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert" id="normal">' +
+                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                        '<img data-notify="icon" class="img-circle pull-left" id="info-icon">' +
+                        '<span data-notify="title" id="info-title">{1}</span>' +
+                        '<span data-notify="message" id="info-message">{2}</span>' +
                     '</div>',
-                    allow_dismiss: false,
+                    allow_dismiss: true,
                     delay: 0,
                     placement: {
                         from: 'bottom',
@@ -511,6 +517,7 @@ ejemplo : this.$store.state.calendario_id
 
                     setTimeout(function(){
                         vm.muestraCita = false;
+                        this.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msFechaFinalTotal);
                     }, msFechaFinalTotal);
                 }
                 //cliente actual: se muestran los datos del cliente actual
@@ -842,6 +849,7 @@ ejemplo : this.$store.state.calendario_id
 
     		},
             createCalendar : function(){
+
             	var vm = this;
                 try{
                     $('#calendar').fullCalendar('destroy');
@@ -855,8 +863,11 @@ ejemplo : this.$store.state.calendario_id
             dayClick:  function(date, jsEvent, view){
                 var date2 = moment(date).format("YYYY-MM-DD");
                 var today = moment().format("YYYY-MM-DD");
+                
                 //moment(fecha_final).format("YYYY-MM-DD HH:mm:ss");
                 if(!(date2 >= today)) return;
+
+                vm.diaClickeado = date2;
                 vm.date_selected = date;
             	$('#calendarModal').modal('show');
             	$('.modal').on('hidden.bs.modal', function(){ 
