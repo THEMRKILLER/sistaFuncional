@@ -354,14 +354,14 @@ import '../assets/js/jquery.min.js';
                 });
             },
             sendImage: function(){
-                var thisObj = this;
-                  this.croppie_obj.result('canvas').then(function(canvas){
+                var vm = this;
+                  vm.croppie_obj.result('canvas').then(function(canvas){
                     var data = {'avatar' : canvas};
                     console.log(data);
-                   thisObj.$http.put('avatar',data).then(
+                   vm.$http.put('avatar',data).then(
                         //success
                         function(response){
-                            thisObj.user.avatar = response.data.avatar;
+                            vm.$store.state.user.avatar = response.data.avatar;
                             $("#photoEdition").modal('hide');
                             $.confirm({
                                   icon: 'fa fa-check',

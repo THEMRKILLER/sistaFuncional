@@ -772,11 +772,13 @@ ejemplo : this.$store.state.calendario_id
     				"calendario_id": this.calendario_id,
     				"tipo_id": servicio.id,
     				"fecha_inicio": this.fecha_inicio,
-    				"fecha_final": fecha_final,
     				"cliente_nombre": this.cliente_nombre,
     				"cliente_telefono": this.cliente_telefono,
-    				"cliente_email": this.cliente_email
+    				"cliente_email": this.cliente_email,
+                    "costo_total" : servicio.costo,
+                    "cupon_descuento" : null
     			};    			
+
     			var objThis = this;
                 $(event.target).attr('disabled',true);
 
