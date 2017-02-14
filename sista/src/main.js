@@ -31,6 +31,7 @@ Vue.component('loading-bar', require('vue2-loading-bar'));
 
 Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
 
+
 var $ = require('jquery');
 window.jQuery = $;
 window.$ = $;
