@@ -12,7 +12,7 @@ const state = {
   calendario_id2: 1,
   calendario_id : null,
   user : null,
-  socket : io.connect('http://localhost:3000'),
+  socket : io.connect('http://192.168.0.12:3000'),
   citas_programadas : [],
   //articulos: [],
   variable_prueba : "hola mundo",

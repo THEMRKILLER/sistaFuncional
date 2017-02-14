@@ -24,7 +24,6 @@
               <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
                   <thead>
                       <tr>                   
-                          <th>Id</th>   
                           <th>Servicio</th>
                           <th>Duración</th>
                           <th>Costo</th>
@@ -33,14 +32,13 @@
                       </tr>
                   </thead>
                   <tbody>                  
-                      <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
-                          <td>{{servicio.id}}</td>
+                      <tr class="list-group" v-if="servicios.length>0" v-for="(servicio, index) in servicios">
                           <td>{{servicio.nombre}}</td> 
                           <td>{{servicio.duracion}} minutos</td>
                           <td>${{servicio.costo}} {{servicio.denominacion}}</td>
 
                           <td>
-                          <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
+                          <button v-on:click="getElementID(index)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
                           </td>
                           <td>
                           <button v-on:click="confirmDialog(servicio.id)" type="button" class="btn btn-danger" title="Eliminar servicio">X</button>
@@ -273,8 +271,8 @@
 
         	},
 //Cannot read property '11' of undefined //////////////////////////////////
-            confirmDialog: function(id_button){
-                var id_button = id_button;
+            confirmDialog: function(id_servicio){
+                var vm = this;
           $.confirm({
             title: '¿Está seguro de eliminar el elemento?',
             content: '',
@@ -284,9 +282,7 @@
               btnClass: 'btn-warning',
               action: function () {
                 /*this.$content*/
-                this.ArregloID = id_button;
-                this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
-                deleteServicio();
+                vm.deleteServicio(id_servicio);
                 // reference to the content
                 $.alert('¡Eliminado!');
               }
@@ -364,14 +360,14 @@
                     }
                     );
             },
-            deleteServicio : function(event){
-                  $(event.target).attr('disabled',true);
-                var datas = {'id' : this.ArregloID};
+            deleteServicio : function(idServicio){
+                  
+                var datas = {'id' : idServicio};
 
-                this.$http.delete('tipo',{params : {'id' : this.ArregloID}}).then(
+                this.$http.delete('tipo',{params : datas}).then(
                     //success
                     function(response){
-                        $(event.target).attr('disabled',false);
+                        
                         this.updateSuccess = true;
                         $('#confirmOverlay').modal('hide');
                         var thisObj = this;
@@ -382,20 +378,20 @@
                     },
                     //error
                     function(response){
-                        $(event.target).attr('disabled',false);
+                        console.log(response.data);
                     }
                     );
             },
             //Bug en este metodo --- verificar
             getElementID: function(id){
-                //this.ArregloID = id;
+                this.ArregloID = id;
                 //imprimo los ids seleccionados
-                this.editIdEvent = id-1;
+                this.editIdEvent = this.servicios[this.ArregloID].id;
                 /*this.arregloID -1*/
-                this.editNameEvent = this.servicios[id-1].nombre;
-                this.editTimeEvent = this.servicios[id-1].duracion;
-                this.editCostEvent = this.servicios[id-1].costo;
-                this.editDenominacionEvent = this.servicios[id-1].denominacion;
+                this.editNameEvent = this.servicios[this.ArregloID].nombre;
+                this.editTimeEvent = this.servicios[this.ArregloID].duracion;
+                this.editCostEvent = this.servicios[this.ArregloID].costo;
+                this.editDenominacionEvent = this.servicios[this.ArregloID].denominacion;
             },
             /*deleteTheEvent: function(id_button) {
                 this.ArregloID = id_button;
