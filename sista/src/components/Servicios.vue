@@ -23,7 +23,8 @@
           <div class="panel-body" align="center">
               <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
                   <thead>
-                      <tr>                      
+                      <tr>                   
+                          <th>Id</th>   
                           <th>Servicio</th>
                           <th>Duración</th>
                           <th>Costo</th>
@@ -33,6 +34,7 @@
                   </thead>
                   <tbody>                  
                       <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
+                          <td>{{servicio.id}}</td>
                           <td>{{servicio.nombre}}</td> 
                           <td>{{servicio.duracion}} minutos</td>
                           <td>{{servicio.costo}} {{servicio.denominacion}}</td>
@@ -147,7 +149,7 @@
 
 			      	<div v-if="registro_estado_exitoso" class="alert alert-success">
 			      		<h4>
-			      			El servicio {{registro_estado_exitoso_name}} se ha creado correctamente, puede serguir registrando más servicios o haga clic en salir.
+			      			El servicio {{registro_estado_exitoso_name}} se ha creado correctamente, puede seguir registrando más servicios o haga clic en salir.
 				        	<i class="fa fa-check"></i>
 						</h4>
 			      	</div>
@@ -189,6 +191,7 @@
 
     	data(){            
     		return{   
+                id: '',
     			nombre: '',
     			duracion : 1,
                 costo : 0,
@@ -302,7 +305,7 @@
         	this.registro_estado_encurso = true;
 
 
-        	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
+        	 var datas_to_server = {'id' : this.id,'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
         	 this.$http.post('tipo',datas_to_server).then(
         	 	//success
         	 	function(response){
@@ -310,9 +313,11 @@
         	 		this.registro_estado_encurso = false;
         	 		$(event.target).attr('disabled',false);
         	 		this.registro_estado_exitoso_name = this.nombre;
+                    this.id = 0; //
         	 		this.nombre = '';
         	 		this.duracion = 0;
                     this.costo = 0;
+                    this.denominacion = ''; //
 
         	 		this.fetchDatas();
 
@@ -381,13 +386,14 @@
             },
             //Bug en este metodo --- verificar
             getElementID: function(id){
-                this.ArregloID = id;
+                //this.ArregloID = id;
                 //imprimo los ids seleccionados
-                this.editIdEvent = id;
-                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
-                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
-                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
-                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
+                this.editIdEvent = id-1;
+                /*this.arregloID -1*/
+                this.editNameEvent = this.servicios[id-1].nombre;
+                this.editTimeEvent = this.servicios[id-1].duracion;
+                this.editCostEvent = this.servicios[id-1].costo;
+                this.editDenominacionEvent = this.servicios[id-1].denominacion;
             },
             /*deleteTheEvent: function(id_button) {
                 this.ArregloID = id_button;

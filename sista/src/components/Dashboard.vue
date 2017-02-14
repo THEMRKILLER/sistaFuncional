@@ -112,7 +112,7 @@ body.modal-open {
 
 <template>	
 	<div class="container">
-    <br><br><br>
+    <br><br><br><br>
     <button v-on:click="cambiaEstado">Cambiar</button>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
@@ -430,7 +430,7 @@ ejemplo : this.$store.state.calendario_id
                     message: '<label>Atendiendo a: '+paciente+'</label><br> <label>Servicio de: '+servicio+'</label><br> <label>Cita termina a las: '+actual+'</label>'
                 });
             },
-            notiFalse: function(){
+            notiFalse: function(msFinalizacion){
                 $.notifyDefaults({
                     type: 'info',
                     icon_type: 'image',
@@ -441,7 +441,7 @@ ejemplo : this.$store.state.calendario_id
                         '<span data-notify="message" id="info-message">{2}</span>' +
                     '</div>',
                     allow_dismiss: true,
-                    delay: 0,
+                    delay: msFinalizacion,
                     placement: {
                         from: 'bottom',
                         align: 'right',
@@ -513,33 +513,33 @@ ejemplo : this.$store.state.calendario_id
                     vm.servicioActual = citasArray.title;
                     vm.finalActual = moment(citasArray.end).format("HH:mm:ss");
                     vm.muestraCita = true;
+                    vm.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msTotal);
                     }, msTotal);
-
-                    setTimeout(function(){
+                    //a que hora desaparece 
+                    setTimeout(function(){                        
                         vm.muestraCita = false;
-                        vm.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msFechaFinalTotal);
+                        vm.notiFalse(msFechaFinalTotal);
                     }, msFechaFinalTotal);
                 }
                 //cliente actual: se muestran los datos del cliente actual
                 else{
                     if(msHastaHoy < msFechaFinal){                           
-                        //this.laHoraDehoy = fechaActual;
-                        //this.laHoraFinal = fechaFinalCita;
                         /*En caso de que exista una cita ya ejecutandose que se muestre directamente*/
                         setTimeout(function() {
                         vm.nombreActual = citasArray.cliente_nombre;
                         vm.servicioActual = citasArray.title;
                         vm.finalActual = moment(citasArray.end).format("HH:mm:ss");
+                        vm.notiTrue(vm.nombreActual, vm.servicioActual, vm.finalActual, msFechaFinalTotal);
                         vm.muestraCita = true;            
                     }, 0);
-
+                        // si no hay una cita actualmente que limpie las variables y muestre un mensaje que el doctor se encuentra libre
                     console.log("ms: "+msFechaFinal);
                         setTimeout(function() {
                         vm.nombreActual = '';
                         vm.servicioActual = '';
                         vm.finalActual = '';
                         vm.muestraCita = false;
-                        this.notiFalse();
+                        vm.notiFalse(msFechaFinalTotal);
                     }, msFechaFinalTotal);
                     
                 }
