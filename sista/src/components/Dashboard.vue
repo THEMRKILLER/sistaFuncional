@@ -199,8 +199,7 @@ body.modal-open {
                 <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
 
                 <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="(hours.length > 0) && (hours_no_disponibilidad == false)">
-                <option value=""  disabled>Selecciona una hora</option>
-                <option v-for="hour in hours" :value="hour.value">
+                <option v-for="hour in hours" :value="hour.value" >
                         {{ hour.text }}
                 </option>
             </select>
@@ -235,7 +234,7 @@ body.modal-open {
                 </div>
             </div>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" v-on:click="sendCalendarJSON">Agendar Cita</button>
+          <button type="button" class="btn btn-primary" v-on:click="sendCalendarJSON" :disabled="button_hours">Agendar Cita</button>
         </div>
       </div>
 </div>
@@ -280,15 +279,20 @@ body.modal-open {
                         </div>
                         <!-- Hora -->
                         <div class="form-group">
-                            <label for="message-text" class="form-control-label">Hora:</label>
-                                <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="hours != []">
-                                    <option v-for="hour in hours" :value="hour.value">
+                            <label for="message-text" class="form-control-label"><i v-if ="horas_disponibilidad_cargando" class="fa fa-spinner fa-pulse fa-fw"></i>Hora:</label>
+
+                                <select class="form-control" v-model="fecha_inicio" name="fecha_inicio" v-if="(hours.length > 0) && (hours_no_disponibilidad == false)">
+                                    <option v-for="hour in hours" :value="hour.value" >
                                         {{ hour.text }}
                                     </option>
                                 </select>
-                            <select v-else class="form-control" name="fecha_inicio" disabled></select>
+                                <select v-if="(hours.length == 0) && (hours_no_disponibilidad == false)" class="form-control" name="fecha_inicio" disabled>
+                                </select>
+                                <select v-if="hours_no_disponibilidad" class="form-control" name="fecha_inicio" disabled>
+                                    <option><i class="fa fa-calendar-times-o" aria-hidden="true"></i> Sin disponibilidad de horario</option>
+                                </select>
 
-                        </div> 
+                        </div>     
                     
                      <div class="form-group">             
                             <label for="message-text" class="form-control-label">Fecha</label>
@@ -297,15 +301,18 @@ body.modal-open {
                 </div>
             </div>
             <div class="modal-footer" v-if="!reagendar">
-
+                
+               
                 <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cerrarModalCita">Cerrar</button>
-                <button class="btn btn-warning" v-on:click="activarReagendar">Reagendar</button>
+                <button class="btn btn-warning" v-on:click="activarReagendar" :disabled="button_hours">Reagendar</button>
             </div>
             <div class="modal-footer" v-else>
+                <div v-if="reagendar_reagendando" class="alert alert-info" align="center">
+                    <i class="fa fa-cog fa-spin  fa-fw"></i>
+                    <span>Reagendando cita...</span>
+                </div>
                 <button type="button" class="btn btn-default" v-on:click="cerrarModalCita">Cancelar</button>
-                <button class="btn btn-danger"  v-on:click="reagendarCita">Realizar cambios</button>
-
-
+                <button class="btn btn-danger"  :disabled="button_hours"  v-on:click="reagendarCita">Realizar cambios</button>
             </div>
         </div>
     </div>
@@ -365,7 +372,9 @@ ejemplo : this.$store.state.calendario_id
                 no_laborales : [],
                 actualizando_coloreado : false,
                 horas_disponibilidad_cargando : false,
-    		}
+                reagendar_reagendando : false,
+                button_hours : true,
+               }
     	},
     	mounted(){
             //var vm = this;
@@ -392,7 +401,14 @@ ejemplo : this.$store.state.calendario_id
                 var fecha = this.event_selected_fecha;
                 this.servicioHorasDisponibles(tipo_id,fecha);
                 if(this.reagendar) this.servicioDisponibilidadColoreado(false,tipo_id);
-            },            
+            },       
+            'hours' : function(){
+                console.log(this.hours.length);
+                if(this.hours[0])this.fecha_inicio = this.hours[0].value;
+
+                if(this.hours.length == 0) this.button_hours = true;
+                else this.button_hours = false;
+            }     
         },
     	methods : {
             cambiaEstado: function(){
@@ -578,21 +594,43 @@ ejemplo : this.$store.state.calendario_id
             },
 
             reagendarCita : function(){
+                var vm = this;
+                vm.reagendar_reagendando = true;
                 var datas  = {'id_cita' : this.event_selected_id,'tipo_id' : this.event_selected_servicio_id,'calendario_id' : this.$store.state.calendario_id,'fecha_inicio' : this.fecha_inicio};
                     this.$http.put('cita-r',datas).then(
                     //success
-
                     function(response){
-                        this.AlertDisplay();
-                    },
-
-                    function(response){
+                        vm.reagendar_reagendando = false;
+                        vm.fetchDatas();
+                        $("#segundoModal").modal('hide');
+                          $.confirm({
+                                title: 'Correcto',
+                                content: 'Cita reagendada correctamente' ,
+                                type: 'green',
+                                typeAnimated: true,
+                                buttons : {
+                                     ok : {text : 'Entendido'}
+                                }
+                            });
                         
-                        console.log("Success");
+                        
 
                     },
                     //error
                     function(response){
+                        vm.reagendar_reagendando = false;
+                        var errors_tmp = '';
+                        for(var error in response.data.errors)
+                                errors_tmp+=response.data.errors[error]+'<br>';                            
+                          $.confirm({
+                            title: 'Error',
+                            content: 'Ha ocurrido uno o varios errores al reagendar la cita<br>'+errors_tmp ,
+                            type: 'red',
+                            typeAnimated: true,
+                                buttons : {
+                                     ok : {text : 'Entendido'}
+                                }
+                        });
                       console.error("Error :(");
                     });
             },
@@ -809,7 +847,7 @@ ejemplo : this.$store.state.calendario_id
                         $(event.target).attr('disabled',false);	
                         thisObj.agendarcita_status_agendando = false;	
                         thisObj.agendarcita_status_error = true;
-
+                        console.log(response.data);
 						  
                           switch(response.status)
                           {

@@ -1156,7 +1156,7 @@ footer
 			      	</div>
 			      	
 			    
-      	<button type="button" class="btn btn-info" v-on:click="reagendarCita">Reagendar</button>
+      	<button type="button" class="btn btn-info" v-on:click="reagendarCita" :disabled="reagendar_button">Reagendar</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
       </div>
     </div>
@@ -1221,6 +1221,7 @@ footer
 		      	cupon_error_mensaje : '',
 		      	cupon_error_server :false,
 		      	codigo_cupon : '',
+		      	reagendar_button : true
     		}
     	},
 
@@ -1277,7 +1278,21 @@ footer
 	    			this.servicioDisponibilidadColoreado(false,datas);
 	    			console.log(this.cita_cliente_fecha);
 	    			this.servicioHorasDisponibles(this.cita_cliente_fecha);
-	    		}
+	    		},
+	    		'hours' : function(){
+                	if(this.hours[0])
+                		{
+                			this.nueva_fecha = this.hours[0].value;
+                			this.fecha_inicio = this.hours[0].value;
+                			this.reagendar_button = false;
+                		}
+                	if(this.hours.length === 0)
+                	{
+                		this.nueva_fecha = null;
+                		this.fecha_inicio = null;
+                		this.reagendar_button = true;
+                	}
+            	}  
 	    		
     		},
     	methods:{

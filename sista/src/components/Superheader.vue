@@ -33,7 +33,7 @@
             <li class="nav-item">
               <router-link to="/articulos">Artículos</router-link>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <router-link to="/dashboard">Citas</router-link>
             </li>
 

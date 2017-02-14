@@ -1,17 +1,5 @@
 <style>
-/*
-    background: rgba(78,144,254,.7);
-    bottom: 0;
-    color: #fff;
-    font-size: 9px;
-    font-weight: bold;
-    left: 0;
-    line-height: 9px;
-    position: absolute;
-    padding: 7px 0;
-    text-align: center;
-    width: 96px;
-*/
+
     #changeIt{
         position: absolute;
         padding: 7px 0px;
@@ -53,46 +41,71 @@
     text-align: center;
     color: inherit;
 }
+#perfil_contenedor{
+    margin-top: 30px;
+}
 </style>
 <template>
 	
-<div>
+<div id="profile_root">
 	<br>
-    <div class="container" style="margin-top: 10px; margin-left: 250px; width: 800px;" v-if="$store.state.user">
-    <br>
+    <div id="perfil_contenedor" class="well" v-if="$store.state.user">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img-container">
+                    <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="$store.state.user.avatar" style="width:250px;">
+                        <a type="button" data-toggle="modal" href="#photoEdition">
+                            <div id="changeIt" class="btn-lg">
+                                <i class="fa fa-camera fa-6" aria-hidden="true"></i>
+                            </div>                
+                        </a>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Nombre: </label>
+                        <p style="color: #A4A4A4">{{$store.state.user.name}}</p>
+                    </div>
 
-    <div class="card" style="height:370px;">
-        <div class="profile-img-container">
-            <img id="profile-img" class="img-thumbnail img-circle img-responsive" :src="$store.state.user.avatar" style="width:250px;">
-            <a type="button" data-toggle="modal" href="#photoEdition">
-            <div id="changeIt" class="btn-lg">
-                <i class="fa fa-camera fa-6" aria-hidden="true"></i>
-            </div>                
-            </a>
+                    <div class="form-group">
+                        <label>Cédula profesional</label>
+                        <p style="color: #A4A4A4">{{$store.state.user.cedula_profesional}}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo Electronico</label>
+                        <p style="color: #A4A4A4">{{$store.state.user.email}}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Información profesional resumen : </label>
+                        <div>
+                          <i>{{$store.state.user.informacion_profesional_resumen}}</i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Información profesional extendido: </label>
+                        <div>
+                            <i>{{$store.state.user.informacion_profesional_completo}}</i>
+                        </div>
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-default" style="margin-left: 0px; margin-top: 50px;" data-toggle="modal" href="#profileEdition">Editar información</button>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
+    </div>
 
-    <div>
-        <div class="" style="margin-left: 300px; margin-top: -220px; width:500px;">
-            <label>{{$store.state.user.name}}</label>
-            <br>            
-            <label style="color: #A4A4A4">{{$store.state.user.email}}</label>
-            <br>
-            <label>Cédula profesional</label>
-            <br>
-            <label style="color: #A4A4A4">{{$store.state.user.cedula_profesional}}</label>
-            <br>            
-            <button class="btn btn-default" style="margin-left: 0px; margin-top: 50px;" data-toggle="modal" href="#profileEdition">Editar perfil</button>
-        </div>            
-    </div>
-<!--  
-<span>
-    <div class="avatar-overlay velocity-animating" style="opacity: 0.45649;">
-        <span class="icon icon-camera-light"></span>
-            <div class="avatar-overlay-text">Cambiar foto de perfil</div>
-    </div>
-        </span>
--->    
-    <!-- MODAL EDICION PERFIL -->
+    <div id="modals">
+
+        <!-- MODAL EDICION PERFIL -->
     <div id="photoEdition" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -123,8 +136,8 @@
     <div id="profileEdition" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <label class="modal-title" align="center">Editar Información</label>
+                <div class="modal-header" align="center">
+                    <label class="modal-title">Editar Información</label>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -139,14 +152,20 @@
                         <div id="basica" class="tab-pane fade in active profileCard">
                             <div style="margin-left: 90px; margin-top: -10px; width:350px;">
                                 <label>Nombre</label>
-                                <input class="form-control" type="text" id="newName" v-model="$store.state.user.name">
+                                <input class="form-control" type="text" id="newName" v-model="user_nombre">
                                 <label>Correo elecrónico</label>
-                                <input class="form-control" type="text" id="newEmail" v-model="$store.state.user.email">
+                                <input class="form-control" type="text" id="newEmail" v-model="user_email">
                                 
                                 <label>Cédula profesional</label>
-                                <input class="form-control" type="text" id="newCedula" v-model="$store.state.user.cedula_profesional">
+                                <input class="form-control" type="text" id="newCedula" v-model="user_cedula">
+                                <label>Informacion profesional resumen : </label>
+                                <textarea class="form-control" type="text"  v-model="user_informacion_profesional_resumen" maxlength="255">
+                                </textarea>
+                                <label>Información profesional extendido : </label>
+                                <textarea class="form-control" type="text"  v-model="user_informacion_profesional_completo"  maxlength="65535">
+                                </textarea>
                             </div>                        
-                        </div >
+                        </div>
 
                         <div id="password" class="tab-pane fade profileCard">
                             <div style="margin-left: 90px; margin-top: -10px; width:350px;">
@@ -156,10 +175,8 @@
                                 <input class="form-control" type="password" v-model="newPass1" :disabled="password_disabled ? true : false">
                                 <label>Repetir Nueva Contraseña</label>
                                 <input class="form-control" type="password" v-model="newPass2" :disabled="password_disabled ? true : false">
-
-                            </div>                        
-                        </div >
-
+                            </div>    
+                        </div>
 
 
                     </div>
@@ -209,7 +226,8 @@
             </div>
         </div>
     </div>
-</div>
+
+    
 </div>
 
 </template>
@@ -225,6 +243,11 @@ import '../assets/js/jquery.min.js';
     				msg: 'ok',
                     user : [],
                     img_selected : '',
+                    user_nombre : '',
+                    user_email : '',
+                    user_cedula : '',
+                    user_informacion_profesional_resumen : '',
+                    user_informacion_profesional_completo : '',
                     croppie_obj : null,
                     oldPass : '',
                     newPass1: '',
@@ -240,6 +263,9 @@ import '../assets/js/jquery.min.js';
     	   },
            mounted(){
             if(this.$store.state.calendario_id != null) this.demoVanilla();
+
+
+                
            },
             watch : {
                 '$store.state.calendario_id': function()
@@ -250,7 +276,18 @@ import '../assets/js/jquery.min.js';
                         vm.demoVanilla();
                     }, 10);
                 }
-            }
+            },
+            '$store.state.user' : function(){
+                if(this.$store.state.user != null)
+                {
+                    this.user_nombre = this.$store.state.user.name;
+                    this.user_email = this.$store.state.user.email;
+                    this.user_cedula = this.$store.state.user.cedula_profesional;
+                    this.user_informacion_profesional_resumen = this.$store.state.user.informacion_profesional_resumen;
+                    this.user_informacion_profesional_completo = this.$store.state.user.informacion_profesional_completo;
+                }
+            } 
+
             },
            methods: {
 
@@ -311,7 +348,47 @@ import '../assets/js/jquery.min.js';
 
           
         },
-        actualizarInformacion : function(){},
+        actualizarInformacion : function(){
+            var vm = this;
+            var datas = {'nombre' : vm.user_nombre ,
+                        'cedula_profesional' : vm.user_cedula ,
+                        'informacion_profesional_resumen' : vm.user_informacion_profesional_resumen,
+                        'informacion_profesional_completo' : vm.user_informacion_profesional_completo
+                        };
+            console.log("Lo que mando : ");
+            console.log(datas);
+
+            vm.$http.put('user',datas).then(
+                //success
+                function(response){
+                     this.$store.commit('setuser', {
+                    user: response.data.user
+                        });
+                    $.confirm({
+                        title: 'Correcto',
+                        content: 'Información actualizada correctamente' ,
+                            type: 'green',
+                            typeAnimated: true,
+                                buttons : {
+                                     ok : {text : 'Entendido'}
+                                }
+          });
+                },
+                //error
+                function(response){
+                        console.log(response.data);
+                        $.confirm({
+                        title: 'Error',
+                        content: 'Ocurrio un error al actualizar la información, intente de nuevo más tarde' ,
+                            type: 'red',
+                            typeAnimated: true,
+                                buttons : {
+                                     ok : {text : 'Entendido'}
+                                }
+          });
+                }
+                );
+        },
         actualizarPassword : function(){
             var vm = this;
             vm.password_disabled = true;
@@ -319,7 +396,7 @@ import '../assets/js/jquery.min.js';
             vm.password_success = false;
             vm.password_error = false;
             vm.password_error_message = [];
-            var datas  = {'current-password' : vm.oldPass , 'password' : vm.newPass2 , 'password_confirmation' : vm.newPass2};
+            var datas  = {'current-password' : vm.oldPass , 'newpassword' : vm.newPass1 , 'newpassword_confirmation' : vm.newPass2};
 
             vm.$http.put('password',datas).then(
                 //success
@@ -355,6 +432,17 @@ import '../assets/js/jquery.min.js';
             },
             sendImage: function(){
                 var vm = this;
+                 var confirm_loading = $.dialog({
+                                    closeIcon: false,
+                                    icon: 'fa fa-cog fa-spin  fa-fw',
+                                    title: 'Espere',
+                                    content: 'Actualizando foto de perfil ...',
+                                    type: 'blue',
+                                    typeAnimated: true,
+                                    buttons: {
+                                        
+                                    }
+                                });   
                   vm.croppie_obj.result('canvas').then(function(canvas){
                     var data = {'avatar' : canvas};
                     console.log(data);
@@ -363,6 +451,7 @@ import '../assets/js/jquery.min.js';
                         function(response){
                             vm.$store.state.user.avatar = response.data.avatar;
                             $("#photoEdition").modal('hide');
+                            confirm_loading.close();
                             $.confirm({
                                   icon: 'fa fa-check',
                                     title: 'Correcto',
@@ -372,6 +461,7 @@ import '../assets/js/jquery.min.js';
                                     buttons: {
                                         ok : {
                                             text : 'Ok'
+                                            
                                         }
                                     }
                                 });                      
