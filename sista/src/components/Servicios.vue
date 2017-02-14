@@ -35,7 +35,7 @@
                       <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
                           <td>{{servicio.nombre}}</td> 
                           <td>{{servicio.duracion}} minutos</td>
-                          <td>{{servicio.costo}} {{servicio.denominacion}}</td>
+                          <td>${{servicio.costo}} {{servicio.denominacion}}</td>
 
                           <td>
                           <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
@@ -157,6 +157,7 @@
 			      			Error creando el servicio <i class="fa fa-times"></i>
 			      			<ul>
 			      				<li v-for="error_s in error_servicio">
+
 			      					<p v-for="suberror in error_s">{{suberror}}</p>
 			      				</li>
 			      			</ul>
@@ -320,6 +321,7 @@
         	 	},
         	 	//error
         	 	function(response){
+                    console.log(response.data);
         	 		this.registro_estado_error = true;
         	 		this.registro_estado_encurso = false;
         	 		this.error_servicio = response.data.errors;
