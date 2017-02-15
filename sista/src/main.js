@@ -28,7 +28,7 @@ Vue.component('articulonotfound', require('components/ArticuloNotFound.vue'));
 Vue.component('superheader', require('components/Superheader.vue'));
 Vue.component('loading-bar', require('vue2-loading-bar'));
 
-Vue.http.options.root = 'http://localhost/Sista/public/api/v1';
+Vue.http.options.root = 'http://192.168.0.19/Sista/public/api/v1';
 
 
 var $ = require('jquery');

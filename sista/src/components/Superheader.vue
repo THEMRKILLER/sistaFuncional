@@ -1,3 +1,10 @@
+<style>
+  #profile-img2{
+    width:50px;
+    margin-left: 100px;
+    display: block;
+  }
+</style>
 <template>
 <div style="position: relative;" id="superheader_root">
 
@@ -31,16 +38,18 @@
             <li class="nav-item">
               <router-link to="/promociones">Promociones</router-link>
             </li>
-            <div style="margin-top: 10px; margin-left: 790px;">
+
+<!--                 -->            
+            <div style="margin-top: 10px; margin-left: 710px;">
               <li class="dropdown">
                 <a type="button" class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                  <img id="profile-img" class="profile-img-card img-responsive" :src="$store.state.user.avatar" style='width:15%; margin-left: 320px; margin-top: -50px;'>
+                  <img id="profile-img2" class="profile-img-card img-responsive" :src="$store.state.user.avatar">
                 </a>
-                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px;">
+                <ul class="dropdown-menu" style="border: 1px; width: 270px; margin-top: 10px; margin-left: 100px;">
                   <div class="container">                  
-                    <img id="profile-img" class="profile-img-card img-responsive"  style='width:7%; margin-left: 0px; margin-top: 10px;'>
-                    <div style="margin-left: 120px; margin-top: -80px;" id="userName">
-                      <label style="margin-left: -23px;">
+                    <img id="profile-img" class="profile-img-card img-responsive"  style='width:7%; margin-left: 0px; margin-top: 10px;' :src="$store.state.user.avatar">
+                    <div style="margin-left: 120px; margin-top: -110px;" id="userName">
+                      <label style="margin-left: -23px; margin-top: 30px;">
                         {{$store.state.user.name}}
                       </label><br>
                       <label style="margin-left: -20px; font-size:10px; color: #A4A4A4">

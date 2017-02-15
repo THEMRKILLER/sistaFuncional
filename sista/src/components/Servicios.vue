@@ -26,7 +26,7 @@
           <div class="panel-body" align="center">
               <table class="table ui-responsive" data-role="table" data-mode="columntoggle">
                   <thead>
-                      <tr>                      
+                      <tr>                   
                           <th>Servicio</th>
                           <th>Duración</th>
                           <th>Costo</th>
@@ -35,13 +35,13 @@
                       </tr>
                   </thead>
                   <tbody>                  
-                      <tr class="list-group" v-if="servicios.length>0" v-for="servicio in servicios">
+                      <tr class="list-group" v-if="servicios.length>0" v-for="(servicio, index) in servicios">
                           <td>{{servicio.nombre}}</td> 
                           <td>{{servicio.duracion}} minutos</td>
                           <td>${{servicio.costo}} {{servicio.denominacion}}</td>
 
                           <td>
-                          <button v-on:click="getElementID(servicio.id)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
+                          <button v-on:click="getElementID(index)" type="button" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar información" data-toggle="modal" href="#modalToEdit"></button>
                           </td>
                           <td>
                           <button v-on:click="confirmDialog(servicio.id)" type="button" class="btn btn-danger" title="Eliminar servicio">X</button>
@@ -150,7 +150,7 @@
 
 			      	<div v-if="registro_estado_exitoso" class="alert alert-success">
 			      		<h4>
-			      			El servicio {{registro_estado_exitoso_name}} se ha creado correctamente, puede serguir registrando más servicios o haga clic en salir.
+			      			El servicio {{registro_estado_exitoso_name}} se ha creado correctamente, puede seguir registrando más servicios o haga clic en salir.
 				        	<i class="fa fa-check"></i>
 						</h4>
 			      	</div>
@@ -193,6 +193,7 @@
 
     	data(){            
     		return{   
+                id: '',
     			nombre: '',
     			duracion : 1,
                 costo : 0,
@@ -273,8 +274,8 @@
 
         	},
 //Cannot read property '11' of undefined //////////////////////////////////
-            confirmDialog: function(id_button){
-                var id_button = id_button;
+            confirmDialog: function(id_servicio){
+                var vm = this;
           $.confirm({
             title: '¿Está seguro de eliminar el elemento?',
             content: '',
@@ -284,9 +285,7 @@
               btnClass: 'btn-warning',
               action: function () {
                 /*this.$content*/
-                this.ArregloID = id_button;
-                this.deleteNameEvent = this.servicios[this.ArregloID -1].nombre;
-                deleteServicio();
+                vm.deleteServicio(id_servicio);
                 // reference to the content
                 $.alert('¡Eliminado!');
               }
@@ -306,7 +305,7 @@
         	this.registro_estado_encurso = true;
 
 
-        	 var datas_to_server = {'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
+        	 var datas_to_server = {'id' : this.id,'nombre' : this.nombre,'duracion' : this.duracion, 'costo' : this.costo,'denominacion' : this.denominacion};
         	 this.$http.post('tipo',datas_to_server).then(
         	 	//success
         	 	function(response){
@@ -314,9 +313,11 @@
         	 		this.registro_estado_encurso = false;
         	 		$(event.target).attr('disabled',false);
         	 		this.registro_estado_exitoso_name = this.nombre;
+                    this.id = 0; //
         	 		this.nombre = '';
         	 		this.duracion = 0;
                     this.costo = 0;
+                    this.denominacion = ''; //
 
         	 		this.fetchDatas();
 
@@ -362,14 +363,14 @@
                     }
                     );
             },
-            deleteServicio : function(event){
-                  $(event.target).attr('disabled',true);
-                var datas = {'id' : this.ArregloID};
+            deleteServicio : function(idServicio){
+                  
+                var datas = {'id' : idServicio};
 
-                this.$http.delete('tipo',{params : {'id' : this.ArregloID}}).then(
+                this.$http.delete('tipo',{params : datas}).then(
                     //success
                     function(response){
-                        $(event.target).attr('disabled',false);
+                        
                         this.updateSuccess = true;
                         $('#confirmOverlay').modal('hide');
                         var thisObj = this;
@@ -380,7 +381,7 @@
                     },
                     //error
                     function(response){
-                        $(event.target).attr('disabled',false);
+                        console.log(response.data);
                     }
                     );
             },
@@ -388,11 +389,12 @@
             getElementID: function(id){
                 this.ArregloID = id;
                 //imprimo los ids seleccionados
-                this.editIdEvent = id;
-                this.editNameEvent = this.servicios[this.ArregloID -1].nombre;
-                this.editTimeEvent = this.servicios[this.ArregloID -1].duracion;
-                this.editCostEvent = this.servicios[this.ArregloID -1].costo;
-                this.editDenominacionEvent = this.servicios[this.ArregloID -1].denominacion;
+                this.editIdEvent = this.servicios[this.ArregloID].id;
+                /*this.arregloID -1*/
+                this.editNameEvent = this.servicios[this.ArregloID].nombre;
+                this.editTimeEvent = this.servicios[this.ArregloID].duracion;
+                this.editCostEvent = this.servicios[this.ArregloID].costo;
+                this.editDenominacionEvent = this.servicios[this.ArregloID].denominacion;
             },
             /*deleteTheEvent: function(id_button) {
                 this.ArregloID = id_button;
