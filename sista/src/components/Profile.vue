@@ -264,7 +264,14 @@ import '../assets/js/jquery.min.js';
            mounted(){
             if(this.$store.state.calendario_id != null) this.demoVanilla();
 
-
+             if(this.$store.state.user != null)
+                {
+                    this.user_nombre = this.$store.state.user.name;
+                    this.user_email = this.$store.state.user.email;
+                    this.user_cedula = this.$store.state.user.cedula_profesional;
+                    this.user_informacion_profesional_resumen = this.$store.state.user.informacion_profesional_resumen;
+                    this.user_informacion_profesional_completo = this.$store.state.user.informacion_profesional_completo;
+                }
                 
            },
             watch : {

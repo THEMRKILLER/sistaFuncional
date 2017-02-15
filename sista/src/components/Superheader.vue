@@ -15,19 +15,21 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="nav-item">
-              <router-link to="/">Inicio</router-link>
+              <router-link to="/dashboard">Citas</router-link>
             </li>
             <li class="nav-item">
               <router-link to="/settings">Configuración</router-link>
             </li>
-            <li class="nav-item">
-              <router-link to="/redactar">Nuevo artículo</router-link>
-            </li>
+         
             <li class="nav-item">
               <router-link to="/articulos">Artículos</router-link>
             </li>
+            
             <li class="nav-item">
-              <router-link to="/dashboard">Citas</router-link>
+              <router-link to="/servicios">Servicios</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/promociones">Promociones</router-link>
             </li>
             <div style="margin-top: 10px; margin-left: 790px;">
               <li class="dropdown">

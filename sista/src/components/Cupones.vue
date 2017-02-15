@@ -1,9 +1,20 @@
+<style>
+#cupones_root{
+  margin-top: 20px;
+}
+
+</style>
+
 <template>
 <div id="cupones_root">
+  <h2>Cupones</h2>
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalCupon">Agregar cupón</button>
 <hr>
 <div class="well">
+  <div align="center">
+    <h3>Tabla de cupones</h3>
+  </div>
   <table class="table">
     <thead>      
       <tr>

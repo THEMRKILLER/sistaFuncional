@@ -17,7 +17,6 @@ import './assets/js/jquery.easing.min.js';
 import './assets/js/custom.js';
 import './assets/css/font-awesome.min.css';
 
-//import './assets/bootstrap/css/bootstrap.min.css'
 import './assets/css/fullcalendar.min.css';
 import 'jquery-ui/themes/base/all.css'
 
@@ -66,6 +65,8 @@ const routes = [
   { path: '/', component: require('components/Home.vue')},
   { path: '/admin', component: require('components/Login.vue') },
   { path: '/dashboard', component: require('components/Dashboard.vue'),name: 'auth-required' },
+  { path: '/servicios', component: require('components/Servicios.vue'),name: 'auth-required' },
+  { path: '/promociones', component: require('components/Promociones.vue'),name: 'auth-required' },
   { path: '/settings', component: require('components/Settings.vue'),name: 'auth-required' },
   { path: '/redactar', component: require('components/Redactador.vue'),name: 'auth-required' },
   { path: '/articuloedit/:id', component: require('components/EditarArticulo.vue'),name: 'auth-required' },
@@ -113,11 +114,9 @@ router.beforeEach((r, redirect, next) => {
 
   if(r.name === 'auth-required')
   {
-     if(localStorage.getItem('token') !== null) next();
-      else{ 
-
-        Auth.clearToken(store);
-      }
+    if(localStorage.getItem('token') !== null) next();
+    else Auth.clearToken(store);
+      
   }
   else{
     if (r.path === '/admin'){

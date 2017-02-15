@@ -6,6 +6,9 @@
 .addService{
     float: right;
 }
+#servicios_root{
+    margin-top: 50px;
+}
 </style>
 <template>
 	<div id="servicios_root">
