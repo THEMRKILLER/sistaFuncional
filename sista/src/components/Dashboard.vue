@@ -113,7 +113,6 @@ body.modal-open {
 <template>	
 	<div class="container">
     <br><br><br><br>
-    <button v-on:click="cambiaEstado">Cambiar</button>
     <!--Despliega los servicios y puede consultar la dispobilidad coloreando el calendario-->
     <div id="servicio_disponibilidad">
         <div class="row form-group">
@@ -514,11 +513,15 @@ ejemplo : this.$store.state.calendario_id
                     var fechaActual =  new Date();
                     var fechaCita = new Date(citasArray.start);
                     var fechaFinalCita = new Date(citasArray.end);
+                    //ms del dia de hoy
                     var msHastaHoy = fechaActual.getTime();
+                    //ms de la hora inicial de la cita
                     var msCitaInicio = fechaCita.getTime();
+                    //ms de la hora de finalización de la cita
                     var msFechaFinal =fechaFinalCita.getTime();
+                    //ms que faltan para que termine la cita
                     var msFechaFinalTotal = msFechaFinal - msHastaHoy;
-                    //milisegundos que faltan para la cita   
+                    //milisegundos que faltan para iniciar la cita
                     msTotal = msCitaInicio - msHastaHoy;
                     //si los milisegundos totales son mayores a cero
                 if(msTotal>0){
@@ -549,17 +552,23 @@ ejemplo : this.$store.state.calendario_id
                         vm.muestraCita = true;            
                     }, 0);
                         // si no hay una cita actualmente que limpie las variables y muestre un mensaje que el doctor se encuentra libre
-                    console.log("ms: "+msFechaFinal);
+                    //console.log("ms: "+msFechaFinal);
                         setTimeout(function() {
                         vm.nombreActual = '';
                         vm.servicioActual = '';
                         vm.finalActual = '';
                         vm.muestraCita = false;
-                        vm.notiFalse(msFechaFinalTotal);
+                        vm.notiFalse(msFechaFinal);
                     }, msFechaFinalTotal);
                     
                 }
+            }/*
+            if(vm.nombreActual == ''){
+                setTimeout(function() {
+                        vm.notiFalse(msFechaFinal);
+                    }, msFechaFinal);
             }
+            */
         },
 
             closeSesion: function(){

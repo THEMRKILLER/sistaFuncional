@@ -100,7 +100,7 @@ hr {border: 0 ; border-top: 4px double gray; width: 100%;}
           {{habilitarHoras(hora)}}
         </label>
         <label v-else>
-          <td>{{hora.hora}} Hrs<input type="checkbox" v-if="enArreglo(dia.horas_s,hora.hora)"  v-model="hora.disponible" :value="hora.hora" />
+          <td>{{hora.hora}} Hrs <input type="checkbox" v-if="enArreglo(dia.horas_s,hora.hora)"  v-model="hora.disponible" :value="hora.hora" />
             <input type="checkbox" v-else  v-model="hora.disponible" :value="hora.hora"/>    
           </td>    
         </label>
@@ -239,7 +239,8 @@ export default {
   				$(event.target).attr('disabled',false);
           //alert
           $.alert({
-            title: '¡Días actualizados correctamente!',
+            title: '',
+            content: '¡Horario actualizado correctamente!',
           });
           this.muestraBoton();
   				console.log(response.status);
