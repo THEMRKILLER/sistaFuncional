@@ -14,10 +14,16 @@
             <!-- Blog Section -->
             <section class="page-section" id="news">
                 <div class="container relative">
+
+                    <div>
+                      <router-link to="/redactar">
+                      <button class="btn btn-info">Nuevo Articulo</button>
+                    </router-link>
+
+                    </div>
                     
                     <h2 class="section-title font-alt align-left mb-70 mb-sm-40">
                         Artículos publicados
-                        
                     </h2>
                     
                     <div class="row multi-columns-row">

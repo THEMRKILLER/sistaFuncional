@@ -888,7 +888,7 @@ footer
 				<div class="col-md-8 col-sm-8 marb20" style="margin-top: -50px;">
 				<div class="alert alert-info fade in alert-dismissable">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-  					<strong>¡Atención!</strong> Al pulsar las flechas usted puede cambiar de mes.
+  					<strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Aviso: </strong> para agendar una cita escoge una fecha del calendario y se te desplegará una ventana donde tedrás que ingresar unos simples datos, el calendario se irá coloreando respecto a la disponibilidad del servicio.
 				</div>
 							<div class="form-group">
 								<button class="btn btn-danger" v-on:click="cancelarDialog">Cancelar una cita</button>

@@ -75,17 +75,24 @@
                    this.$store.commit('setidcalendario', {
                       calendario_id: response.data.calendario_id
                   });
+
                   vm.$store.state.socket.emit('join', {'id_user' : vm.$store.state.calendario_id});
+                  
+
                   vm.$store.state.socket.on('nueva_cita', function(data) {
                     notification("Cita nueva creada");
                   });
                   vm.$store.state.socket.on('reagendar_cita', function(data) {
                     vm.notification("Una cita ha sido reagendada correctamente");
                   });
+
+
             
                 },
             //error
-            function(response){}
+            function(response){
+              console.log(response.data);
+            }
 
         );
       },

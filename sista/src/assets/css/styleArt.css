@@ -50,6 +50,7 @@ Primary use:    MultiPurpose Template
     -ms-transition: all 0.27s cubic-bezier(0.000, 0.000, 0.580, 1.000); 
     transition: all 0.27s cubic-bezier(0.000, 0.000, 0.580, 1.000);
 }
+
 .no-animate, .no-animate *{
 	-webkit-transition: 0 none !important;  
     -moz-transition: 0 none !important;  
@@ -89,10 +90,7 @@ Primary use:    MultiPurpose Template
     box-sizing: border-box;
 }
 
-html{
-	overflow-y: scroll;
-    -ms-overflow-style: scrollbar;
-}
+
 html, body{
 	height: 100%;
 	-webkit-font-smoothing: antialiased;
@@ -693,6 +691,7 @@ a.btn-mod:focus{
     -ms-transition: all 0.2s cubic-bezier(0.000, 0.000, 0.580, 1.000); 
     transition: all 0.2s cubic-bezier(0.000, 0.000, 0.580, 1.000);
 }
+
 .btn-icon:hover > span{
 	opacity: 0;
     
